@@ -1,0 +1,34 @@
+{
+  "name": "nullbot",
+  "version": "0.1.0",
+  "description": "",
+  "main": "nullbot.js",
+  "scripts": {
+    "test": "echo \"No tests.\" && exit 1",
+    "build": "babel src -d build",
+    "start": "npm run build && node build/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GoBJIuH/NullBot.git"
+  },
+  "keywords": [
+    "Discord",
+    "Bot",
+    "Russian"
+  ],
+  "author": "GoBJIuH",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GoBJIuH/NullBot/issues"
+  },
+  "homepage": "https://github.com/GoBJIuH/NullBot#readme",
+  "dependencies": {
+    "discord.js": "^9.2.0",
+    "ytdl-core": "^0.7.18"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-preset-es2015": "^6.14.0"
+  }
+}
