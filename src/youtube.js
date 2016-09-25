@@ -37,11 +37,10 @@ function search(query) {
   query = youtubeID ? youtubeID : query;
   query = querystring.escape(query);
   let url = 'https://www.googleapis.com/youtube/v3/search?part=snippet' +
-  `&maxResults=1&key=${key}&q=${query}`;
+  `&maxResults=1&key=${key}&q=${query}&type=video&order=relevance`;
   return new Promise((resolve, reject) => {
     request(url, (error, response, body) => {
       if (!error && response.statusCode == 200) {
-
         let obj = JSON.parse(body);
         if(obj.pageInfo.totalResults < 1) reject(1);
         resolve(obj.items[0]);

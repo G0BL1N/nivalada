@@ -49,10 +49,11 @@ class Queue {
   next() {
     this.playing = this.array.shift();
     this.textChannel.sendMessage(`🎶 Сейчас играет: **${this.playing.title}**`);
-    this.dispatcher = this.connection.playFile(this.playing.path,{vol: this.vol});
+    let stream = fs.createReadStream(this.playing.path);
+    this.dispatcher = this.connection.playStream(stream,{vol: this.vol});
     this.dispatcher.on('end', () => {
       this.textChannel.sendMessage(`🎶 Завершено: **${this.playing.title}**`);
-      fs.unlink(this.playing.path);
+      fs.unlinkSync(this.playing.path);
       this.playing = null;
       this.dispatcher = null;
       if(this.array[0]) {this.next();}

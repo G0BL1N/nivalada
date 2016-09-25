@@ -47,7 +47,9 @@ const category = {
       action(message) {
         let content = message.content;
         let vol = content.substr(content.indexOf(' ')+1);
-        Queues.get(message.guild.id).setVol(vol);
+        let queue = Queues.get(message.guild.id);
+        queue.setTextChannel(message.channel);
+        queue.setVol(vol);
       }
     },
     {
