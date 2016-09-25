@@ -58,8 +58,9 @@ class Queue {
       if(this.array[0]) {this.next();}
     });
   }
-  setTextChannel(channel) {
-    this.textChannel = channel;
+  skip() {
+    if(!this.dispatcher) return;
+    this.dispatcher.end();
   }
   move(channel) {
     channel.join()
@@ -69,6 +70,9 @@ class Queue {
     .catch((err) => {
       //do something
     });
+  }
+  setTextChannel(channel) {
+    this.textChannel = channel;
   }
   setVol(num) {
     this.vol = Math.min(Math.max(num, 0), 100);

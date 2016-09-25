@@ -43,15 +43,9 @@ function search(query) {
       if (!error && response.statusCode == 200) {
 
         let obj = JSON.parse(body);
-
-        if(obj.pageInfo.totalResults < 1) {
-          reject(-1);
-        }
+        if(obj.pageInfo.totalResults < 1) reject(1);
         resolve(obj.items[0]);
-
-      } else {
-        reject(-2);
-      }
+      } else reject(2);
     });
   });
 }

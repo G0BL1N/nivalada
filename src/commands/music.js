@@ -13,9 +13,8 @@ const category = {
 			description: 'Перемещает бота на ваш голосовой канал.',
 			usage: prefix+'mv',
 			action(message) {
-        if(message.member.voiceChannel) {
-          Queues.get(message.guild.id).move(message.member.voiceChannel);
-        }
+        if(!message.member.voiceChannel) return;
+        Queues.get(message.guild.id).move(message.member.voiceChannel);
 			}
 		},
     {
@@ -36,7 +35,7 @@ const category = {
             }
           }
           let content = message.content;
-          let query = content.substr(content.indexOf(' ')+1); //needs to be redone
+          let query = content.substr(content.indexOf(' ')+1);
           queue.push(query);
       }
     },
@@ -49,6 +48,15 @@ const category = {
         let content = message.content;
         let vol = content.substr(content.indexOf(' ')+1);
         Queues.get(message.guild.id).setVol(vol);
+      }
+    },
+    {
+      prefix: prefix,
+      variants: ['skip', 'next','s','n'],
+      description: 'Бот пропускает текущий трек.',
+      usage: prefix+'skip',
+      action(message) {
+        Queues.get(message.guild.id).skip();
       }
     },
   ],

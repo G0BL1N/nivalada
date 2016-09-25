@@ -23,6 +23,29 @@ const category = {
 					`\`${hours}\` часов, \`${minutes}\` минут, \`${sec}\` секунд.`);
 			}
 		},
+    {
+      prefix: prefix,
+      variants: ['userid', 'uid'],
+      description: 'Выводит id указанных пользователей.',
+      usage: prefix+'skip',
+      action(message) {
+        let users = message.mentions.users.array();
+        let msg = '';
+        let bLen = 0;
+        for(let user of users) {
+          let name = user.username;
+          if(name.length > bLen) bLen = name.length;
+        }
+        for(let user of users) {
+          let name = user.username;
+          msg = msg + `**${name}**` +
+          String.fromCharCode(8196).repeat(bLen - name.length) + //spaces
+          ` – <${user.id}>\n`;
+        }
+        message.channel.sendMessage(msg);
+      }
+    },
   ],
+
 }
 module.exports = category;

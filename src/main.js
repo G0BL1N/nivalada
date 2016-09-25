@@ -16,15 +16,18 @@ Client.on('ready', () => {
 });
 
 Client.on('message', (message) => {
+  if(message.author.id == Client.user.id) return;
+  loop:
   for(let key in commands) {
     let command = commands[key];
-    for(let variantKey in command.variants) {
+    for(let vkey in command.variants) {
+      let variant = command.variants[vkey];
       let prefix = command.prefix;
-      let variant = command.variants[variantKey];
       let cmd = (prefix ? prefix : '') + variant;
       if(message.content.indexOf(cmd) == 0) {
         command.action(message);
-        break;
+        console.log(`${message.author.username} initiated ${cmd}`)
+        break loop;
       }
     }
   }
