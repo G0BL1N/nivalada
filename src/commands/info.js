@@ -2,7 +2,7 @@ const config = require('../../config.json');
 const Client = require('../main.js').Client;
 const prefix = config.prefix;
 
-const category = {
+module.exports = {
   name: 'info',
   commands: [
     {
@@ -10,7 +10,7 @@ const category = {
 			variants: ['uptime', 'up', 'аптайм'],
 			description: 'Показывает аптайм.',
 			usage: prefix+'uptime',
-			action: (message) => {
+			action(message) {
 				let ms = Client.uptime;
 				let days      = Math.floor(ms / (24*60*60*1000));
 				let daysms    = ms % (24*60*60*1000);
@@ -27,7 +27,7 @@ const category = {
       prefix: prefix,
       variants: ['userid', 'uid'],
       description: 'Выводит id указанных пользователей.',
-      usage: prefix+'skip',
+      usage: prefix+'userid @Man @Dude @Bot',
       action(message) {
         let users = message.mentions.users.array();
         let msg = '';
@@ -45,7 +45,15 @@ const category = {
         message.channel.sendMessage(msg);
       }
     },
+    {
+      prefix: prefix,
+      variants: ['getavatar', 'avatar'],
+      description: 'Выводит ссылку на аватар указанного пользователей.',
+      usage: prefix+'getavatar @Dude',
+      action(message) {
+        let user = message.mentions.users.first();
+        message.channel.sendMessage(user.avatarURL);
+      }
+    },
   ],
-
 }
-module.exports = category;

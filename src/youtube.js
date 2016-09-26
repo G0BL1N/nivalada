@@ -24,9 +24,7 @@ function cache(query) {
         resolve(result);
       });
     })
-    .catch((err) => {
-      reject(err);
-    });
+    .catch(reject);
   });
 
 }

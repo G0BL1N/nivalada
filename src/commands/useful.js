@@ -4,7 +4,7 @@ const Client = main.Client;
 const Queues = main.Queues;
 const prefix = config.prefix;
 
-const category = {
+module.exports = {
   name: 'useful',
   commands: [
     {
@@ -12,7 +12,7 @@ const category = {
       variants: ['8ball','ball','шар'],
       description: 'Шар судьбы, что тут ещё можно сказать?',
       usage: prefix + 'шар Стоит ли покодить?',
-      action: message => {
+      action(message) {
         let answers = [
           'Бесспорно.',
           'Прекалькулировано.',
@@ -35,10 +35,8 @@ const category = {
           'Весьма сомнительно.',
         ];
         let content = message.content;
-        console.log('kek');
-        let answer = answers[Math.floor(Math.random() * answers.length)];
-        message.channel.sendMessage(`🎱 ${answer}`);
-					//											   ^^8ball emoji in discord
+        let answer = answers[Math.round(Math.random() * answers.length)];
+        message.channel.sendMessage(`:8ball: ${answer}`);
       }
     },
     {
@@ -46,7 +44,7 @@ const category = {
       variants: ['choose', 'выбери', 'выбор'],
       description: 'Выбирает случайный вариант из предложенных, разделённых `;`.',
       usage: prefix+'выбери спать;смотреть аниме;кодить',
-      action: message => {
+      action(message) {
         let content = message.content;
         let question = content.substr(content.indexOf(' ')+1);
         let answers = question.split(';');
@@ -56,4 +54,3 @@ const category = {
     },
   ],
 }
-module.exports = category;

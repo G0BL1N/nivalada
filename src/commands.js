@@ -1,13 +1,15 @@
+const fs = require('fs');
 const commands = [];
+const PATH = __dirname + '/commands/';
 
-load(require('./commands/info.js'));
-load(require('./commands/music.js'));
-load(require('./commands/talk.js'));
-load(require('./commands/useful.js'));
+let filenames = fs.readdirSync(PATH);
+
+for(let filename of filenames) {
+  load(require(PATH + filename));
+}
 
 function load(category) {
-  for(let key in category.commands) {
-    let command = category.commands[key];
+  for(let command of category.commands) {
     command.category = category.name;
     commands.push(command);
   }

@@ -2,7 +2,7 @@ const config = require('../../config.json');
 const Client = require('../main.js').Client;
 const prefix = config.prefix;
 
-const category = {
+module.exports = {
   name: 'talk',
   commands: [
     {
@@ -10,7 +10,7 @@ const category = {
 			variants: ['/o/'],
 			description: '/o/ \\o\\ /o/ \\o\\',
 			usage: '/o/',
-			action: (message) => {
+			action(message) {
 				message.channel.sendMessage('\\o\\');
 			}
 		},
@@ -19,10 +19,9 @@ const category = {
 			variants: ['\\o\\'],
 			description: '\\o\\ /o/ \\o\\ /o/',
 			usage: '\\o\\',
-			action: (message) => {
+			action(message) {
 				message.channel.sendMessage('/o/');
 			}
 		},
   ],
 }
-module.exports = category;

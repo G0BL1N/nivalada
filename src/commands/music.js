@@ -4,7 +4,7 @@ const Client = main.Client;
 const Queues = main.Queues;
 const prefix = config.prefix;
 
-const category = {
+module.exports = {
   name: 'music',
   commands: [
     {
@@ -63,4 +63,3 @@ const category = {
     },
   ],
 }
-module.exports = category;

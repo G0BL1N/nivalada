@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const config = require('../config.json');
+const Config = require('../config.json');
 const Queues = require('./queues.js');
 
 const Client = new Discord.Client();
@@ -16,26 +16,34 @@ Client.on('ready', () => {
 });
 
 Client.on('message', (message) => {
-  if(message.author.id == Client.user.id) return;
+  if(message.author.bot) return;
   loop:
-  for(let key in commands) {
-    let command = commands[key];
-    for(let vkey in command.variants) {
-      let variant = command.variants[vkey];
+  for(let command of commands) {
+    for(let variant of command.variants) {
       let prefix = command.prefix;
       let cmd = (prefix ? prefix : '') + variant;
-      if(message.content.indexOf(cmd) == 0) {
+      if(message.content.toLowerCase().startsWith(cmd)) {
+        if(command.category == 'control' && message.author.id != Config.ownerid) {
+          //say something
+          return;
+        }
         command.action(message);
-        console.log(`${message.author.username} initiated ${cmd}`)
+        console.log(`${message.author.username}(${message.member.nickname || ''}) initiated ${cmd}`)
         break loop;
       }
     }
   }
 });
 
-Client.login(config.token)
+Client.login(Config.token)
   .then(result => console.log('Logged in successfully.'))
   .catch((error) => {
     console.error('Cannot log in, error:\n' + error);
     process.exit(0);
-  });
+});
+
+process.on('exit', Client.destroy);
+process.on('SIGINT', () => {
+  Client.destroy();
+  process.exit(0);
+});
