@@ -58,7 +58,29 @@ module.exports = {
       description: 'Бот пропускает текущий трек.',
       usage: prefix+'skip',
       action(message) {
-        Queues.get(message.guild.id).skip();
+        let queue = Queues.get(message.guild.id);
+        queue.setTextChannel(message.channel);
+        queue.skip();
+      }
+    },
+    {
+      prefix: prefix,
+      variants: ['ls', 'list'],
+      description: 'Бот выдёт список треков в очереди.',
+      usage: prefix+'list',
+      action(message) {
+        let queue = Queues.get(message.guild.id);
+        queue.setTextChannel(message.channel);
+        queue.list();
+      }
+    },
+    {
+      prefix: prefix,
+      variants: ['lv', 'leave'],
+      description: 'Бот покидает голосовй канал.',
+      usage: prefix+'list',
+      action(message) {
+        Queues.get(message.guild.id).leave();
       }
     },
   ],

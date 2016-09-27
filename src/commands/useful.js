@@ -36,7 +36,7 @@ module.exports = {
         ];
         let content = message.content;
         let answer = answers[Math.round(Math.random() * answers.length)];
-        message.channel.sendMessage(`:8ball: ${answer}`);
+        message.channel.sendMessage(`🎱 ${answer}`);
       }
     },
     {

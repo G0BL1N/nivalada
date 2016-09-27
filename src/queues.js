@@ -77,10 +77,23 @@ class Queue {
   }
   setVol(num) {
     this.vol = Math.min(Math.max(num, 0), 100);
-    this.textChannel.sendMessage(`🔊 Громкость: ${this.vol}%`);
+    this.textChannel.sendMessage(`🔊 Громкость: ${this.vol}%`)
+    .then(message => message.delete(1500));
     if(this.dispatcher) {
       this.dispatcher.setVolume(this.vol/100);
     }
+  }
+  list() {
+    let num = 0;
+    let msg = 'В очереди: \n';
+    for(let audio of this.array) {
+      msg = msg + `${++num}. **${audio.title}**\n`;
+    }
+    this.textChannel.sendMessage(msg);
+
+  }
+  leave() {
+    this.connection.channel.leave();
   }
 }
 
