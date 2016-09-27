@@ -93,6 +93,7 @@ class Queue {
 
   }
   leave() {
+    if(!this.connection) return;
     this.connection.channel.leave();
   }
 }
