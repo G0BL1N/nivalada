@@ -5,14 +5,17 @@ const Queues = require('./queues.js');
 const Client = new Discord.Client();
 
 var commands;
+var initiated = false;
 
 module.exports.Client = Client;
 
 Client.on('ready', () => {
   console.log('Client ready.');
+  if(initiated) return;
   module.exports.Queues = new Queues(Client);
   console.log('Queues initialized.');
   commands = require('./commands.js');
+  console.log('Commands initialized.');
 });
 
 Client.on('message', (message) => {

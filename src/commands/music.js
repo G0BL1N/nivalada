@@ -76,8 +76,20 @@ module.exports = {
     },
     {
       prefix: prefix,
+      variants: ['rm', 'remove'],
+      description: 'Бот удаляет указанный трек из очереди' +
+      ' или очищает всю очередь если ничего указано не было.',
+      usage: prefix+'rm 2',
+      action(message) {
+        let content = message.content;
+        let num = parseInt(content.substr(content.indexOf(' ')+1));
+        Queues.get(message.guild.id).remove(num ? num + 1 : null);
+      }
+    },
+    {
+      prefix: prefix,
       variants: ['lv', 'leave'],
-      description: 'Бот покидает голосовй канал.',
+      description: 'Бот покидает голосовй канал и очищает очередь.',
       usage: prefix+'list',
       action(message) {
         Queues.get(message.guild.id).leave();

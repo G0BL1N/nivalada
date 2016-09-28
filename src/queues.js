@@ -60,7 +60,7 @@ class Queue {
     });
   }
   skip() {
-    if(!this.dispatcher) return;
+    if(!this.playing) return;
     this.dispatcher.end();
   }
   move(channel) {
@@ -79,7 +79,7 @@ class Queue {
     this.vol = Math.min(Math.max(num, 0), 100);
     this.textChannel.sendMessage(`🔊 Громкость: ${this.vol}%`)
     .then(message => message.delete(1500));
-    if(this.dispatcher) {
+    if(this.playing) {
       this.dispatcher.setVolume(this.vol/100);
     }
   }
@@ -90,11 +90,25 @@ class Queue {
       msg = msg + `${++num}. **${audio.title}**\n`;
     }
     this.textChannel.sendMessage(msg);
-
+  }
+  remove(num) {
+    if(!num) {
+      this.array = [];
+      //message
+      return;
+    }
+    if(num < 0 || num > this.array.length -1) {
+      //message
+      return;
+    }
+    this.array.splice(num,1);
   }
   leave() {
     if(!this.connection) return;
+    this.remove();
+    if(this.playing) this.skip();
     this.connection.channel.leave();
+    this.connection = null;
   }
 }
 
