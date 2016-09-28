@@ -12,6 +12,7 @@ module.exports = {
 			variants: ['setavatar', 'newavatar'],
 			description: 'Устанавливает в качестве нового аватара файл по ссылке.',
 			usage: prefix + 'setavatar',
+      permissions: ['OWNER'],
 			action(message) {
 
         let content = message.content;

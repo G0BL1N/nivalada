@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const Config = require('../config.json');
 const Queues = require('./queues.js');
-
+const checkPermissions = require('./permissionchecker.js');
 const Client = new Discord.Client();
 
 var commands;
@@ -25,18 +25,26 @@ Client.on('message', (message) => {
     for(let variant of command.variants) {
       let prefix = command.prefix;
       let cmd = (prefix ? prefix : '') + variant;
-      if(message.content.toLowerCase().startsWith(cmd)) {
-        if(command.category == 'control' && message.author.id != Config.ownerid) {
-          //say something
+      let regexp = buildRegExp(cmd);
+      if(message.content.match(regexp)) {
+        if(!checkPermissions(message, command)) {
+          message.channel.sendMessage(':warning: У вас недостаточно прав для' +
+          'использования этой команды.');
           return;
         }
-        command.action(message);
+        //console.log should be changed
         console.log(`${message.author.username}(${message.member.nickname || ''}) initiated ${cmd}`)
+        command.action(message);
         break loop;
       }
     }
   }
 });
+
+function buildRegExp(str) {
+    let escaped = str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+    return new RegExp('^' + escaped + '(\\s|$)');
+}
 
 Client.login(Config.token)
   .then(result => console.log('Logged in successfully.'))

@@ -1,11 +1,18 @@
 const youtube = require('./youtube.js');
 const fs = require('fs');
+const request = require('request');
 
 
 class Audio {
   constructor(info) {
     this.title = info.snippet.title;
     this.path = './cache/' + info.id.videoId;;
+  }
+}
+class Stream {
+  constructor(url) {
+    this.title = url;
+    this.url = url;
   }
 }
 class Queues {
@@ -46,14 +53,27 @@ class Queue {
       //do something
     });
   }
+  pushStream(url) {
+    let audio = new Stream(url);
+    this.array.push(audio);
+    this.textChannel.sendMessage(`🎶 В очереди: **${audio.title}**`);
+    if(!this.playing) {
+      this.next();
+    }
+  }
   next() {
     this.playing = this.array.shift();
     this.textChannel.sendMessage(`🎶 Сейчас играет: **${this.playing.title}**`);
-    let stream = fs.createReadStream(this.playing.path);
-    this.dispatcher = this.connection.playStream(stream,{vol: this.vol});
+    let readStream = null;
+    if(this.playing instanceof Stream) {
+      readStream = request(this.playing.url);
+    } else {
+      readStream = fs.createReadStream(this.playing.path);
+    }
+    this.dispatcher = this.connection.playStream(readStream,{vol: this.vol});
     this.dispatcher.on('end', () => {
       this.textChannel.sendMessage(`🎶 Завершено: **${this.playing.title}**`);
-      fs.unlinkSync(this.playing.path);
+      if(this.playing instanceof Audio) fs.unlinkSync(this.playing.path);
       this.playing = null;
       this.dispatcher = null;
       if(this.array[0]) {this.next();}
@@ -64,13 +84,15 @@ class Queue {
     this.dispatcher.end();
   }
   move(channel) {
-    channel.join()
-    .then((connection) => {
-      this.connection = connection;
-    })
-    .catch((err) => {
-      //do something
+    return new Promise((resolve, reject) => {
+      channel.join()
+      .then((connection) => {
+        this.connection = connection;
+        resolve(channel);
+      })
+      .catch(reject);
     });
+
   }
   setTextChannel(channel) {
     this.textChannel = channel;

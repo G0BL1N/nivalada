@@ -36,7 +36,7 @@ module.exports = {
         ];
         let content = message.content;
         let answer = answers[Math.round(Math.random() * answers.length)];
-        message.channel.sendMessage(`🎱 ${answer}`);
+        message.channel.sendMessage(`:8ball: ${answer}`);
       }
     },
     {
@@ -49,7 +49,8 @@ module.exports = {
         let question = content.substr(content.indexOf(' ')+1);
         let answers = question.split(';');
         let answer = answers[Math.floor(answers.length * Math.random())];
-        message.channel.sendMessage(message, `✅ Правильным выбором будет: **\`${answer}\`**.`);
+        message.channel.sendMessage(message, ':heavy_check_mark:' +
+        `Правильным выбором будет: **\`${answer}\`**.`);
       }
     },
   ],

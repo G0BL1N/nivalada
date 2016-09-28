@@ -20,15 +20,21 @@ module.exports = {
     {
       prefix: prefix,
       variants: ['add', 'q'],
-      description: 'Добавляет трек в очередь, допустимы' +
-      ' ссылки на Youtube, ~~ссылки на аудио-стримы~~ или название.',
-      usage: 'usage',
+      description: 'Ищет трек на Youtube и добавляет в очередь, допустимы' +
+      ' ссылки на Youtube или название.',
+      usage: prefix + 'q rickroll',
       action(message) {
           let queue = Queues.get(message.guild.id);
           queue.setTextChannel(message.channel);
           if(!queue.connection) {
             if(message.member.voiceChannel) {
-              queue.move(message.member.voiceChannel);
+              queue.move(message.member.voiceChannel)
+              .then(() => {
+                let content = message.content;
+                let query = content.substr(content.indexOf(' ')+1);
+                queue.push(query);
+              });
+              return;
             } else {
               //do warning
               return;
@@ -37,6 +43,33 @@ module.exports = {
           let content = message.content;
           let query = content.substr(content.indexOf(' ')+1);
           queue.push(query);
+      }
+    },
+    {
+      prefix: prefix,
+      variants: ['addstream', 'qs'],
+      description: 'Добавляет аудиострим в очередь.',
+      usage: prefix + 'qs http://examplesiteitsnotreal.com/stream',
+      action(message) {
+          let queue = Queues.get(message.guild.id);
+          queue.setTextChannel(message.channel);
+          if(!queue.connection) {
+            if(message.member.voiceChannel) {
+              queue.move(message.member.voiceChannel)
+              .then(() => {
+                let content = message.content;
+                let query = content.substr(content.indexOf(' ')+1);
+                queue.pushStream(query);
+              });
+              return;
+            } else {
+              //do warning
+              return;
+            }
+          }
+          let content = message.content;
+          let query = content.substr(content.indexOf(' ')+1);
+          queue.pushStream(query);
       }
     },
     {
