@@ -5,13 +5,14 @@ const checkPermissions = require('./permissionchecker.js');
 const Client = new Discord.Client();
 module.exports.Client = Client;
 var initiated = false;
+var handlder = null;
 
 Client.on('ready', () => {
   console.log('Client ready.');
   if(initiated) return;
   module.exports.Queues = new Queues(Client);
   console.log('Queues initialized.');
-  const handler = require('./command_handler.js');
+  handler = require('./command_handler.js');
   console.log('Command handler initialized.');
 });
 
