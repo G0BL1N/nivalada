@@ -4,8 +4,6 @@ const Queues = require('./queues.js');
 const checkPermissions = require('./permissionchecker.js');
 const Client = new Discord.Client();
 module.exports.Client = Client;
-
-const handler = require('./command_handler.js');
 var initiated = false;
 
 Client.on('ready', () => {
@@ -13,7 +11,8 @@ Client.on('ready', () => {
   if(initiated) return;
   module.exports.Queues = new Queues(Client);
   console.log('Queues initialized.');
-  console.log('Commands initialized.');
+  const handler = require('./command_handler.js');
+  console.log('Command handler initialized.');
 });
 
 Client.on('message', (message) => {
