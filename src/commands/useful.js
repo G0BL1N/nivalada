@@ -49,8 +49,8 @@ module.exports = {
         let question = content.substr(content.indexOf(' ')+1);
         let answers = question.split(';');
         let answer = answers[Math.floor(answers.length * Math.random())];
-        message.channel.sendMessage(message, ':heavy_check_mark:' +
-        `Правильным выбором будет: **\`${answer}\`**.`);
+        message.channel.sendMessage(':heavy_check_mark: ' +
+        `Правильным выбором будет: "**${answer}**".`);
       }
     },
   ],

@@ -22,7 +22,7 @@ module.exports = {
           if (!error && response.statusCode == 200) {
             Client.user.setAvatar(body);
             console.log('New avatar set.');
-            message.channel.sendMessage('Новый автар установлен');
+            message.channel.sendMessage('Новый аватар установлен');
           } else {
             //do something
           }
