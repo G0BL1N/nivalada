@@ -5,7 +5,7 @@ const checkPermissions = require('./permissionchecker.js');
 const Client = new Discord.Client();
 module.exports.Client = Client;
 var initiated = false;
-var handlder = null;
+var handler = null;
 
 Client.on('ready', () => {
   console.log('Client ready.');
