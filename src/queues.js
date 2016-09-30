@@ -70,7 +70,7 @@ class Queue {
     } else {
       readStream = fs.createReadStream(this.playing.path);
     }
-    this.dispatcher = this.connection.playStream(readStream,{vol: this.vol});
+    this.dispatcher = this.connection.playStream(readStream,{vol: this.vol/100});
     this.dispatcher.on('end', () => {
       this.textChannel.sendMessage(`🎶 Завершено: **${this.playing.title}**`);
       if(this.playing instanceof Audio) fs.unlinkSync(this.playing.path);
@@ -106,7 +106,10 @@ class Queue {
     }
   }
   list() {
-    let num = 0;
+    if(!this.array[0]) {
+      this.textChannel.sendMessage('Очередь пуста.');
+      return;
+    }
     let msg = 'В очереди: \n';
     for(let audio of this.array) {
       msg = msg + `${++num}. **${audio.title}**\n`;

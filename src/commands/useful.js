@@ -42,7 +42,7 @@ module.exports = {
     {
       prefix: prefix,
       variants: ['choose', 'выбери', 'выбор'],
-      description: 'Выбирает случайный вариант из предложенных, разделённых `;`.',
+      description: 'Выбирает вариант из предложенных, разделённых `;`.',
       usage: prefix+'выбери спать;смотреть аниме;кодить',
       action(message) {
         let content = message.content;

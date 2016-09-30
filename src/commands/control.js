@@ -11,7 +11,7 @@ module.exports = {
       prefix: prefix,
       variants: ['setavatar', 'newavatar'],
       description: 'Устанавливает в качестве нового аватара файл по ссылке.',
-      usage: prefix + 'setavatar',
+      usage: prefix + 'setavatar http://examplesiteitsnotreal.com/avatar.png',
       permissions: ['OWNER'],
       action(message) {
 
@@ -22,7 +22,7 @@ module.exports = {
           if (!error && response.statusCode == 200) {
             Client.user.setAvatar(body);
             console.log('New avatar set.');
-            message.channel.sendMessage('Новый аватар установлен');
+            message.channel.sendMessage('Новый аватар установлен.');
           } else {
             //do something
           }

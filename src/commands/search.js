@@ -11,7 +11,7 @@ module.exports = {
       prefix: prefix,
       variants: ['yt','youtube'],
       description: 'Ищет видео на YouTube и возвращает ссылку на видео.',
-      usage: prefix + '',
+      usage: prefix + 'yt смешнявки',
       action(message) {
         let content = message.content;
         let query = content.substr(content.indexOf(' ')+1);

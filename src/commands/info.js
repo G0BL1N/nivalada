@@ -9,19 +9,36 @@ module.exports = {
     {
       prefix: prefix,
       variants: ['help', 'h'],
-      description: 'Помощь по категории или команде',
+      description: 'Помощь по категории или команде.' +
+      ` \`Вызовите ${prefix}help categories\` для спика категорий.`,
       usage: prefix+'help info',
       action(message) {
         let content = message.content;
-        let index = content.indexOf(' ')+1;
+        let index = content.indexOf(' ');
+        console.log(index);
         if(index === -1) {
-          //help message
+          let reply =  `Помощь по команде \`${this.variants[0]}\`:\n` +
+          `**Описание**: ${this.description}\n**Использование**: ${this.usage}` +
+          '\n**Варианты** :';
+          for(let variant of this.variants) {
+            reply = reply + `\`${variant}\`,`;
+          }
+          reply = reply.substr(0, reply.length - 1);
+          message.channel.sendMessage(reply);
           return;
         }
-        let query = content.substr(index);
+        let query = content.substr(index + 1);
+        if(query === 'categories') {
+          let reply = '**Категории**: \n';
+          for(let cat of handler.categories) {
+            reply = reply +`• \`${cat.name}\`\n`;
+          }
+          message.channel.sendMessage(reply);
+          return;
+        }
         let cat = handler.findCategory(query);
         if(cat) {
-          let reply = `Команды категории \`${cat.name}\`:\n`;
+          let reply = `**Команды категории** \`${cat.name}\`:\n`;
           for(let cmd of cat.commands) {
             reply = reply +`• \`${cmd.variants[0]}\`\n`;
           }
@@ -38,6 +55,10 @@ module.exports = {
           }
           reply = reply.substr(0, reply.length - 1);
           message.channel.sendMessage(reply);
+          return;
+        }
+        if(!cmd) {
+          message.channel.sendMessage(':warning: Не найдено.');
           return;
         }
       }

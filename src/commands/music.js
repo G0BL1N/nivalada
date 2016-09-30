@@ -123,7 +123,7 @@ module.exports = {
       prefix: prefix,
       variants: ['lv', 'leave'],
       description: 'Бот покидает голосовй канал и очищает очередь.',
-      usage: prefix+'list',
+      usage: prefix+'leave',
       action(message) {
         Queues.get(message.guild.id).leave();
       }
