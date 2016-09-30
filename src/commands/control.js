@@ -8,12 +8,12 @@ module.exports = {
   name: 'control',
   commands: [
     {
-			prefix: prefix,
-			variants: ['setavatar', 'newavatar'],
-			description: 'Устанавливает в качестве нового аватара файл по ссылке.',
-			usage: prefix + 'setavatar',
+      prefix: prefix,
+      variants: ['setavatar', 'newavatar'],
+      description: 'Устанавливает в качестве нового аватара файл по ссылке.',
+      usage: prefix + 'setavatar',
       permissions: ['OWNER'],
-			action(message) {
+      action(message) {
 
         let content = message.content;
         let url = content.substr(content.indexOf(' ')+1);
@@ -27,7 +27,7 @@ module.exports = {
             //do something
           }
         });
-			}
-		},
+      }
+    },
   ],
 }

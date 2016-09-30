@@ -8,15 +8,15 @@ module.exports = {
   name: 'music',
   commands: [
     {
-			prefix: prefix,
-			variants: ['mv', 'move'],
-			description: 'Перемещает бота на ваш голосовой канал.',
-			usage: prefix+'mv',
-			action(message) {
+      prefix: prefix,
+      variants: ['mv', 'move'],
+      description: 'Перемещает бота на ваш голосовой канал.',
+      usage: prefix+'mv',
+      action(message) {
         if(!message.member.voiceChannel) return;
         Queues.get(message.guild.id).move(message.member.voiceChannel);
-			}
-		},
+      }
+    },
     {
       prefix: prefix,
       variants: ['add', 'q'],

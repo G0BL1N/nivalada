@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"No tests.\" && exit 1",
     "build": "babel src -d build",
-    "start": "npm run build && node build/main.js"
+    "start": "npm run build && node build/main.js",
+    "foreverstart": "npm run build && forever start build/main.js -w --watchIgnore cache",
+    "foreverstop":  "forever stop build/main.js"
   },
   "repository": {
     "type": "git",
