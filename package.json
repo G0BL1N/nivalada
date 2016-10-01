@@ -1,8 +1,8 @@
 {
-  "name": "nullbot",
-  "version": "0.5.4",
+  "name": "GBot",
+  "version": "0.5.5",
   "description": "",
-  "main": "nullbot.js",
+  "main": "build/main.js",
   "scripts": {
     "test": "echo \"No tests.\" && exit 1",
     "build": "babel src -d build",
