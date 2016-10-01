@@ -2,7 +2,7 @@ const ytdl = require('ytdl-core');
 const request = require('request');
 const querystring = require('querystring');
 const fs = require('fs');
-const key = require('../config.json').googleKey;
+const key = require('../config.json').googlekey;
 
 
 
