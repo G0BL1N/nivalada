@@ -1,6 +1,6 @@
 {
   "name": "GBot",
-  "version": "0.5.6",
+  "version": "0.6.0",
   "description": "",
   "main": "build/main.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "build": "babel src -d build",
     "start": "npm run build && node build/main.js",
     "foreverstart": "npm run build && forever start build/main.js -w --watchIgnore cache",
-    "foreverstop":  "forever stop build/main.js"
+    "foreverstop": "forever stop build/main.js"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/G0BL1N/GBot#readme",
   "dependencies": {
-    "discord.js": "^9.3.0",
+    "discord.js": "^10.0.1",
     "ytdl-core": "^0.7.18"
   },
   "devDependencies": {
