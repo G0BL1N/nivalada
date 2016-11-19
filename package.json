@@ -1,6 +1,6 @@
 {
   "name": "GBot",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "",
   "main": "build/main.js",
   "scripts": {
@@ -26,7 +26,8 @@
   },
   "homepage": "https://github.com/G0BL1N/GBot#readme",
   "dependencies": {
-    "discord.js": "^10.0.1",
+    "discord.js": "github:hydrabolt/discord.js#indev",
+    "request": "^2.78.0",
     "ytdl-core": "^0.7.18"
   },
   "devDependencies": {

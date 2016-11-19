@@ -15,6 +15,41 @@ class Stream {
     this.url = url;
   }
 }
+class MessageQueue {
+  constructor(channel) {
+    this.channel = channel;
+    this.pending = null;
+    this.strArray = [];
+    this.lastMessage = null;
+  }
+  put(str) {
+    if(this.pending == null) {
+      this.send(str);
+      return;
+    }
+    this.strArray.push(str);
+  }
+  resolver(result) {
+    this.lastMessage = result;
+    let shifted = this.strArray.shift();
+    if(!shifted) {
+      this.pending = null;
+      return;
+    }
+    this.send(shifted);
+  }
+  send(str) {
+    if(this.lastMessage != null && this.lastMessage.id == this.channel.lastMessageID) {
+      this.pending = this.lastMessage.edit(str)
+      .then(result => this.resolver(result))
+      .catch(console.error);
+      return;
+    }
+    this.pending = this.channel.sendMessage(str)
+    .then(result => this.resolver(result))
+    .catch(console.error);
+  }
+}
 class Queues {
   constructor(Client) {
     this.container = {};
@@ -37,14 +72,16 @@ class Queue {
     this.connection = null;
     this.dispatcher = null;
     this.textChannel = null;
+    this.mq = null;
     this.vol = 100;
   }
   push(query) {
+    this.send('Кэширую...');
     youtube.cache(query)
     .then((result) => {
       let audio = new Audio(result);
       this.array.push(audio);
-      this.textChannel.sendMessage(`🎶 В очереди: **${audio.title}**`);
+      this.send(`🎶 В очереди: **${audio.title}**`);
       if(!this.playing) {
         this.next();
       }
@@ -56,14 +93,14 @@ class Queue {
   pushStream(url) {
     let audio = new Stream(url);
     this.array.push(audio);
-    this.textChannel.sendMessage(`🎶 В очереди: **${audio.title}**`);
+    this.send(`🎶 В очереди: **${audio.title}**`);
     if(!this.playing) {
       this.next();
     }
   }
   next() {
     this.playing = this.array.shift();
-    this.textChannel.sendMessage(`🎶 Сейчас играет: **${this.playing.title}**`);
+    this.send(`🎶 Сейчас играет: **${this.playing.title}**`);
     let readStream = null;
     if(this.playing instanceof Stream) {
       readStream = request(this.playing.url);
@@ -72,7 +109,7 @@ class Queue {
     }
     this.dispatcher = this.connection.playStream(readStream,{vol: this.vol/100});
     this.dispatcher.on('end', () => {
-      this.textChannel.sendMessage(`🎶 Завершено: **${this.playing.title}**`);
+      this.send(`🎶 Завершено: **${this.playing.title}**`);
       if(this.playing instanceof Audio) fs.unlinkSync(this.playing.path);
       this.playing = null;
       this.dispatcher = null;
@@ -96,6 +133,7 @@ class Queue {
   }
   setTextChannel(channel) {
     this.textChannel = channel;
+    this.mq = new MessageQueue(channel);
   }
   setVol(num) {
     this.vol = Math.min(Math.max(num, 0), 100);
@@ -107,7 +145,7 @@ class Queue {
   }
   list() {
     if(!this.array[0]) {
-      this.textChannel.sendMessage('Очередь пуста.');
+      this.send('Очередь пуста.');
       return;
     }
     let msg = 'В очереди: \n';
@@ -127,6 +165,9 @@ class Queue {
       return;
     }
     this.array.splice(num,1);
+  }
+  send(str) {
+    this.mq.put(str);
   }
   leave() {
     if(!this.connection) return;
