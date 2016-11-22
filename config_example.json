@@ -1,7 +1,7 @@
 {
     "token": "",
     "ownerid": "",
-    "googlekey": "",
-    "customsearchid": "",
+    "googlekey": "", 
+    "googlecsid": "",
     "prefix": "+"
 }

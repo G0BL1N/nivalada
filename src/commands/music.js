@@ -47,6 +47,34 @@ module.exports = {
     },
     {
       prefix: prefix,
+      variants: ['addplaylist','addp', 'qp'],
+      description: 'Ищет плейлист на Youtube и добавляет в очередь, допустимы' +
+      ' ссылки на Youtube или название.',
+      usage: prefix + 'q dubstep',
+      action(message) {
+          let queue = Queues.get(message.guild.id);
+          queue.setTextChannel(message.channel);
+          if(!queue.connection) {
+            if(message.member.voiceChannel) {
+              queue.move(message.member.voiceChannel)
+              .then(() => {
+                let content = message.content;
+                let query = content.substr(content.indexOf(' ')+1);
+                queue.pushPlaylist(query);
+              });
+              return;
+            } else {
+              //do warning
+              return;
+            }
+          }
+          let content = message.content;
+          let query = content.substr(content.indexOf(' ')+1);
+          queue.pushPlaylist(query);
+      }
+    },
+    {
+      prefix: prefix,
       variants: ['addstream', 'qs'],
       description: 'Добавляет аудиострим в очередь.',
       usage: prefix + 'qs http://examplesiteitsnotreal.com/stream',
@@ -116,7 +144,7 @@ module.exports = {
       action(message) {
         let content = message.content;
         let num = parseInt(content.substr(content.indexOf(' ')+1));
-        Queues.get(message.guild.id).remove(num ? num + 1 : null);
+        Queues.get(message.guild.id).remove(num ? num - 1 : null);
       }
     },
     {

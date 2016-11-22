@@ -34,7 +34,7 @@ module.exports = {
           let query = content.substr(content.indexOf(' ')+1);
           query = querystring.escape(query);
           let url = 'https://www.googleapis.com/customsearch/v1' +
-          `?key=${config.googlekey}&cx=${config.customsearchid}&q=${query}`;
+          `?key=${config.googlekey}&cx=${config.googlecsid}&q=${query}`;
           request(url, (error, response, body) => {
             let parsed = JSON.parse(body);
             if (!error && response.statusCode == 200

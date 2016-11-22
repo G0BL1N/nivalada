@@ -3,53 +3,6 @@ const fs = require('fs');
 const request = require('request');
 
 
-class Audio {
-  constructor(info) {
-    this.title = info.snippet.title;
-    this.path = './cache/' + info.id.videoId;;
-  }
-}
-class Stream {
-  constructor(url) {
-    this.title = url;
-    this.url = url;
-  }
-}
-class MessageQueue {
-  constructor(channel) {
-    this.channel = channel;
-    this.pending = null;
-    this.strArray = [];
-    this.lastMessage = null;
-  }
-  put(str) {
-    if(this.pending == null) {
-      this.send(str);
-      return;
-    }
-    this.strArray.push(str);
-  }
-  resolver(result) {
-    this.lastMessage = result;
-    let shifted = this.strArray.shift();
-    if(!shifted) {
-      this.pending = null;
-      return;
-    }
-    this.send(shifted);
-  }
-  send(str) {
-    if(this.lastMessage != null && this.lastMessage.id == this.channel.lastMessageID) {
-      this.pending = this.lastMessage.edit(str)
-      .then(result => this.resolver(result))
-      .catch(console.error);
-      return;
-    }
-    this.pending = this.channel.sendMessage(str)
-    .then(result => this.resolver(result))
-    .catch(console.error);
-  }
-}
 class Queues {
   constructor(Client) {
     this.container = {};
@@ -77,18 +30,39 @@ class Queue {
   }
   push(query) {
     this.send('Кэширую...');
-    youtube.cache(query)
+    youtube.search(query, {type : 'video'})
     .then((result) => {
-      let audio = new Audio(result);
-      this.array.push(audio);
-      this.send(`🎶 В очереди: **${audio.title}**`);
-      if(!this.playing) {
-        this.next();
-      }
+      youtube.cache(result.id.videoId)
+      .then(() => {
+        let audio = new Audio(result, false);
+        this.array.push(audio);
+        this.send(`🎶 В очереди: **${audio.title}**`);
+        if(!this.playing) this.next();
+      });
     })
-    .catch((err) => {
-      //do something
+    .catch(console.error);
+  }
+  pushPlaylist(query) {
+    let realthis = this;
+    this.send('Кэширую...');
+    youtube.search(query, {type : 'playlist'})
+    .then((result) => {
+      youtube.cachePlaylist(result.id.playlistId)
+      .then((cp_results) => nextPromise(cp_results));
     });
+    function nextPromise(array) {
+      let shifted = array.shift();
+      if(!shifted) {
+        realthis.send('Плейлист полностью кэширован и добавлен в очередь.')
+        return;
+      }
+      shifted.promise.then(() => {
+        let audio = new Audio(shifted.info, true);
+        realthis.array.push(audio);
+        if(!realthis.playing) realthis.next();
+        nextPromise(array);
+      })
+    }
   }
   pushStream(url) {
     let audio = new Stream(url);
@@ -149,6 +123,7 @@ class Queue {
       return;
     }
     let msg = 'В очереди: \n';
+    let num = 0;
     for(let audio of this.array) {
       msg = msg + `${++num}. **${audio.title}**\n`;
     }
@@ -164,7 +139,8 @@ class Queue {
       //message
       return;
     }
-    this.array.splice(num,1);
+    let removed = this.array.splice(num, 1);
+    if(removed instanceof Audio) fs.unlinkSync(removed.path);
   }
   send(str) {
     this.mq.put(str);
@@ -175,6 +151,57 @@ class Queue {
     if(this.playing) this.skip();
     this.connection.channel.leave();
     this.connection = null;
+  }
+}
+class Audio {
+  constructor(info, isPlaylistInfo) {
+    this.title = info.snippet.title;
+    if(isPlaylistInfo) {
+      this.path = './cache/' + info.snippet.resourceId.videoId;
+      return;
+    }
+    this.path = './cache/' + info.id.videoId;
+  }
+}
+class Stream {
+  constructor(url) {
+    this.title = url;
+    this.url = url;
+  }
+}
+class MessageQueue {
+  constructor(channel) {
+    this.channel = channel;
+    this.pending = null;
+    this.strArray = [];
+    this.lastMessage = null;
+  }
+  put(str) {
+    if(this.pending == null) {
+      this.send(str);
+      return;
+    }
+    this.strArray.push(str);
+  }
+  resolver(result) {
+    this.lastMessage = result;
+    let shifted = this.strArray.shift();
+    if(!shifted) {
+      this.pending = null;
+      return;
+    }
+    this.send(shifted);
+  }
+  send(str) {
+    if(this.lastMessage != null && this.lastMessage.id == this.channel.lastMessageID) {
+      this.pending = this.lastMessage.edit(str)
+      .then(result => this.resolver(result))
+      .catch(console.error);
+      return;
+    }
+    this.pending = this.channel.sendMessage(str)
+    .then(result => this.resolver(result))
+    .catch(console.error);
   }
 }
 
