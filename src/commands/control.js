@@ -29,5 +29,15 @@ module.exports = {
         });
       }
     },
+    {
+      prefix: prefix,
+      variants: ['stop', 'reboot'],
+      description: 'Выключает бота. Если был запущен через forever то будет перезагружен.',
+      usage: prefix + 'stop',
+      permissions: ['TRUSTED'],
+      action(message) {
+        process.exit();
+      }
+    },
   ],
 }

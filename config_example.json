@@ -1,7 +1,8 @@
 {
     "token": "",
     "ownerid": "",
-    "googlekey": "", 
+    "trustedids": [""],
+    "googlekey": "",
     "googlecsid": "",
     "prefix": "+"
 }
