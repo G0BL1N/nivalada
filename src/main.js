@@ -1,29 +1,28 @@
 const Discord = require('discord.js');
-const Config = require('../config.json');
-const Queues = require('./queues.js');
-const checkPermissions = require('./permissionchecker.js');
-const Client = new Discord.Client();
-module.exports.Client = Client;
+const config = require('../config.json');
+const voiceHandler = require('./voiceHandler.js');
+const commandHandler = require('./commandHandler.js');
+const logger = require('./logger');
 
-var initiated = false;
-var handler = null;
+const Client = new Discord.Client();
+
+module.exports = Client;
+
+var ready = false;
 
 Client.on('ready', () => {
-  console.log('Client ready.');
-  if(initiated) return;
-  module.exports.Queues = new Queues(Client);
-  console.log('Queues initialized.');
-  handler = require('./command_handler.js');
-  console.log('Command handler initialized.');
-  initiated = true;
+  if(ready) return;
+  voiceHandler.init(Client);
+  commandHandler.init();
+  ready = true;
 });
 
 Client.on('message', (message) => {
   if(message.author.bot) return;
-  let command = handler.findCommandPrefix(message.content);
+  let command = commandHandler.findCommandPrefix(message.content);
   if(!command) return;
-  if(!checkPermissions(message, command)) {
-    message.channel.sendMessage(':warning: У вас недостаточно прав для' +
+  if(!commandHandler.checkPermissions(message, command)) {
+    message.channel.sendMessage(':warning: У вас недостаточно прав для ' +
     'использования этой команды.');
     return;
   }
@@ -33,10 +32,10 @@ Client.on('message', (message) => {
   return;
 });
 
-Client.login(Config.token)
-  .then(result => console.log('Logged in successfully.'))
+Client.login(config.token)
+  .then(result => logger.log('Logged in successfully.'))
   .catch((error) => {
-    console.error('Cannot log in, error:\n' + error);
+    logger.error('Cannot log in, error:\n' + error);
     process.exit(0);
 });
 

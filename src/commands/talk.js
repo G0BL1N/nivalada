@@ -1,5 +1,5 @@
 const config = require('../../config.json');
-const Client = require('../main.js').Client;
+const Client = require('../main.js');
 const prefix = config.prefix;
 
 module.exports = {

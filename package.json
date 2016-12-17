@@ -5,10 +5,7 @@
   "main": "build/main.js",
   "scripts": {
     "test": "echo \"No tests.\" && exit 1",
-    "build": "babel src -d build",
-    "start": "npm run build && node build/main.js",
-    "foreverstart": "npm run build && forever start build/main.js -w --watchIgnore cache",
-    "foreverstop": "forever stop build/main.js"
+    "start": "node --harmony src/main.js",
   },
   "repository": {
     "type": "git",
@@ -27,11 +24,10 @@
   "homepage": "https://github.com/G0BL1N/GBot#readme",
   "dependencies": {
     "discord.js": "github:hydrabolt/discord.js#indev",
+    "moment": "^2.17.1",
+    "moment-duration-format": "^1.3.0",
     "request": "^2.78.0",
-    "ytdl-core": "^0.7.18"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.14.0",
-    "babel-preset-es2015": "^6.14.0"
+    "request-promise-native": "^1.0.3",
+    "youtube-dl": "^1.11.1"
   }
 }

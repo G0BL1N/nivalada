@@ -1,9 +1,6 @@
 const config = require('../../config.json');
-const main = require('../main.js');
-const Client = main.Client;
-const Queues = main.Queues;
+const Client = require('../main.js');
 const prefix = config.prefix;
-
 module.exports = {
   name: 'useful',
   commands: [
@@ -34,7 +31,6 @@ module.exports = {
           'Перспективы не очень хорошие.',
           'Весьма сомнительно.',
         ];
-        let content = message.content;
         let answer = answers[Math.round(Math.random() * answers.length)];
         message.channel.sendMessage(`:8ball: ${answer}`);
       }

@@ -2,8 +2,8 @@ const request = require('request');
 const querystring = require('querystring');
 
 const config = require('../../config.json');
-const Client = require('../main.js').Client;
-const youtube = require('../youtube.js');
+const Client = require('../main.js');
+//const youtube = require('../youtube.js');
 const prefix = config.prefix;
 
 module.exports = {

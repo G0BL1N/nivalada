@@ -1,7 +1,7 @@
 const config = require('../../config.json');
-const main = require('../main.js');
-const Client = main.Client;
-const Queues = main.Queues;
+const Client = require('../main.js');
+const voiceHandler = require('../voiceHandler.js');
+const audioHandler = require('../audioHandler.js');
 const prefix = config.prefix;
 
 module.exports = {
@@ -13,8 +13,8 @@ module.exports = {
       description: 'Перемещает бота на ваш голосовой канал.',
       usage: prefix+'mv',
       action(message) {
-        if(!message.member.voiceChannel) return;
-        Queues.get(message.guild.id).move(message.member.voiceChannel);
+        let id = message.guild.id;
+        voiceHandler[id].move(message.member.voiceChannel);
       }
     },
     {
@@ -24,80 +24,12 @@ module.exports = {
       ' ссылки на Youtube или название.',
       usage: prefix + 'q rickroll',
       action(message) {
-          let queue = Queues.get(message.guild.id);
-          queue.setTextChannel(message.channel);
-          if(!queue.connection) {
-            if(message.member.voiceChannel) {
-              queue.move(message.member.voiceChannel)
-              .then(() => {
-                let content = message.content;
-                let query = content.substr(content.indexOf(' ')+1);
-                queue.push(query);
-              });
-              return;
-            } else {
-              //do warning
-              return;
-            }
-          }
-          let content = message.content;
-          let query = content.substr(content.indexOf(' ')+1);
-          queue.push(query);
-      }
-    },
-    {
-      prefix: prefix,
-      variants: ['addplaylist','addp', 'qp'],
-      description: 'Ищет плейлист на Youtube и добавляет в очередь, допустимы' +
-      ' ссылки на Youtube или название.',
-      usage: prefix + 'q dubstep',
-      action(message) {
-          let queue = Queues.get(message.guild.id);
-          queue.setTextChannel(message.channel);
-          if(!queue.connection) {
-            if(message.member.voiceChannel) {
-              queue.move(message.member.voiceChannel)
-              .then(() => {
-                let content = message.content;
-                let query = content.substr(content.indexOf(' ')+1);
-                queue.pushPlaylist(query);
-              });
-              return;
-            } else {
-              //do warning
-              return;
-            }
-          }
-          let content = message.content;
-          let query = content.substr(content.indexOf(' ')+1);
-          queue.pushPlaylist(query);
-      }
-    },
-    {
-      prefix: prefix,
-      variants: ['addstream', 'qs'],
-      description: 'Добавляет аудиострим в очередь.',
-      usage: prefix + 'qs http://examplesiteitsnotreal.com/stream',
-      action(message) {
-          let queue = Queues.get(message.guild.id);
-          queue.setTextChannel(message.channel);
-          if(!queue.connection) {
-            if(message.member.voiceChannel) {
-              queue.move(message.member.voiceChannel)
-              .then(() => {
-                let content = message.content;
-                let query = content.substr(content.indexOf(' ')+1);
-                queue.pushStream(query);
-              });
-              return;
-            } else {
-              //do warning
-              return;
-            }
-          }
-          let content = message.content;
-          let query = content.substr(content.indexOf(' ')+1);
-          queue.pushStream(query);
+        let content = message.content;
+        let query = content.substr(content.indexOf(' ')+1);
+        let queue = voiceHandler[message.guild.id];
+        queue.setTextChannel(message.channel);
+        queue.connect(message.member)
+        .then(() => queue.add(query, message.author));
       }
     },
     {
@@ -108,9 +40,8 @@ module.exports = {
       action(message) {
         let content = message.content;
         let vol = content.substr(content.indexOf(' ')+1);
-        let queue = Queues.get(message.guild.id);
-        queue.setTextChannel(message.channel);
-        queue.setVol(vol);
+        let queue = voiceHandler[message.guild.id];
+        queue.setVolume(vol);
       }
     },
     {
@@ -119,20 +50,9 @@ module.exports = {
       description: 'Бот пропускает текущий трек.',
       usage: prefix+'skip',
       action(message) {
-        let queue = Queues.get(message.guild.id);
+        let queue = voiceHandler[message.guild.id];
         queue.setTextChannel(message.channel);
         queue.skip();
-      }
-    },
-    {
-      prefix: prefix,
-      variants: ['ls', 'list'],
-      description: 'Бот выдёт список треков в очереди.',
-      usage: prefix+'list',
-      action(message) {
-        let queue = Queues.get(message.guild.id);
-        queue.setTextChannel(message.channel);
-        queue.list();
       }
     },
     {
@@ -144,7 +64,8 @@ module.exports = {
       action(message) {
         let content = message.content;
         let num = parseInt(content.substr(content.indexOf(' ')+1));
-        Queues.get(message.guild.id).remove(num ? num - 1 : null);
+        let queue = voiceHandler[message.guild.id];
+        queue.remove(num ? num - 1 : null);
       }
     },
     {
@@ -153,7 +74,8 @@ module.exports = {
       description: 'Бот покидает голосовй канал и очищает очередь.',
       usage: prefix+'leave',
       action(message) {
-        Queues.get(message.guild.id).leave();
+        let queue = voiceHandler[message.guild.id];
+        queue.leave();
       }
     },
   ],

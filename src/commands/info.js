@@ -1,6 +1,6 @@
 const config = require('../../config.json');
-const Client = require('../main.js').Client;
-const handler = require('../command_handler.js');
+const Client = require('../main.js');
+const handler = require('../commandHandler.js');
 const prefix = config.prefix;
 
 module.exports = {
