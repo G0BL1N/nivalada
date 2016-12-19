@@ -1,17 +1,15 @@
 const querystring = require('querystring');
-const fs          = require('fs');
-const request     = require('request-promise-native');
-const youtubedl   = require('youtube-dl');
-const gkey        = require('../config.json').googlekey;
-const moment      = require('moment');
-                    require("moment-duration-format");
-
+const fs = require('fs');
+const request = require('request-promise-native');
+const youtubedl = require('youtube-dl');
+const {googlekey: gkey} = require('../config.json');
+const Discord = require('discord.js');
 
 
 module.exports = {
   handle,
-  ytSearch,
-  cache,
+  handleStream,
+  ytSearch
 }
 
 function handle(query, author) {
@@ -31,6 +29,13 @@ function handle(query, author) {
     return cache('https://www.youtube.com/watch?v=' + id, author);
   });
 }
+function handleStream(url, author) {
+  return new Audio({
+    type: 'stream',
+    url: url,
+    author: author
+  });
+}
 
 function cache(url, author) {
   let [, filename] = /\W(\w+)$/i.exec(url);
@@ -45,15 +50,11 @@ function cache(url, author) {
       let audio = new Audio({
         type: 'file',
         filename: filename,
-        title: data.title,
-        duration: data.duration,
+        data: data,
         author: author
       });
       resolve(audio);
     });
-
-
-
     video.on('error', (err) => reject(err));
   })
 }
@@ -80,23 +81,41 @@ function attachOptions(url, options) {
 }
 
 class Audio {
-  constructor({type, filename, url, title, duration, author}) {
+  constructor({type, filename, url, data, author}) {
     if(type === 'file') {
       this.type = 'file';
       this.path = './cache/' + filename;
-      this.title = title;
 
-      let splitted = duration.split(':');
-      splitted.reverse();
-      let [s, m, h, d] = splitted;
-      this.duration = moment.duration({s, m, h, d});
+      let authorname = `${author.username}#${author.discriminator}`;
+      this.title = data.title ? data.title : 'Unnamed';
+      if(data.duration) {
+        let duration = data.duration.split(':').reverse();
+        let sec = duration[0];
+        duration[0] = sec.length === 1 ? '0' + sec : sec;
+        duration[1] = duration[1] ? duration[1] : '0';
+        duration = duration.reverse().join(':');
+        this.title += ` (${duration})`;
+      }
+      this.embed = new Discord.RichEmbed()
+        .setColor('#5DADEC') //blue color, same as :notes:
+        .setAuthor(authorname, author.avatarURL)
+        .setTitle(this.title)
+        .setFooter('Сейчас играет');
+      if(data.thumbnail)
+        this.embed.setThumbnail(data.thumbnail);
+
     }
     else if(type === 'stream') {
       this.type = 'stream';
       this.url = url;
       this.title = url;
+      let authorname = `${author.username}#${author.discriminator}`;
+      this.embed = new Discord.RichEmbed()
+        .setColor('#226699') //dark blue
+        .setAuthor(authorname, author.avatarURL)
+        .setTitle(this.title)
+        .setFooter('Сейчас играет');
     }
-    this.author = author;
   }
   getStream() {
     if(this.type === 'file') {
@@ -105,11 +124,6 @@ class Audio {
     if(this.type === 'stream') {
       return request(this.url);
     }
-  }
-  toString() {
-    let dur = (this.type == 'file') ? this.duration.format('d:h:m:ss') : '∞';
-    let author = this.author.username+'#'+this.author.discriminator;
-    return `**${this.title}** (${dur}), добавлено ${author}`;
   }
   destroy() {
     if(this.type !== 'file') return;

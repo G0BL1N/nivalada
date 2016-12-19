@@ -34,14 +34,27 @@ module.exports = {
     },
     {
       prefix: prefix,
+      variants: ['addstream', 'qs'],
+      description: 'Добавляет аудиострим в очередь.',
+      usage: prefix + 'qs http://examplesiteitsnotreal.com/stream',
+      action(message) {
+        let content = message.content;
+        let query = content.substr(content.indexOf(' ')+1);
+        let queue = voiceHandler[message.guild.id];
+        queue.setTextChannel(message.channel);
+        queue.connect(message.member)
+        .then(() => queue.addStream(query, message.author));
+      }
+    },
+    {
+      prefix: prefix,
       variants: ['vol', 'v'],
       description: 'Устанавливает громкость музыки для этого сервера.',
       usage: prefix+'v 45',
       action(message) {
         let content = message.content;
         let vol = content.substr(content.indexOf(' ')+1);
-        let queue = voiceHandler[message.guild.id];
-        queue.setVolume(vol);
+        voiceHandler[message.guild.id].setVolume(vol);
       }
     },
     {
@@ -64,18 +77,37 @@ module.exports = {
       action(message) {
         let content = message.content;
         let num = parseInt(content.substr(content.indexOf(' ')+1));
-        let queue = voiceHandler[message.guild.id];
-        queue.remove(num ? num - 1 : null);
+        voiceHandler[message.guild.id].remove(num ? num - 1 : null);
+        message.channel.sendMessage(':white_check_mark: Очередь очищена.');
       }
     },
     {
       prefix: prefix,
       variants: ['lv', 'leave'],
-      description: 'Бот покидает голосовй канал и очищает очередь.',
+      description: 'Бот покидает голосовой канал и очищает очередь.',
       usage: prefix+'leave',
       action(message) {
-        let queue = voiceHandler[message.guild.id];
-        queue.leave();
+        voiceHandler[message.guild.id].leave();
+      }
+    },
+    {
+      prefix: prefix,
+      variants: ['ls', 'list'],
+      description: 'Список треков в очереди.',
+      usage: prefix+'list',
+      action(message) {
+        voiceHandler[message.guild.id].list();
+      }
+    },
+    {
+      prefix: prefix,
+      variants: ['shuffle', 'shu'],
+      description: 'Перемешивает очередь.',
+      usage: prefix+'shu',
+      action(message) {
+        voiceHandler[message.guild.id].shuffle();
+        let channel = message.channel;
+        channel.sendMessage(':twisted_rightwards_arrows: Очередь перемешана.');
       }
     },
   ],

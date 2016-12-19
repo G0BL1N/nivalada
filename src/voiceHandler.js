@@ -21,24 +21,25 @@ module.exports.add = function (guild) {
 }
 
 
-
 class Queue {
 
   constructor() {
     this.array = [];
     this.connection = null;
+    this.pendingConnetion = null;
     this.nowPlaying = null;
     this.dispatcher = null;
     this.currentDispatcher = null;
-    this.textChannel = null;
     this.volume = 100;
+    this.textChannel = null;
   }
   move(channel) {
     return channel.join().then((connection) => this.connection = connection)
     .catch(logger.error);
   }
   connect(member) {
-    if(this.connection) return Promise.resolve(this.connection);
+    if(this.connection || this.pendingConnetion)
+      return Promise.resolve(this.connection);
     if(!member.voiceChannel) {
       //warning message
       return Promise.reject();
@@ -46,17 +47,30 @@ class Queue {
     return this.move(member.voiceChannel);
   }
   add(query, author) {
-    //message about caching
     audioHandler.handle(query, author)
-    .then((result) => {
-      this.array.push(result);
-      this.play();
-    });
+      .then((result) => {
+        this.textChannel.sendMessage(
+          `:white_check_mark: **Добавлено: ${result.title}**`);
+        this.array.push(result);
+        this.play();
+      })
+      .catch((error) => {
+        if(error.message === 'Not found')
+          this.textChannel.sendMessage(':x: Не найдено.');
+        else throw error;
+      });
+  }
+  addStream(url, author) {
+    let result = audioHandler.handleStream(url, author)
+    this.textChannel.sendMessage(
+        `:white_check_mark: **Добавлено: ${result.title}**`);
+    this.array.push(result);
+    this.play();
   }
   play() {
     if(!this.array[0] || this.nowPlaying) return;
     this.nowPlaying = this.array.shift();
-    this.message('🎶 Сейчас играет: ' + this.nowPlaying);
+    this.textChannel.sendEmbed(this.nowPlaying.embed, '');
     let stream = this.nowPlaying.getStream();
     let streamOptions = {volume: this.volume/100};
     this.dispatcher = this.connection.playStream(stream, streamOptions);
@@ -76,24 +90,55 @@ class Queue {
   }
   setVolume(num) {
     this.volume = Math.min(Math.max(num, 0), 100);
-    this.textChannel.sendMessage(`🔊 Громкость: ${this.vol}%`);
+    this.textChannel.sendMessage(`:loud_sound: Громкость: ${this.vol}%`);
     if(this.nowPlaying) this.dispatcher.setVolume(this.volume/100);
   }
   remove(num) {
     if(num === undefined) {
+      for(const a of this.array)
+        a.destroy();
       this.array = [];
-      this.message(':white_check_mark: Список очищен.');
       return;
     }
+    num = num - 1;
     num = Math.min(Math.max(num, 0), this.array.length -1);
     let removed = this.array.splice(num, 1);
     removed.destroy();
   }
-  message(str) {
-    this.textChannel.sendMessage(str);
+  list() {
+    if(!this.nowPlaying) {
+      this.textChannel.sendMessage('Очередь пуста.');
+      return;
+    }
+    let message = `:notes: Сейчас играет: ${this.nowPlaying}\n`;
+    if(this.array[0]) {
+      message += ':arrow_forward: В очереди:\n'
+      for(const key in this.array) {
+        if(message.length > 1900) {
+          message += '**...**';
+          break;
+        }
+        message += `**${parseInt(key)+1}.** ${this.array[key]}\n`;
+      }
+    } else {
+      message += 'Очередь пуста.'
+    }
+    this.textChannel.sendMessage(message);
+  }
+  shuffle() {
+    if(this.array.length < 2) return;
+    let array = this.array;
+    let i = array.length;
+    while (--i) {
+       let j = Math.floor(Math.random() * (i + 1));
+       [array[i], array[j]] = [array[j], array[i]];
+    }
   }
   leave() {
     if(!this.connection) return;
-
+    this.remove();
+    if(this.nowPlaying) this.skip();
+    this.connection.channel.leave();
+    this.connection = null;
   }
 }
