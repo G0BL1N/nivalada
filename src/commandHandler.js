@@ -59,7 +59,7 @@ function buildCommandRegExp(command, clientid) {
 
   let variantsString = command.variants.map(escapeString).join('|');
 
-  return new RegExp(`${prefix}(${variantsString})(?:\\s*|$)(.*)`, 'i');
+  return new RegExp(`${prefix}(${variantsString})(?:\\s|$)(.*)`, 'i');
 
   function escapeString(str) {
     return str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');

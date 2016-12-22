@@ -95,7 +95,7 @@ class Queue {
     num = parseInt(num);
     if(!num) return;
     this.volume = Math.min(Math.max(num, 0), 100);
-    this.textChannel.sendMessage(`:loud_sound: Громкость: ${this.vol}%`);
+    this.textChannel.sendMessage(`:loud_sound: Громкость: ${this.volume}%`);
     if(this.nowPlaying) this.dispatcher.setVolume(this.volume/100);
   }
   removeAll() {
@@ -139,7 +139,7 @@ class Queue {
   }
   leave() {
     if(!this.connection) return;
-    this.remove();
+    this.removeAll();
     if(this.nowPlaying) this.skip();
     this.connection.channel.leave();
     this.connection = null;

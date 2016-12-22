@@ -85,11 +85,11 @@ class Audio {
     if(type === 'file') {
       this.type = 'file';
       this.path = './cache/' + filename;
-
-      let authorname = `${author.username}#${author.discriminator}`;
       this.title = data.title ? data.title : 'Unnamed';
+      let authorname = `${author.username}#${author.discriminator}`;
+      let duration;
       if(data.duration) {
-        let duration = data.duration.split(':').reverse();
+        duration = data.duration.split(':').reverse();
         let sec = duration[0];
         duration[0] = sec.length === 1 ? '0' + sec : sec;
         duration[1] = duration[1] ? duration[1] : '0';
@@ -103,12 +103,15 @@ class Audio {
         .setFooter('Сейчас играет');
       if(data.thumbnail)
         this.embed.setThumbnail(data.thumbnail);
+      this.duration = duration;
+      this.authorname = authorname;
 
     }
     else if(type === 'stream') {
       this.type = 'stream';
       this.url = url;
       this.title = url;
+      this.authorname = `${author.username}#${author.discriminator}`; 
       let authorname = `${author.username}#${author.discriminator}`;
       this.embed = new RichEmbed()
         .setColor('#226699') //dark blue
@@ -124,6 +127,10 @@ class Audio {
     if(this.type === 'stream') {
       return request(this.url);
     }
+  }
+  toString() {
+    let dur = (this.type == 'file') ? this.duration : '∞';
+    return `**${this.title}** (${dur}), добавлено ${this.authorname}`;
   }
   destroy() {
     if(this.type !== 'file') return;
