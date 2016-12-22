@@ -1,5 +1,5 @@
 const Client = require('../main.js');
-const logger = require('./logger.js');
+const logger = require('../logger.js');
 const request = require('request');
 const fs = require('fs');
 
