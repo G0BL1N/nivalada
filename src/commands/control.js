@@ -1,11 +1,12 @@
-const config = require('../../config.json');
 const Client = require('../main.js');
+const logger = require('./logger.js');
 const request = require('request');
 const fs = require('fs');
-const prefix = config.prefix;
+
+const prefix = Client.config.prefix;
 
 module.exports = {
-  name: 'control',
+  name: ':keyboard: Управление',
   commands: [
     {
       prefix: prefix,
@@ -13,15 +14,13 @@ module.exports = {
       description: 'Устанавливает в качестве нового аватара файл по ссылке.',
       usage: prefix + 'setavatar http://examplesiteitsnotreal.com/avatar.png',
       permissions: ['OWNER'],
-      action(message) {
-
-        let content = message.content;
-        let url = content.substr(content.indexOf(' ')+1);
+      async action(message, args) {
+        let url = args;
 
         request({uri: url, encoding: null}, (error, response, body) => {
           if (!error && response.statusCode == 200) {
             Client.user.setAvatar(body);
-            console.log('New avatar set.');
+            logger.log('New avatar set.');
             message.channel.sendMessage('Новый аватар установлен.');
           } else {
             //do something
@@ -35,7 +34,7 @@ module.exports = {
       description: 'Выключает бота. Если был запущен через forever то будет перезагружен.',
       usage: prefix + 'stop',
       permissions: ['TRUSTED'],
-      action(message) {
+      async action(message, args) {
         process.exit();
       }
     },

@@ -2,34 +2,36 @@ const Discord = require('discord.js');
 const config = require('../config.json');
 const voiceHandler = require('./voiceHandler.js');
 const commandHandler = require('./commandHandler.js');
-const logger = require('./logger');
+const logger = require('./logger.js');
 
 const Client = new Discord.Client();
 
 module.exports = Client;
+module.exports.config = config;
 
-var ready = false;
+let ready = false;
+let id;
 
 Client.on('ready', () => {
   if(ready) return;
   voiceHandler.init(Client);
-  commandHandler.init();
+  commandHandler.init(Client);
+  id = Client.user.id;
   ready = true;
 });
 
 Client.on('message', (message) => {
   if(message.author.bot) return;
-  let command = commandHandler.findCommandPrefix(message.content);
-  if(!command) return;
-  if(!commandHandler.checkPermissions(message, command)) {
-    message.channel.sendMessage(':warning: У вас недостаточно прав для ' +
-    'использования этой команды.');
-    return;
+  let content = message.content;
+  let commands = commandHandler.commands;
+  for(const cmd of commands) {
+    let result = cmd.regexp.exec(content);
+    if(!result) continue;
+    let [, variant, args] = result;
+    cmd.action(message, args, variant);
+    logger.command(message);
+    break;
   }
-  //console.log should be changed
-  console.log(`${message.author.username}(${message.member.nickname || ''}) initiated ${command.variants[0]}`)
-  command.action(message);
-  return;
 });
 
 Client.login(config.token)

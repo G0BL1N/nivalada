@@ -1,66 +1,57 @@
-const config = require('../../config.json');
 const Client = require('../main.js');
-const handler = require('../commandHandler.js');
-const prefix = config.prefix;
+const {RichEmbed} = require('discord.js');
+const moment = require('moment');
+const commandHandler = require('../commandHandler.js');
+
+const prefix = Client.config.prefix;
 
 module.exports = {
-  name: 'info',
+  name: ':information_source: Инфо',
   commands: [
     {
       prefix: prefix,
       variants: ['help', 'h'],
-      description: 'Помощь по категории или команде.' +
-      ` \`Вызовите ${prefix}help categories\` для спика категорий.`,
+      description: 'Список команд или поиск по команде.',
       usage: prefix+'help info',
-      action(message) {
-        let content = message.content;
-        let index = content.indexOf(' ');
-        console.log(index);
-        if(index === -1) {
-          let reply =  `Помощь по команде \`${this.variants[0]}\`:\n` +
-          `**Описание**: ${this.description}\n**Использование**: ${this.usage}` +
-          '\n**Варианты** :';
-          for(let variant of this.variants) {
-            reply = reply + `\`${variant}\`,`;
-          }
-          reply = reply.substr(0, reply.length - 1);
-          message.channel.sendMessage(reply);
+      async action(message, args) {
+        if(!args) {
+          message.channel.sendEmbed(commandHandler.helpEmbed);
           return;
         }
-        let query = content.substr(index + 1);
-        if(query === 'categories') {
-          let reply = '**Категории**: \n';
-          for(let cat of handler.categories) {
-            reply = reply +`• \`${cat.name}\`\n`;
-          }
-          message.channel.sendMessage(reply);
-          return;
-        }
-        let cat = handler.findCategory(query);
-        if(cat) {
-          let reply = `**Команды категории** \`${cat.name}\`:\n`;
-          for(let cmd of cat.commands) {
-            reply = reply +`• \`${cmd.variants[0]}\`\n`;
-          }
-          message.channel.sendMessage(reply);
-          return;
-        }
-        let cmd = handler.findCommand(query) || handler.findCommandPrefix(query);
-        if(cmd) {
-          let reply =  `Помощь по команде \`${cmd.variants[0]}\`:\n` +
-          `**Описание**: ${cmd.description}\n**Использование**: ${cmd.usage}` +
-          '\n**Варианты** :';
-          for(let variant of cmd.variants) {
-            reply = reply + `\`${variant}\`,`;
-          }
-          reply = reply.substr(0, reply.length - 1);
-          message.channel.sendMessage(reply);
-          return;
-        }
-        if(!cmd) {
-          message.channel.sendMessage(':warning: Не найдено.');
-          return;
-        }
+        let cmd = commandHandler.findCommand(args);
+        let reply =  `Помощь по команде \`${cmd.variants[0]}\`:\n` +
+          `**Описание**: ${cmd.description}\n` +
+          `**Использование**: ${cmd.usage}\n` +
+          `**Варианты** : \`${cmd.variants.join('\`, ')}\``;
+        message.channel.sendMessage(reply);
+      }
+    },
+    {
+      prefix: prefix,
+      variants: ['stats'],
+      description: '',
+      usage: prefix+'stats',
+      async action(message, args) {
+
+        let ms = Client.uptime;
+        let days      = Math.floor(ms / (24*60*60*1000));
+        let daysms    = ms % (24*60*60*1000);
+        let hours     = Math.floor((daysms)/(60*60*1000));
+        let hoursms   = ms % (60*60*1000);
+        let minutes   = Math.floor((hoursms)/(60*1000));
+
+        let memory = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
+        let uptime = `\`${days}\` дней, ` +
+          `\`${hours}\` часов, \`${minutes}\` минут`;
+        const embed = new RichEmbed()
+          .setColor('#36d148')
+          .addField('Использование памяти', `${memory} MB`, true)
+          .addField('Онлайн', uptime, true)
+          .addField('\u200b', '\u200b', true)
+          .addField('Сервера', Client.guilds.size, true)
+          .addField('Каналы', Client.channels.size, true)
+          .addField('Пользователи', Client.users.size, true)
+        message.channel.sendEmbed(embed);
       }
     },
     {
@@ -68,7 +59,7 @@ module.exports = {
       variants: ['uptime', 'up', 'аптайм'],
       description: 'Показывает аптайм.',
       usage: prefix+'uptime',
-      action(message) {
+      async action(message, args) {
         let ms = Client.uptime;
         let days      = Math.floor(ms / (24*60*60*1000));
         let daysms    = ms % (24*60*60*1000);
@@ -84,23 +75,12 @@ module.exports = {
     {
       prefix: prefix,
       variants: ['userid', 'uid'],
-      description: 'Выводит id указанных пользователей.',
-      usage: prefix+'userid @Man @Dude @Bot',
-      action(message) {
-        let users = message.mentions.users.array();
-        let reply = '';
-        let bLen = 0;
-        for(let user of users) {
-          let name = user.username;
-          if(name.length > bLen) bLen = name.length;
-        }
-        for(let user of users) {
-          let name = user.username;
-          reply = reply + `**${name}**` +
-          String.fromCharCode(8196).repeat(bLen - name.length) + //spaces
-          ` – <${user.id}>\n`;
-        }
-        message.channel.sendMessage(reply);
+      description: 'Выводит id указанного пользователя.',
+      usage: prefix+'userid @Man',
+      async action(message, args) {
+        if(message.mentions.users.size == 0) return;
+        let user = message.mentions.users.first();
+        message.channel.sendMessage(`\`${user.id}\``);
       }
     },
     {
@@ -108,7 +88,8 @@ module.exports = {
       variants: ['getavatar', 'avatar'],
       description: 'Выводит ссылку на аватар указанного пользователей.',
       usage: prefix+'getavatar @Dude',
-      action(message) {
+      async action(message, args) {
+        if(message.mentions.users.size == 0) return;
         let user = message.mentions.users.first();
         message.channel.sendMessage(user.avatarURL);
       }

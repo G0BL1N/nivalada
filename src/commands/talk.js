@@ -1,26 +1,20 @@
-const config = require('../../config.json');
 const Client = require('../main.js');
-const prefix = config.prefix;
+
+const prefix = Client.config.prefix;
 
 module.exports = {
-  name: 'talk',
+  name: ':lips: Общение',
   commands: [
     {
       prefix: '',
-      variants: ['/o/'],
+      variants: ['/o/', '\\o\\'],
       description: '/o/ \\o\\ /o/ \\o\\',
       usage: '/o/',
-      action(message) {
-        message.channel.sendMessage('\\o\\');
-      }
-    },
-    {
-      prefix: '',
-      variants: ['\\o\\'],
-      description: '\\o\\ /o/ \\o\\ /o/',
-      usage: '\\o\\',
-      action(message) {
-        message.channel.sendMessage('/o/');
+      async action(message, args, variant) {
+        if(variant === '/o/')
+          message.channel.sendMessage('\\o\\');
+        else
+          message.channel.sendMessage('/o/');
       }
     },
   ],

@@ -3,3 +3,5 @@ cache
 node_modules
 config.json
 npm-debug.log
+log.log
+stderr.log

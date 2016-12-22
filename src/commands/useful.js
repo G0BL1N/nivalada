@@ -1,15 +1,16 @@
-const config = require('../../config.json');
 const Client = require('../main.js');
-const prefix = config.prefix;
+
+const prefix = Client.config.prefix;
+
 module.exports = {
-  name: 'useful',
+  name: ':8ball: Полезное',
   commands: [
     {
       prefix: prefix,
       variants: ['8ball','ball','шар'],
       description: 'Шар судьбы, что тут ещё можно сказать?',
       usage: prefix + 'шар Стоит ли покодить?',
-      action(message) {
+      async action(message, args) {
         let answers = [
           'Бесспорно.',
           'Прекалькулировано.',
@@ -31,7 +32,7 @@ module.exports = {
           'Перспективы не очень хорошие.',
           'Весьма сомнительно.',
         ];
-        let answer = answers[Math.round(Math.random() * answers.length)];
+        let answer = answers[Math.floor(Math.random() * answers.length)];
         message.channel.sendMessage(`:8ball: ${answer}`);
       }
     },
@@ -40,12 +41,10 @@ module.exports = {
       variants: ['choose', 'выбери', 'выбор'],
       description: 'Выбирает вариант из предложенных, разделённых `;`.',
       usage: prefix+'выбери спать;смотреть аниме;кодить',
-      action(message) {
-        let content = message.content;
-        let question = content.substr(content.indexOf(' ')+1);
-        let answers = question.split(';');
+      async action(message, args) {
+        let answers = args.split(';');
         let answer = answers[Math.floor(answers.length * Math.random())];
-        message.channel.sendMessage(':heavy_check_mark: ' +
+        message.channel.sendMessage(':white_check_mark: ' +
         `Правильным выбором будет: "**${answer}**".`);
       }
     },

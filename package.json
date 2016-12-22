@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/G0BL1N/GBot#readme",
   "dependencies": {
+    "chalk": "^1.1.3",
     "discord.js": "github:hydrabolt/discord.js#indev",
     "moment": "^2.17.1",
     "moment-duration-format": "^1.3.0",

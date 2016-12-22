@@ -3,7 +3,7 @@ const fs = require('fs');
 const request = require('request-promise-native');
 const youtubedl = require('youtube-dl');
 const {googlekey: gkey} = require('../config.json');
-const Discord = require('discord.js');
+const {RichEmbed} = require('discord.js');
 
 
 module.exports = {
@@ -96,7 +96,7 @@ class Audio {
         duration = duration.reverse().join(':');
         this.title += ` (${duration})`;
       }
-      this.embed = new Discord.RichEmbed()
+      this.embed = new RichEmbed()
         .setColor('#5DADEC') //blue color, same as :notes:
         .setAuthor(authorname, author.avatarURL)
         .setTitle(this.title)
@@ -110,7 +110,7 @@ class Audio {
       this.url = url;
       this.title = url;
       let authorname = `${author.username}#${author.discriminator}`;
-      this.embed = new Discord.RichEmbed()
+      this.embed = new RichEmbed()
         .setColor('#226699') //dark blue
         .setAuthor(authorname, author.avatarURL)
         .setTitle(this.title)
