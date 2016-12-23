@@ -74,16 +74,16 @@ class Queue {
   play() {
     if(!this.array[0] || this.nowPlaying) return;
     this.nowPlaying = this.array.shift();
-    this.textChannel.sendEmbed(this.nowPlaying.embed);
     let stream = this.nowPlaying.getStream();
     let streamOptions = {volume: this.volume/100};
     this.dispatcher = this.connection.playStream(stream, streamOptions);
-
-    let startedPlaying = new Date().getTime();
-    this.dispatcher.on('debug', logger.log);
+    let timeout = setTimeout(() => {
+      this.textChannel.sendEmbed(this.nowPlaying.embed);
+      timeout = null;
+    }, 300);
     this.dispatcher.once('end', () => {
-      let played = new Date().getTime() - startedPlaying;
-      if(played < 500) {
+      if(timeout) {
+        clearTimeout(timeout);
         this.nowPlaying = null;
         this.dispatcher = null;
         this.array.unshift(this.nowPlaying);
