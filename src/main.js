@@ -27,6 +27,12 @@ Client.on('message', (message) => {
   for(const cmd of commands) {
     let result = cmd.regexp.exec(content);
     if(!result) continue;
+    let hasPermissions = commandHandler.checkPermissions(message, cmd);
+    if(!hasPermissions) {
+      message.channel.sendMessage(':warning: У вас недостаточно прав для' +
+      'использования этой команды.');
+      return;
+    }
     let [, variant, args] = result;
     cmd.action(message, args, variant);
     logger.command(message);
