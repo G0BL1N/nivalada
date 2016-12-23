@@ -78,9 +78,18 @@ class Queue {
     let stream = this.nowPlaying.getStream();
     let streamOptions = {volume: this.volume/100};
     this.dispatcher = this.connection.playStream(stream, streamOptions);
+
+    let startedPlaying = new Date().getTime();
     this.dispatcher.on('debug', logger.log);
-    this.dispatcher.on('error', logger.error);
-    this.dispatcher.on('end', () => {
+    this.dispatcher.once('end', () => {
+      let played = new Date().getTime() - startedPlaying;
+      if(played < 500) {
+        this.nowPlaying = null;
+        this.dispatcher = null;
+        this.array.unshift(this.nowPlaying);
+        this.play();
+        return;
+      }
       this.nowPlaying.destroy();
       this.nowPlaying = null;
       this.dispatcher = null;
