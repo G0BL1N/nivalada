@@ -55,12 +55,13 @@ class Queue {
         this.array.push(result);
         this.play();
       })
-      .catch((error) => {
-        if(error.message === 'Not found') {
+      .catch((err) => {
+        if(err.message === 'Not found') {
           pending.then(message => message.edit(':x: Не найдено.'));
           this.textChannel.stopTyping();
         }
-        logger.error(error);
+        logger.error(err);
+        throw err;
       });
   }
   addStream(url, author) {
@@ -73,10 +74,12 @@ class Queue {
   play() {
     if(!this.array[0] || this.nowPlaying) return;
     this.nowPlaying = this.array.shift();
-    this.textChannel.sendEmbed(this.nowPlaying.embed, '');
+    this.textChannel.sendEmbed(this.nowPlaying.embed);
     let stream = this.nowPlaying.getStream();
     let streamOptions = {volume: this.volume/100};
     this.dispatcher = this.connection.playStream(stream, streamOptions);
+    this.dispatcher.on('debug', logger.log);
+    this.dispatcher.on('error', logger.error);
     this.dispatcher.on('end', () => {
       this.nowPlaying.destroy();
       this.nowPlaying = null;

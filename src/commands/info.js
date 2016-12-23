@@ -40,12 +40,13 @@ module.exports = {
         let hoursms   = ms % (60*60*1000);
         let minutes   = Math.floor((hoursms)/(60*1000));
 
-        let memory = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
+        let memory = (process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2);
+        let memoryUsed = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
         let uptime = `\`${days}\` дней, ` +
-          `\`${hours}\` часов, \`${minutes}\` минут`;
+          `\`${hours}\` часов, \`${minutes}\` мин`;
         const embed = new RichEmbed()
           .setColor('#36d148')
-          .addField('Использование памяти', `${memory} MB`, true)
+          .addField('Использование памяти', `${memoryUsed} / ${memory} MB`, true)
           .addField('Онлайн', uptime, true)
           .addField('\u200b', '\u200b', true)
           .addField('Сервера', Client.guilds.size, true)

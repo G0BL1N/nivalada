@@ -19,11 +19,10 @@ function handle(query, author) {
     .then((result, err) => {
       if(err)
         throw err;
-
       return result;
     });
   }
-  return ytSearch(query)
+  return ytSearch(query, {type: 'video'})
   .then((result) => {
     let id = result.id.videoId;
     return cache('https://www.youtube.com/watch?v=' + id, author);
@@ -86,10 +85,9 @@ class Audio {
       this.type = 'file';
       this.path = './cache/' + filename;
       this.title = data.title ? data.title : 'Unnamed';
-      let authorname = `${author.username}#${author.discriminator}`;
-      let duration;
+      this.authorname = `${author.username}#${author.discriminator}`;
       if(data.duration) {
-        duration = data.duration.split(':').reverse();
+        let duration = data.duration.split(':').reverse();
         let sec = duration[0];
         duration[0] = sec.length === 1 ? '0' + sec : sec;
         duration[1] = duration[1] ? duration[1] : '0';
@@ -98,20 +96,18 @@ class Audio {
       }
       this.embed = new RichEmbed()
         .setColor('#5DADEC') //blue color, same as :notes:
-        .setAuthor(authorname, author.avatarURL)
+        .setAuthor(this.authorname, author.avatarURL)
         .setTitle(this.title)
         .setFooter('Сейчас играет');
       if(data.thumbnail)
         this.embed.setThumbnail(data.thumbnail);
-      this.duration = duration;
-      this.authorname = authorname;
 
     }
     else if(type === 'stream') {
       this.type = 'stream';
       this.url = url;
-      this.title = url;
-      this.authorname = `${author.username}#${author.discriminator}`; 
+      this.title = url + ' (∞)';
+      this.authorname = `${author.username}#${author.discriminator}`;
       let authorname = `${author.username}#${author.discriminator}`;
       this.embed = new RichEmbed()
         .setColor('#226699') //dark blue
@@ -129,8 +125,7 @@ class Audio {
     }
   }
   toString() {
-    let dur = (this.type == 'file') ? this.duration : '∞';
-    return `**${this.title}** (${dur}), добавлено ${this.authorname}`;
+    return `**${this.title}**, добавлено ${this.authorname}`;
   }
   destroy() {
     if(this.type !== 'file') return;
