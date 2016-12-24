@@ -8,14 +8,14 @@ const errorOutput = fs.createWriteStream('./stderr.log', {flags: 'a'});
 fileConsole = new Console(output, errorOutput);
 
 module.exports.log = function(...info) {
-  let m = `[${moment().format()}]`;
+  let m = '[' + moment().format('YYYY-MM-DD/kk:mm') + ']';
   let str = `${chalk.bgGreen(m)} ${chalk.grey(info)}`;
   console.log(str);
   fileConsole.log(str);
 }
 
 module.exports.command = function(message) {
-  let m = `[${moment().format()}]`;
+  let m = '[' + moment().format('YYYY-MM-DD/kk:mm') + ']';
   let name =  message.member.displayName;
   let disc = message.author.discriminator;
   let id = message.author.id;
@@ -28,7 +28,7 @@ module.exports.command = function(message) {
 }
 
 module.exports.error = function(err) {
-  let m = `[${moment().format()}]`;
+  let m = '[' + moment().format('YYYY-MM-DD/kk:mm') + ']';
   let str = `${chalk.red(m)} ${err}`;
   console.log(str);
   fileConsole.error(str);

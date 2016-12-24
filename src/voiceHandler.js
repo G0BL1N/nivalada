@@ -45,20 +45,23 @@ class Queue {
     return this.move(member.voiceChannel);
   }
   add(query, author) {
-    this.textChannel.startTyping();
-    let pending = this.textChannel.sendMessage('Кеширую...');
+    let pending = this.textChannel.sendMessage('Кеширую...')
+      .then((message) => {
+        this.textChannel.startTyping();
+        return message;
+      })
     audioHandler.handle(query, author)
       .then((result) => {
+        this.textChannel.stopTyping();
         let str = `:white_check_mark: Добавлено: **${result.title}**`;
         pending.then(message => message.edit(str));
-        this.textChannel.stopTyping();
         this.array.push(result);
         this.play();
       })
       .catch((err) => {
         if(err.message === 'Not found') {
-          pending.then(message => message.edit(':x: Не найдено.'));
           this.textChannel.stopTyping();
+          pending.then(message => message.edit(':x: Не найдено.'));
         }
         logger.error(err);
         throw err;

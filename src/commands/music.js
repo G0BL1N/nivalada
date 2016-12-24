@@ -1,7 +1,5 @@
-const Client = require('../main.js');
 const voiceHandler = require('../voiceHandler.js');
-
-const prefix = Client.config.prefix;
+const {prefix} = require('../../config.json');
 
 module.exports = {
   name: ':notes: Музыка',
@@ -11,7 +9,7 @@ module.exports = {
       variants: ['mv', 'move'],
       description: 'Перемещает бота на ваш голосовой канал.',
       usage: prefix+'mv',
-      async action(message, args) {
+      async action(message) {
         let id = message.guild.id;
         voiceHandler[id].move(message.member.voiceChannel);
       }
@@ -59,7 +57,7 @@ module.exports = {
       variants: ['skip', 'next', 's', 'n'],
       description: 'Бот пропускает текущий трек.',
       usage: prefix+'skip',
-      async action(message, args) {
+      async action(message) {
         let queue = voiceHandler[message.guild.id];
         queue.setTextChannel(message.channel);
         queue.skip();
@@ -89,7 +87,7 @@ module.exports = {
       variants: ['lv', 'leave'],
       description: 'Бот покидает голосовой канал и очищает очередь.',
       usage: prefix+'leave',
-      async action(message, args) {
+      async action(message) {
         let queue = voiceHandler[message.guild.id];
         queue.setTextChannel(message.channel);
         queue.leave();
@@ -100,7 +98,7 @@ module.exports = {
       variants: ['ls', 'list'],
       description: 'Список треков в очереди.',
       usage: prefix+'list',
-      async action(message, args) {
+      async action(message) {
         let queue = voiceHandler[message.guild.id];
         queue.setTextChannel(message.channel);
         queue.list();
@@ -111,7 +109,7 @@ module.exports = {
       variants: ['shuffle', 'shu'],
       description: 'Перемешивает очередь.',
       usage: prefix+'shu',
-      async action(message, args) {
+      async action(message) {
         let queue = voiceHandler[message.guild.id];
         queue.setTextChannel(message.channel);
         queue.shuffle();

@@ -1,9 +1,6 @@
-const Client = require('../main.js');
+const exec = require('child_process').exec;
 const logger = require('../logger.js');
-const request = require('request');
-const fs = require('fs');
-
-const prefix = Client.config.prefix;
+const {prefix} = require('../../config.json');
 
 module.exports = {
   name: ':keyboard: Управление',
@@ -16,27 +13,37 @@ module.exports = {
       permissions: ['OWNER'],
       async action(message, args) {
         let url = args;
-
-        request({uri: url, encoding: null}, (error, response, body) => {
-          if (!error && response.statusCode == 200) {
-            Client.user.setAvatar(body);
-            logger.log('New avatar set.');
-            message.channel.sendMessage('Новый аватар установлен.');
-          } else {
-            //do something
-          }
-        });
+        message.client.user.setAvatar(url)
+          .catch((err) => {
+            logger.err(err);
+            message.channel.sendMessage(':x: Ошибка.');
+          });
+        logger.log('New avatar set.');
+        message.channel.sendMessage('Новый аватар установлен.');
       }
     },
     {
       prefix: prefix,
-      variants: ['stop', 'reboot'],
+      variants: ['stop', 'restart'],
       description: 'Выключает бота. Если был запущен через forever то будет перезагружен.',
       usage: prefix + 'stop',
       permissions: ['TRUSTED'],
-      async action(message, args) {
-        process.exit();
+      action(message) {
+        message.client.destroy().then(() => process.exit(1));
+      }
+    },
+    {
+      prefix: prefix,
+      variants: ['update', 'upgrade'],
+      description: 'Обновляет бота и перезапускает его.',
+      usage: prefix + 'update',
+      permissions: ['OWNER'],
+      action(message) {
+        child = exec("git pull origin master", function (error, stdout, stderr) {
+          if(error) return logger.error(error);
+          message.client.destroy().then(() => process.exit(1));
+        });
       }
     },
   ],
-}
+};

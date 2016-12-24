@@ -1,9 +1,6 @@
-const Client = require('../main.js');
 const {RichEmbed} = require('discord.js');
-const moment = require('moment');
 const commandHandler = require('../commandHandler.js');
-
-const prefix = Client.config.prefix;
+const {prefix} = require('../../config.json');
 
 module.exports = {
   name: ':information_source: Инфо',
@@ -28,12 +25,12 @@ module.exports = {
     },
     {
       prefix: prefix,
-      variants: ['stats'],
-      description: '',
-      usage: prefix+'stats',
-      async action(message, args) {
+      variants: ['status'],
+      description: 'Статус бота.',
+      usage: prefix+'status',
+      async action(message) {
 
-        let ms = Client.uptime;
+        let ms = message.client.uptime;
         let days      = Math.floor(ms / (24*60*60*1000));
         let daysms    = ms % (24*60*60*1000);
         let hours     = Math.floor((daysms)/(60*60*1000));
@@ -45,13 +42,13 @@ module.exports = {
         let uptime = `\`${days}\` дней, ` +
           `\`${hours}\` часов, \`${minutes}\` мин`;
         const embed = new RichEmbed()
-          .setColor('#36d148')
+          .setColor(0x36d148)
           .addField('Использование памяти', `${memoryUsed} / ${memory} MB`, true)
           .addField('Онлайн', uptime, true)
           .addField('\u200b', '\u200b', true)
-          .addField('Сервера', Client.guilds.size, true)
-          .addField('Каналы', Client.channels.size, true)
-          .addField('Пользователи', Client.users.size, true)
+          .addField('Сервера', message.client.guilds.size, true)
+          .addField('Каналы', message.client.channels.size, true)
+          .addField('Пользователи', message.client.users.size, true);
         message.channel.sendEmbed(embed);
       }
     },
@@ -60,8 +57,8 @@ module.exports = {
       variants: ['uptime', 'up', 'аптайм'],
       description: 'Показывает аптайм.',
       usage: prefix+'uptime',
-      async action(message, args) {
-        let ms = Client.uptime;
+      async action(message) {
+        let ms = message.client.uptime;
         let days      = Math.floor(ms / (24*60*60*1000));
         let daysms    = ms % (24*60*60*1000);
         let hours     = Math.floor((daysms)/(60*60*1000));
@@ -78,7 +75,7 @@ module.exports = {
       variants: ['userid', 'uid'],
       description: 'Выводит id указанного пользователя.',
       usage: prefix+'userid @Man',
-      async action(message, args) {
+      async action(message) {
         if(message.mentions.users.size == 0) return;
         let user = message.mentions.users.first();
         message.channel.sendMessage(`\`${user.id}\``);
@@ -89,11 +86,11 @@ module.exports = {
       variants: ['getavatar', 'avatar'],
       description: 'Выводит ссылку на аватар указанного пользователей.',
       usage: prefix+'getavatar @Dude',
-      async action(message, args) {
+      async action(message) {
         if(message.mentions.users.size == 0) return;
         let user = message.mentions.users.first();
         message.channel.sendMessage(user.avatarURL);
       }
     },
   ],
-}
+};

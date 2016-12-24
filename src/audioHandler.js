@@ -95,7 +95,7 @@ class Audio {
         this.title += ` (${duration})`;
       }
       this.embed = new RichEmbed()
-        .setColor('#5DADEC') //blue color, same as :notes:
+        .setColor(0x5DADEC) //blue color, same as :notes:
         .setAuthor(this.authorname, author.avatarURL)
         .setTitle(this.title)
         .setFooter('Сейчас играет');
@@ -110,7 +110,7 @@ class Audio {
       this.authorname = `${author.username}#${author.discriminator}`;
       let authorname = `${author.username}#${author.discriminator}`;
       this.embed = new RichEmbed()
-        .setColor('#226699') //dark blue
+        .setColor(0x226699) //dark blue
         .setAuthor(authorname, author.avatarURL)
         .setTitle(this.title)
         .setFooter('Сейчас играет');

@@ -1,6 +1,5 @@
-const Client = require('../main.js');
 
-const prefix = Client.config.prefix;
+const {prefix} = require('../../config.json');
 
 module.exports = {
   name: ':lips: Общение',
@@ -18,4 +17,4 @@ module.exports = {
       }
     },
   ],
-}
+};

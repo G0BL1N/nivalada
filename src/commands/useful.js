@@ -1,6 +1,4 @@
-const Client = require('../main.js');
-
-const prefix = Client.config.prefix;
+const {prefix} = require('../../config.json');
 
 module.exports = {
   name: ':8ball: Полезное',
@@ -10,7 +8,7 @@ module.exports = {
       variants: ['8ball','ball','шар'],
       description: 'Шар судьбы, что тут ещё можно сказать?',
       usage: prefix + 'шар Стоит ли покодить?',
-      async action(message, args) {
+      async action(message) {
         let answers = [
           'Бесспорно.',
           'Прекалькулировано.',
@@ -61,4 +59,4 @@ module.exports = {
       }
     },
   ],
-}
+};
