@@ -29,7 +29,7 @@ module.exports = {
       usage: prefix + 'exit',
       permissions: ['TRUSTED'],
       action(message) {
-        process.exit(1);
+        throw new Error('reboot');
       }
     },
     {
@@ -41,7 +41,7 @@ module.exports = {
       action(message) {
         child = exec("git pull origin master", function (error, stdout, stderr) {
           if(error) return logger.error(error);
-          process.exit(1);
+          throw new Error('reboot');
         });
       }
     },
