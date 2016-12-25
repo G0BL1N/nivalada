@@ -26,10 +26,10 @@ module.exports = {
       prefix: prefix,
       variants: ['exit', 'restart'],
       description: 'Выключает бота. Если был запущен через forever то будет перезагружен.',
-      usage: prefix + 'stop',
+      usage: prefix + 'exit',
       permissions: ['TRUSTED'],
       action(message) {
-        message.client.destroy().then(() => process.exit(1));
+        process.exit(1);
       }
     },
     {
@@ -41,7 +41,7 @@ module.exports = {
       action(message) {
         child = exec("git pull origin master", function (error, stdout, stderr) {
           if(error) return logger.error(error);
-          message.client.destroy().then(() => process.exit(1));
+          process.exit(1);
         });
       }
     },
