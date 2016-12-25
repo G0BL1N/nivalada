@@ -9,7 +9,7 @@ module.exports = {
       prefix: prefix,
       variants: ['help', 'h'],
       description: 'Список команд или поиск по команде.',
-      usage: prefix+'help info',
+      usage: prefix + 'help info',
       async action(message, args) {
         if(!args) {
           message.channel.sendEmbed(commandHandler.helpEmbed);
@@ -19,7 +19,7 @@ module.exports = {
         let reply =  `Помощь по команде \`${cmd.variants[0]}\`:\n` +
           `**Описание**: ${cmd.description}\n` +
           `**Использование**: ${cmd.usage}\n` +
-          `**Варианты** : \`${cmd.variants.join('\`, ')}\``;
+          `**Варианты** : \`${cmd.variants.join('\`;\`')}\``;
         message.channel.sendMessage(reply);
       }
     },
@@ -27,7 +27,7 @@ module.exports = {
       prefix: prefix,
       variants: ['status'],
       description: 'Статус бота.',
-      usage: prefix+'status',
+      usage: prefix + 'status',
       async action(message) {
 
         let ms = message.client.uptime;
@@ -56,7 +56,7 @@ module.exports = {
       prefix: prefix,
       variants: ['uptime', 'up', 'аптайм'],
       description: 'Показывает аптайм.',
-      usage: prefix+'uptime',
+      usage: prefix + 'uptime',
       async action(message) {
         let ms = message.client.uptime;
         let days      = Math.floor(ms / (24*60*60*1000));
@@ -74,7 +74,7 @@ module.exports = {
       prefix: prefix,
       variants: ['userid', 'uid'],
       description: 'Выводит id указанного пользователя.',
-      usage: prefix+'userid @Man',
+      usage: prefix + 'userid @Man',
       async action(message) {
         if(message.mentions.users.size == 0) return;
         let user = message.mentions.users.first();
@@ -85,7 +85,7 @@ module.exports = {
       prefix: prefix,
       variants: ['getavatar', 'avatar'],
       description: 'Выводит ссылку на аватар указанного пользователей.',
-      usage: prefix+'getavatar @Dude',
+      usage: prefix + 'getavatar @Dude',
       async action(message) {
         if(message.mentions.users.size == 0) return;
         let user = message.mentions.users.first();

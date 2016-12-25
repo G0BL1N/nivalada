@@ -35,7 +35,7 @@ module.exports = {
     {
       prefix: prefix,
       variants: ['update', 'upgrade'],
-      description: 'Обновляет бота и перезапускает его.',
+      description: 'Обновляет бота и выключает его.',
       usage: prefix + 'update',
       permissions: ['OWNER'],
       action(message) {

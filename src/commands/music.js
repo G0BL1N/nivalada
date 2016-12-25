@@ -8,7 +8,7 @@ module.exports = {
       prefix: prefix,
       variants: ['mv', 'move'],
       description: 'Перемещает бота на ваш голосовой канал.',
-      usage: prefix+'mv',
+      usage: prefix + 'mv',
       async action(message) {
         let id = message.guild.id;
         voiceHandler[id].move(message.member.voiceChannel);
@@ -45,7 +45,7 @@ module.exports = {
       prefix: prefix,
       variants: ['vol', 'v'],
       description: 'Устанавливает громкость музыки для этого сервера.',
-      usage: prefix+'v 45',
+      usage: prefix + 'v 45',
       async action(message, args) {
         let queue = voiceHandler[message.guild.id];
         queue.setTextChannel(message.channel);
@@ -56,7 +56,7 @@ module.exports = {
       prefix: prefix,
       variants: ['skip', 'next', 's', 'n'],
       description: 'Бот пропускает текущий трек.',
-      usage: prefix+'skip',
+      usage: prefix + 'skip',
       async action(message) {
         let queue = voiceHandler[message.guild.id];
         queue.setTextChannel(message.channel);
@@ -68,7 +68,7 @@ module.exports = {
       variants: ['rm', 'remove'],
       description: 'Бот удаляет указанный трек из очереди' +
       ' или очищает всю очередь если было указано \`all\`.',
-      usage: prefix+'rm 2',
+      usage: prefix + 'rm 2',
       async action(message, args) {
         let queue = voiceHandler[message.guild.id];
         queue.setTextChannel(message.channel);
@@ -86,7 +86,7 @@ module.exports = {
       prefix: prefix,
       variants: ['lv', 'leave'],
       description: 'Бот покидает голосовой канал и очищает очередь.',
-      usage: prefix+'leave',
+      usage: prefix + 'leave',
       async action(message) {
         let queue = voiceHandler[message.guild.id];
         queue.setTextChannel(message.channel);
@@ -97,7 +97,7 @@ module.exports = {
       prefix: prefix,
       variants: ['ls', 'list'],
       description: 'Список треков в очереди.',
-      usage: prefix+'list',
+      usage: prefix + 'list',
       async action(message) {
         let queue = voiceHandler[message.guild.id];
         queue.setTextChannel(message.channel);
@@ -108,7 +108,7 @@ module.exports = {
       prefix: prefix,
       variants: ['shuffle', 'shu'],
       description: 'Перемешивает очередь.',
-      usage: prefix+'shu',
+      usage: prefix + 'shu',
       async action(message) {
         let queue = voiceHandler[message.guild.id];
         queue.setTextChannel(message.channel);
