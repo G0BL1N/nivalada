@@ -1,6 +1,5 @@
 const audioHandler = require('./audioHandler.js');
 const fs = require('fs');
-const request = require('request');
 const logger = require('./logger.js');
 
 var container = {};

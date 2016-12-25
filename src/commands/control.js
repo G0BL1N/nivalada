@@ -24,7 +24,7 @@ module.exports = {
     },
     {
       prefix: prefix,
-      variants: ['stop', 'restart'],
+      variants: ['exit', 'restart'],
       description: 'Выключает бота. Если был запущен через forever то будет перезагружен.',
       usage: prefix + 'stop',
       permissions: ['TRUSTED'],

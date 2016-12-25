@@ -1,6 +1,7 @@
 const querystring = require('querystring');
 const fs = require('fs');
-const request = require('request-promise-native');
+const request = require('request');
+const requestp = require('request-promise-native');
 const youtubedl = require('youtube-dl');
 const {googlekey: gkey} = require('../config.json');
 const {RichEmbed} = require('discord.js');
@@ -65,7 +66,7 @@ function ytSearch(query, options = {}) {
   options.key = gkey;
   options.q = query;
   url = attachOptions(url, options);
-  return request(url)
+  return requestp(url)
   .then((body) => {
     let result = JSON.parse(body);
     if(result.pageInfo.totalResults < 1) throw new Error('Not found');
