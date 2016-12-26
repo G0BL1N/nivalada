@@ -39,7 +39,8 @@ module.exports = {
       usage: prefix + 'update',
       permissions: ['OWNER'],
       action(message) {
-        child = exec("git pull origin master", function (error, stdout, stderr) {
+        let from = args ? args : 'master';
+        child = exec('git pull origin ' + from, function (error, stdout, stderr) {
           if(error) return logger.error(error);
           throw new Error('reboot');
         });
