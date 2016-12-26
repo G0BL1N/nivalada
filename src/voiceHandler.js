@@ -58,9 +58,10 @@ class Queue {
         this.play();
       })
       .catch((err) => {
+        this.textChannel.stopTyping();
         if(err.message === 'Not found') {
-          this.textChannel.stopTyping();
           pending.then(message => message.edit(':x: Не найдено.'));
+          return;
         }
         logger.error(err);
         throw err;

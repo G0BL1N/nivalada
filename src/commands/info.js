@@ -71,24 +71,16 @@ module.exports = {
     },
     {
       prefix: prefix,
-      variants: ['userid', 'uid'],
-      description: 'Выводит id указанного пользователя.',
-      usage: prefix + 'userid @Man',
+      variants: ['ping'],
+      description: 'Пинг до бота.',
+      usage: prefix + 'ping',
       async action(message) {
-        if(message.mentions.users.size == 0) return;
-        let user = message.mentions.users.first();
-        message.channel.sendMessage(`\`${user.id}\``);
-      }
-    },
-    {
-      prefix: prefix,
-      variants: ['getavatar', 'avatar'],
-      description: 'Выводит ссылку на аватар указанного пользователей.',
-      usage: prefix + 'getavatar @Dude',
-      async action(message) {
-        if(message.mentions.users.size == 0) return;
-        let user = message.mentions.users.first();
-        message.channel.sendMessage(user.avatarURL);
+        let pingTimestamp = message.createdTimestamp;
+        message.channel.sendMessage('Pong!')
+          .then((reply) => {
+            let pongTimestamp = reply.createdTimestamp;
+            reply.edit(`Pong! Took \`${pongTimestamp-pingTimestamp}ms\``);
+          });
       }
     },
   ],
