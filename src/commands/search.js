@@ -1,6 +1,5 @@
 const {RichEmbed} = require('discord.js');
 const request = require('request-promise-native');
-const querystring = require('querystring');
 
 const config = require('../../config.json');
 const prefix = config.prefix;
@@ -32,7 +31,7 @@ module.exports = {
             channel.startTyping()
             return message;
           });
-        let query = querystring.escape(args);
+        let query = encodeURIComponent(args);
         let url = 'https://www.googleapis.com/customsearch/v1' +
         `?key=${config.googlekey}&cx=${config.googlecsid}&q=${query}`;
         request(url)
@@ -62,7 +61,7 @@ module.exports = {
             channel.startTyping()
             return message;
           });
-        let query = querystring.escape(args);
+        let query = encodeURIComponent(args);
         let url = 'https://www.googleapis.com/customsearch/v1' +
         `?key=${config.googlekey}&cx=${config.googlecsid}&q=${query}`;
         url += '&searchType=image';
@@ -72,11 +71,10 @@ module.exports = {
             let parsed = JSON.parse(body);
             if(parsed.items && parsed.items.length > 0)
               pending.then(message => {
-                message.delete();
                 let embed = new RichEmbed()
                   .setColor(0xfbbc05)
                   .setImage(parsed.items[0].link);
-                channel.sendEmbed(embed);
+                message.edit('',{embed: embed});
               });
             else
               pending.then(message => message.edit(':x: Не найдено.'));
@@ -102,20 +100,19 @@ module.exports = {
             return message;
           });
         args.replace(/\s/g, '+');
-        let query = querystring.escape(args);
+        let query = encodeURIComponent(args);
         let url = 'https://safebooru.org/index.php?page=dapi&s=post&q=index' +
         `&json=1&limit=100&tags=${query}`;
         requestNext(url, [], 0)
           .then((list) => {
             pending.then((message) => {
               channel.stopTyping();
-              message.delete();
               let {image, directory} = list[Math.floor(Math.random() * list.length)]
               let url = `https://safebooru.org/images/${directory}/${image}`;
               let embed = new RichEmbed()
                 .setColor(0xa5c7ff)
                 .setImage(url);
-              channel.sendEmbed(embed);
+              message.edit('',{embed: embed});
             })
           });
         function requestNext(url, list, currPage) {

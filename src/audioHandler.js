@@ -1,4 +1,3 @@
-const querystring = require('querystring');
 const fs = require('fs');
 const request = require('request');
 const requestp = require('request-promise-native');
@@ -60,7 +59,7 @@ function cache(url, author) {
 }
 
 function ytSearch(query, options = {}) {
-  query = querystring.escape(query);
+  query = encodeURIComponent(query);
   let url = 'https://www.googleapis.com/youtube/v3/search?part=snippet';
   options.maxResults = 1;
   options.key = gkey;
