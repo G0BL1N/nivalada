@@ -21,7 +21,9 @@ Client.on('ready', () => {
 });
 
 Client.on('message', (message) => {
-  if(message.author.bot) return;
+  let member = message.guild.member(Client.user);
+  let perms = message.channel.permissionsFor(member);
+  if(message.author.bot || !perms.hasPermission('SEND_MESSAGES')) return;
   let content = message.content;
   let commands = commandHandler.commands;
   for(const cmd of commands) {

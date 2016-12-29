@@ -53,33 +53,15 @@ module.exports = {
     },
     {
       prefix: prefix,
-      variants: ['uptime', 'up', 'аптайм'],
-      description: 'Показывает аптайм.',
-      usage: prefix + 'uptime',
-      async action(message) {
-        let ms = message.client.uptime;
-        let days      = Math.floor(ms / (24*60*60*1000));
-        let daysms    = ms % (24*60*60*1000);
-        let hours     = Math.floor((daysms)/(60*60*1000));
-        let hoursms   = ms % (60*60*1000);
-        let minutes   = Math.floor((hoursms)/(60*1000));
-        let minutesms = ms % (60*1000);
-        let sec = Math.floor((minutesms)/(1000));
-        message.channel.sendMessage(`Онлайн: \`${days}\` дней, `+
-          `\`${hours}\` часов, \`${minutes}\` минут, \`${sec}\` секунд.`);
-      }
-    },
-    {
-      prefix: prefix,
-      variants: ['ping'],
+      variants: ['ping', 'пинг'],
       description: 'Пинг до бота.',
       usage: prefix + 'ping',
       async action(message) {
         let pingTimestamp = message.createdTimestamp;
-        message.channel.sendMessage('Pong!')
+        message.channel.sendMessage('Понг!')
           .then((reply) => {
             let pongTimestamp = reply.createdTimestamp;
-            reply.edit(`Pong! Took \`${pongTimestamp-pingTimestamp}ms\``);
+            reply.edit(`Понг! Заняло \`${pongTimestamp-pingTimestamp}мс\``);
           });
       }
     },

@@ -29,7 +29,7 @@ module.exports.command = function(message) {
 
 module.exports.error = function(err) {
   let m = '[' + moment().format('YYYY-MM-DD/kk:mm') + ']';
-  let str = `${chalk.red(m)} ${err}`;
+  let str = `${chalk.bgRed(m)} ${err}`;
   console.log(str);
   fileConsole.error(str);
 }
