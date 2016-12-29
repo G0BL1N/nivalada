@@ -15,7 +15,7 @@ module.exports = {
         let query = args;
         youtube.search(query).then((result) => {
           let url = `https://www.youtube.com/watch?v=${result.id.videoId}`;
-          message.channel.sendMessage(url);
+          message.channel.send(url);
         });
       }
     },
@@ -26,7 +26,7 @@ module.exports = {
       usage: prefix + 'yt смешнявки',
       async action(message, args) {
         let channel = message.channel;
-        let pending = channel.sendMessage('Поиск...')
+        let pending = channel.send('Поиск...')
           .then((message) => {
             channel.startTyping()
             return message;
@@ -56,7 +56,7 @@ module.exports = {
       usage: prefix + 'yt котик',
       async action(message, args) {
         let channel = message.channel;
-        let pending = channel.sendMessage('Поиск...')
+        let pending = channel.send('Поиск...')
           .then((message) => {
             channel.startTyping()
             return message;
@@ -94,7 +94,7 @@ module.exports = {
       async action(message, args) {
 
         let channel = message.channel;
-        let pending = channel.sendMessage('Поиск...')
+        let pending = channel.send('Поиск...')
           .then((message) => {
             channel.startTyping()
             return message;

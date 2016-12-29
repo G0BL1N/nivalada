@@ -20,7 +20,7 @@ module.exports = {
           `**Описание**: ${cmd.description}\n` +
           `**Использование**: ${cmd.usage}\n` +
           `**Варианты** : \`${cmd.variants.join('\`;\`')}\``;
-        message.channel.sendMessage(reply);
+        message.channel.send(reply);
       }
     },
     {
@@ -58,7 +58,7 @@ module.exports = {
       usage: prefix + 'ping',
       async action(message) {
         let pingTimestamp = message.createdTimestamp;
-        message.channel.sendMessage('Понг!')
+        message.channel.send('Понг!')
           .then((reply) => {
             let pongTimestamp = reply.createdTimestamp;
             reply.edit(`Понг! Заняло \`${pongTimestamp-pingTimestamp}мс\``);

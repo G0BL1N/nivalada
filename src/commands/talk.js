@@ -11,9 +11,9 @@ module.exports = {
       usage: '/o/',
       async action(message, args, variant) {
         if(variant === '/o/')
-          message.channel.sendMessage('\\o\\');
+          message.channel.send('\\o\\');
         else
-          message.channel.sendMessage('/o/');
+          message.channel.send('/o/');
       }
     },
   ],

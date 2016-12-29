@@ -31,7 +31,7 @@ module.exports = {
           'Весьма сомнительно.',
         ];
         let answer = answers[Math.floor(Math.random() * answers.length)];
-        message.channel.sendMessage(`:8ball: ${answer}`);
+        message.channel.send(`:8ball: ${answer}`);
       }
     },
     {
@@ -42,7 +42,7 @@ module.exports = {
       async action(message, args) {
         let answers = args.split(';');
         let answer = answers[Math.floor(answers.length * Math.random())];
-        message.channel.sendMessage(':white_check_mark: ' +
+        message.channel.send(':white_check_mark: ' +
         `Правильным выбором будет: "**${answer}**".`);
       }
     },
@@ -68,7 +68,7 @@ module.exports = {
           result = Math.floor(Math.random() * (max - min + 1)) + min;
         else if(min)
           result = Math.floor(Math.random() * min) + 1;
-        message.channel.sendMessage(`\`${result}\``);
+        message.channel.send(`\`${result}\``);
       }
     },
     {

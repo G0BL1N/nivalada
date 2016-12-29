@@ -31,7 +31,7 @@ Client.on('message', (message) => {
     if(!result) continue;
     let hasPermissions = commandHandler.checkPermissions(message, cmd);
     if(!hasPermissions) {
-      message.channel.sendMessage(':warning: У вас недостаточно прав для' +
+      message.channel.send(':warning: У вас недостаточно прав для' +
       'использования этой команды.');
       return;
     }

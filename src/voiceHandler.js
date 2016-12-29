@@ -44,7 +44,7 @@ class Queue {
     return this.move(member.voiceChannel);
   }
   add(query, author) {
-    let pending = this.textChannel.sendMessage('Кеширую...')
+    let pending = this.textChannel.send('Кеширую...')
       .then((message) => {
         this.textChannel.startTyping();
         return message;
@@ -69,7 +69,7 @@ class Queue {
   }
   addStream(url, author) {
     let result = audioHandler.handleStream(url, author)
-    this.textChannel.sendMessage(
+    this.textChannel.send(
         `:white_check_mark: Добавлено: **${result.title}**`);
     this.array.push(result);
     this.play();
@@ -110,7 +110,7 @@ class Queue {
     num = parseInt(num);
     if(!num) return;
     this.volume = Math.min(Math.max(num, 0), 100);
-    this.textChannel.sendMessage(`:loud_sound: Громкость: ${this.volume}%`);
+    this.textChannel.send(`:loud_sound: Громкость: ${this.volume}%`);
     if(this.nowPlaying) this.dispatcher.setVolume(this.volume/100);
   }
   removeAll() {
@@ -125,7 +125,7 @@ class Queue {
   }
   list() {
     if(!this.nowPlaying) {
-      this.textChannel.sendMessage('Очередь пуста.');
+      this.textChannel.send('Очередь пуста.');
       return;
     }
     let message = `:notes: Сейчас играет: ${this.nowPlaying}\n`;
@@ -141,7 +141,7 @@ class Queue {
     } else {
       message += 'Очередь пуста.'
     }
-    this.textChannel.sendMessage(message);
+    this.textChannel.send(message);
   }
   shuffle() {
     if(this.array.length < 2) return;

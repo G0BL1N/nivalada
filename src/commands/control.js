@@ -16,10 +16,10 @@ module.exports = {
         message.client.user.setAvatar(url)
           .catch((err) => {
             logger.err(err);
-            message.channel.sendMessage(':x: Ошибка.');
+            message.channel.send(':x: Ошибка.');
           });
         logger.log('New avatar set.');
-        message.channel.sendMessage('Новый аватар установлен.');
+        message.channel.send('Новый аватар установлен.');
       }
     },
     {

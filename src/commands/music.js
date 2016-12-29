@@ -74,7 +74,7 @@ module.exports = {
         queue.setTextChannel(message.channel);
         if(args === 'all') {
           queue.removeAll();
-          message.channel.sendMessage(':white_check_mark: Очередь очищена.');
+          message.channel.send(':white_check_mark: Очередь очищена.');
           return;
         }
         let num = parseInt(args);
@@ -114,7 +114,7 @@ module.exports = {
         queue.setTextChannel(message.channel);
         queue.shuffle();
         let channel = message.channel;
-        channel.sendMessage(':twisted_rightwards_arrows: Очередь перемешана.');
+        channel.send(':twisted_rightwards_arrows: Очередь перемешана.');
       }
     },
   ],
