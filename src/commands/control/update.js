@@ -9,7 +9,7 @@ module.exports = {
     let from = args ? args : 'master';
     child = exec('git pull origin ' + from, function (error, stdout, stderr) {
       if(error) return logger.error(error);
-      message.channel.send(`\`${stdout}\``);
+      message.channel.send(`\`\`\`${stdout}\`\`\``);
     });
   }
 }

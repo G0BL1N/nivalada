@@ -17,17 +17,16 @@ module.exports = {
     args.replace(/\s/g, '+');
     let query = encodeURIComponent(args);
 
-    let url = 'https://gelbooru.com/index.php?page=dapi&s=post&q=index' +
+    let url = 'http://gelbooru.com/index.php?page=dapi&s=post&q=index' +
     `&json=1&limit=100&tags=${query}`;
     requestNext(url, [], 0)
       .then((list) => {
         pending.then((message) => {
           channel.stopTyping();
-          let {image, directory} = list[Math.floor(Math.random() * list.length)]
-          let url = `https://safebooru.org/images/${directory}/${image}`;
+          let {file_url} = list[Math.floor(Math.random() * list.length)]
           let embed = new RichEmbed()
             .setColor(0xa5c7ff)
-            .setImage(url);
+            .setImage(file_url);
           message.edit('',{embed: embed});
         })
       });
