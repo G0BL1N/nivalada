@@ -1,4 +1,5 @@
 const {RichEmbed} = require('discord.js');
+const request = require('request-promise-native');
 
 module.exports = {
   variants: ['safebooru'],

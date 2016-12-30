@@ -27,7 +27,6 @@ function init(Client) {
       command.category = category.name;
       let prefix = command.prefix;
       command.prefix = prefix === undefined ? config.prefix : prefix;
-      console.log(command.variants[0], command.prefix);
       command.regexp = buildCommandRegExp(command, Client.user.id);
       commands.push(command);
       category.commands.push(command);
