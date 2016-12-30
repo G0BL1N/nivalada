@@ -1,4 +1,5 @@
-const { gkey } = require('../../../config.json');
+const request = require('request-promise-native');
+const config = require('../../../config.json');
 
 module.exports = {
   variants: ['google','gg'],
@@ -13,7 +14,7 @@ module.exports = {
       });
     let query = encodeURIComponent(args);
     let url = 'https://www.googleapis.com/customsearch/v1' +
-    `?key=${config.googlekey}&cx=${gkey}&q=${query}`;
+    `?key=${config.googlekey}&cx=${config.googlecsid}&q=${query}`;
     request(url)
       .then((body) => {
         let parsed = JSON.parse(body);

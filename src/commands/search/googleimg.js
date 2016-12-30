@@ -1,4 +1,6 @@
 const {RichEmbed} = require('discord.js');
+const request = require('request-promise-native');
+const config = require('../../../config.json');
 
 module.exports = {
     variants: ['googleimg','gi'],
