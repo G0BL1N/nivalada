@@ -25,7 +25,9 @@ function init(Client) {
       if(filename === '_index.js') continue;
       let command = require(FOLDERPATH + filename);
       command.category = category.name;
-      command.prefix = command.prefix || config.prefix;
+      let prefix = command.prefix;
+      command.prefix = prefix === undefined ? config.prefix : prefix;
+      console.log(command.variants[0], command.prefix);
       command.regexp = buildCommandRegExp(command, Client.user.id);
       commands.push(command);
       category.commands.push(command);
