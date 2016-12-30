@@ -10,17 +10,29 @@ const categories = [];
 module.exports = {
   init,
   commands,
-  categories,
   checkPermissions,
   findCommand,
 }
 
 function init(Client) {
-  let filenames = fs.readdirSync(PATH);
-  for(let filename of filenames) {
-    load(require(PATH + filename), Client);
+  const foldernames = fs.readdirSync(PATH);
+  for(const foldername of foldernames) {
+    const FOLDERPATH = PATH + foldername + '/';
+    let category = require(FOLDERPATH + '_index.js');
+    category.commands = [];
+    const filenames = fs.readdirSync(FOLDERPATH);
+    for(const filename of filenames) {
+      if(filename === '_index.js') continue;
+      let command = require(FOLDERPATH + filename);
+      command.category = category.name;
+      command.prefix = command.prefix || config.prefix;
+      command.regexp = buildCommandRegExp(command, Client.user.id);
+      commands.push(command);
+      category.commands.push(command);
+    }
+    categories.push(category);
   }
-  categories.sort((catA, catB) => {
+  categories.sort((catA, catB) => { //sort categories by legnth for help embed
     return catB.commands.length - catA.commands.length;
   });
 
@@ -37,16 +49,6 @@ function init(Client) {
   'Используйте `-help <command>` для получения детальной информации');
   helpEmbed.setColor('#f4b342');
   module.exports.helpEmbed = helpEmbed;
-}
-
-function load(category, Client) {
-
-  categories.push(category);
-  for(let command of category.commands) {
-    command.category = category.name;
-    command.regexp = buildCommandRegExp(command, Client.user.id);
-    commands.push(command);
-  }
 }
 
 function buildCommandRegExp(command, clientid) {
