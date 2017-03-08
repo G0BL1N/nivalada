@@ -23,7 +23,8 @@ module.exports = {
       .then((list) => {
         pending.then((message) => {
           channel.stopTyping();
-          let {file_url} = list[Math.floor(Math.random() * list.length)]
+          let {file_url} = list[Math.floor(Math.random() * list.length)];
+          file_url = 'http:' + file_url;
           let embed = new RichEmbed()
             .setColor(0xa5c7ff)
             .setImage(file_url);
