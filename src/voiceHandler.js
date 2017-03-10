@@ -16,6 +16,9 @@ module.exports.init = function (Client) {
 module.exports.add = function (guild) {
   container[guild.id] = new Queue();
 }
+module.exports.remove = function (guild) {
+  delete container[guild.id];
+}
 
 
 class Queue {
@@ -46,19 +49,16 @@ class Queue {
   add(query, author) {
     let pending = this.textChannel.send('Кеширую...')
       .then((message) => {
-        this.textChannel.startTyping();
         return message;
       })
     audioHandler.handle(query, author)
       .then((result) => {
-        this.textChannel.stopTyping();
         let str = `:white_check_mark: Добавлено: **${result.title}**`;
         pending.then(message => message.edit(str));
         this.array.push(result);
         this.play();
       })
       .catch((err) => {
-        this.textChannel.stopTyping();
         if(err.message === 'Not found') {
           pending.then(message => message.edit(':x: Не найдено.'));
           return;

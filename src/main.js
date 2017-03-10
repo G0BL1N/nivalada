@@ -31,7 +31,7 @@ Client.on('message', (message) => {
     if(!result) continue;
     let hasPermissions = commandHandler.checkPermissions(message, cmd);
     if(!hasPermissions) {
-      message.channel.send(':warning: У вас недостаточно прав для' +
+      message.channel.send(':warning: У вас недостаточно прав для ' +
       'использования этой команды.');
       return;
     }
@@ -40,6 +40,13 @@ Client.on('message', (message) => {
     logger.command(message);
     break;
   }
+});
+Client.on('guildCreate', (guild) => {
+  if(!ready) return;
+  voiceHandler.add(guild);
+});
+Client.on('guildDelete', (guild) => {
+  voiceHandler.remove(guild);
 });
 
 Client.login(config.token)

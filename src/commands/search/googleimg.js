@@ -10,7 +10,6 @@ module.exports = {
       let channel = message.channel;
       let pending = channel.send('Поиск...')
         .then((message) => {
-          channel.startTyping()
           return message;
         });
       let query = encodeURIComponent(args);
@@ -30,11 +29,9 @@ module.exports = {
             });
           else
             pending.then(message => message.edit(':x: Не найдено.'));
-          channel.stopTyping();
         })
         .catch(() => {
           pending.then(message => message.edit(':x: Ошибка.'));
-          channel.stopTyping();
         });
     }
   }

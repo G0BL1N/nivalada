@@ -1,5 +1,5 @@
 const {RichEmbed} = require('discord.js');
-const request = require('request-promise-native');
+const {booruRequestRecursive} = require('../../utilities.js');
 
 module.exports = {
   variants: ['gelbooru'],
@@ -10,7 +10,6 @@ module.exports = {
     let channel = message.channel;
     let pending = channel.send('Поиск...')
       .then((message) => {
-        channel.startTyping()
         return message;
       });
     args += ' rating:safe';
@@ -19,27 +18,24 @@ module.exports = {
 
     let url = 'http://gelbooru.com/index.php?page=dapi&s=post&q=index' +
     `&json=1&limit=100&tags=${query}`;
-    requestNext(url, [], 0)
+    booruRequestRecursive(url, [], 0)
       .then((list) => {
         pending.then((message) => {
-          channel.stopTyping();
           let {file_url} = list[Math.floor(Math.random() * list.length)];
           file_url = 'http:' + file_url;
           let embed = new RichEmbed()
             .setColor(0xa5c7ff)
             .setImage(file_url);
-          message.edit('',{embed: embed});
+          message.edit('', {embed: embed});
         })
+      })
+      .catch((err) => {
+        if(err.message === 'Not found') {
+          pending.then(message => message.edit(':x: Не найдено.'));
+        } else {
+          pending.then(message => message.edit(':x: Ошибка.'));
+        }
       });
-    function requestNext(url, list, currPage) {
-      url += `&pid=${currPage}`;
-      return request(url)
-        .then((body) => {
-          let content = JSON.parse(body);
-          list = list.concat(content);
-          if(content.length < 100 || list.length === 1000) return list;
-          return requestNext(url, list, ++currPage);
-        })
-    }
+
   }
 }
