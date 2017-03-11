@@ -5,7 +5,7 @@ module.exports = {
   permissions: ['MANAGE_MESSAGES'],
   async action(message, args) {
     let num = parseInt(args);
-    if(!num || num < 1) return;
-    message.channel.bulkDelete(num);
+    if(!num) return;
+    message.channel.bulkDelete(num + 1);
   }
 }
