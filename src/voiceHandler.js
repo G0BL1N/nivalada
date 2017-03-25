@@ -93,7 +93,7 @@ class Queue {
         this.play();
         return;
       }
-      this.nowPlaying.destroy();
+      this.destroyWithCheck(this.nowPlaying);
       this.nowPlaying = null;
       this.dispatcher = null;
       this.play();
@@ -121,7 +121,8 @@ class Queue {
   remove(num) {
     num = num - 1;
     num = Math.min(Math.max(num, 0), this.array.length -1);
-    this.array.splice(num, 1).destroy();
+    const toDestroy = this.array.splice(num, 1)
+    this.destroyWithCheck(toDestroy);
   }
   list() {
     if(!this.nowPlaying) {
@@ -151,6 +152,16 @@ class Queue {
        let j = Math.floor(Math.random() * (i + 1));
        [array[i], array[j]] = [array[j], array[i]];
     }
+  }
+  destroyWithCheck(audio) {
+    for(const a of this.array) {
+      if(a.type === 'stream')
+        continue;
+      if(audio.path === audio.path) {
+        return;
+      }
+    }
+    audio.destroy()
   }
   leave() {
     if(!this.connection) return;

@@ -23,7 +23,8 @@ Client.on('ready', () => {
 Client.on('message', (message) => {
   let member = message.guild.member(Client.user);
   let perms = message.channel.permissionsFor(member);
-  if(message.author.bot || !perms.hasPermission('SEND_MESSAGES')) return;
+  if(message.author.bot || !perms.hasPermission('SEND_MESSAGES') || message.type === 'dm')
+    return;
   let content = message.content;
   let commands = commandHandler.commands;
   for(const cmd of commands) {

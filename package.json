@@ -4,8 +4,8 @@
   "description": "",
   "main": "build/main.js",
   "scripts": {
-    "test": "echo \"No tests.\" && exit 1",
-    "start": "node --harmony src/main.js"
+    "start": "node --harmony --trace-warnings src/main.js",
+    "pm2start": "pm2 start src/main.js --name \"gbot\" --node-args=\"--harmony --trace-warnings\" -- --color"
   },
   "repository": {
     "type": "git",
