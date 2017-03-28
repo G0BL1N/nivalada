@@ -9,7 +9,7 @@ module.exports = {
     const columnSize = Math.ceil(guilds.lenght/3);
 
     const embed = new RichEmbed()
-      .setColor(0x36d148);
+      .setColor(0x36d148)
       .setTitle('Список серверов');
     let str = '';
     let counter = 0;
