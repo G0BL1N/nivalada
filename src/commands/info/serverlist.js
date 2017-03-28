@@ -17,7 +17,7 @@ module.exports = {
       counter += 1;
       str += `**${guild.name}**`;
       if(counter === columnSize || counter === guilds.length) {
-        embed.addField(str, '\u200b', true);
+        embed.addField('\u200b', str, true);
         counter = 0;
         str = '';
       } else {
