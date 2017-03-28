@@ -10,13 +10,14 @@ module.exports = {
 
     const embed = new RichEmbed()
       .setColor(0x36d148);
+      .setTitle('Список серверов');
     let str = '';
     let counter = 0;
     for(const guild of guilds) {
       counter += 1;
-      str += `**${guild.name}`;
+      str += `**${guild.name}**`;
       if(counter === columnSize || counter === guilds.length) {
-        embed.addField('', str, true);
+        embed.addField(str, '\u200b', true);
         counter = 0;
         str = '';
       } else {
