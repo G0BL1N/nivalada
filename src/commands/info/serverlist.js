@@ -4,9 +4,10 @@ module.exports = {
   variants: ['serverlist', 'serverls'],
   description: 'Список серверов.',
   usage: 'serverlist',
+  permissions: ['TRUSTED'],
   async action(message) {
     const guilds = message.client.guilds.array();
-    const columnSize = Math.ceil(guilds.lenght/3);
+    const columnSize = Math.ceil(guilds.length/3);
 
     const embed = new RichEmbed()
       .setColor(0x36d148)
