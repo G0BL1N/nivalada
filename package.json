@@ -37,6 +37,6 @@
     "bufferutil": "^3.0.0",
     "uws": "^0.14.5",
     "libsodium-wrappers": "^0.5.1",
-    "sodium-wrappers": "^2.0.1"
+    "sodium": "^2.0.1"
   }
 }
