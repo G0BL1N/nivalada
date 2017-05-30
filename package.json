@@ -33,6 +33,10 @@
     "youtube-dl": "^1.11.1"
   },
   "optionalDependencies": {
-    "node-opus": "^0.2.4"
+    "node-opus": "^0.2.4",
+    "bufferutil": "^3.0.0",
+    "uws": "^0.14.5",
+    "libsodium-wrappers": "^0.5.1",
+    "sodium-wrappers": "^2.0.1"
   }
 }

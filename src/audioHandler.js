@@ -16,17 +16,17 @@ function handle(query, author) {
   let httpRegExp = /^(http|https):\/\//i;
   if(httpRegExp.test(query)) {
     return cache(query, author)
-    .then((result, err) => {
-      if(err)
-        throw err;
-      return result;
-    });
+      .then((result, err) => {
+        if(err)
+          throw err;
+        return result;
+      });
   }
   return ytSearch(query, {type: 'video'})
-  .then((result) => {
-    let id = result.id.videoId;
-    return cache('https://www.youtube.com/watch?v=' + id, author);
-  });
+    .then((result) => {
+      let id = result.id.videoId;
+      return cache('https://www.youtube.com/watch?v=' + id, author);
+    });
 }
 function handleStream(url, author) {
   return new Audio({
@@ -64,7 +64,8 @@ function ytSearch(query, options = {}) {
   options.maxResults = 1;
   options.key = gkey;
   options.q = query;
-  url = attachOptions(url, options);
+  for(const opt in options)
+    url += `&${opt}=${options[opt]}`;
   return requestp(url)
   .then((body) => {
     let result = JSON.parse(body);
@@ -73,11 +74,6 @@ function ytSearch(query, options = {}) {
   });
 }
 
-function attachOptions(url, options) {
-  for(const opt in options)
-    url += `&${opt}=${options[opt]}`;
-  return url;
-}
 
 class Audio {
   constructor({type, filename, url, data, author}) {
