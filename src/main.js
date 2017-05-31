@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const config = require('../config.json');
-const voiceHandler = require('./voiceHandler.js');
+const QueuesManager = require('./QueuesManager.js');
 const commandHandler = require('./commandHandler.js');
 const logger = require('./logger.js');
 
@@ -14,7 +14,6 @@ let id;
 
 Client.on('ready', () => {
   if(ready) return;
-  voiceHandler.init(Client);
   commandHandler.init(Client);
   id = Client.user.id;
   ready = true;
@@ -23,7 +22,7 @@ Client.on('ready', () => {
 Client.on('message', (message) => {
   let member = message.guild.member(Client.user);
   let perms = message.channel.permissionsFor(member);
-  if(message.author.bot || !perms.hasPermission('SEND_MESSAGES') || message.type === 'dm')
+  if(message.author.bot || !perms.has('SEND_MESSAGES') || message.type === 'dm')
     return;
   let content = message.content;
   let commands = commandHandler.commands;
@@ -42,12 +41,8 @@ Client.on('message', (message) => {
     break;
   }
 });
-Client.on('guildCreate', (guild) => {
-  if(!ready) return;
-  voiceHandler.add(guild);
-});
 Client.on('guildDelete', (guild) => {
-  voiceHandler.remove(guild);
+  QueuesManager.removeQueue(guild.id);
 });
 
 Client.login(config.token)

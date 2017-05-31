@@ -1,4 +1,4 @@
-const voiceHandler = require('../../voiceHandler.js');
+const QueuesManager = require('../../QueuesManager.js');
 
 module.exports = {
   variants: ['rm', 'remove'],
@@ -6,7 +6,8 @@ module.exports = {
   ' или очищает всю очередь если было указано \`all\`.',
   usage: 'rm 2',
   async action(message, args) {
-    let queue = voiceHandler[message.guild.id];
+    let queue = QueuesManager.getQueue(message.guild.id);
+
     queue.setTextChannel(message.channel);
     if(args === 'all') {
       queue.removeAll();

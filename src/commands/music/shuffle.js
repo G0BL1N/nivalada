@@ -1,11 +1,12 @@
-const voiceHandler = require('../../voiceHandler.js');
+const QueuesManager = require('../../QueuesManager.js');
 
 module.exports = {
   variants: ['shuffle', 'shu'],
   description: 'Перемешивает очередь.',
   usage: 'shuffle',
   async action(message) {
-    let queue = voiceHandler[message.guild.id];
+    let queue = QueuesManager.getQueue(message.guild.id);
+
     queue.setTextChannel(message.channel);
     queue.shuffle();
     let channel = message.channel;

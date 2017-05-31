@@ -1,4 +1,4 @@
-const voiceHandler = require('../../voiceHandler.js');
+const QueuesManager = require('../../QueuesManager.js');
 
 module.exports = {
   variants: ['add', 'q'],
@@ -6,7 +6,7 @@ module.exports = {
   ' ссылки на Youtube или название.',
   usage: 'q rickroll',
   async action(message, args) {
-    let queue = voiceHandler[message.guild.id];
+    let queue = QueuesManager.getQueue(message.guild.id);
 
     queue.setTextChannel(message.channel);
     queue.connect(message.member)

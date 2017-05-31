@@ -2,24 +2,6 @@ const audioHandler = require('./audioHandler.js');
 const fs = require('fs');
 const logger = require('./logger.js');
 
-var container = {};
-
-module.exports = container;
-module.exports.queues = container;
-
-module.exports.init = function (Client) {
-  let guilds = Client.guilds.array();
-  for(const guild of guilds) {
-    container[guild.id] = new Queue();
-  }
-}
-module.exports.add = function (guild) {
-  container[guild.id] = new Queue();
-}
-module.exports.remove = function (guild) {
-  delete container[guild.id];
-}
-
 
 class Queue {
 
@@ -171,3 +153,5 @@ class Queue {
     this.connection = null;
   }
 }
+
+module.exports = Queue;

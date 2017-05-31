@@ -85,16 +85,16 @@ function checkPermissions(message, command) {
     perms.splice(ownerPermIndex, 1);
     if(trustedPermIndex > -1) perms.splice(trustedPermIndex, 1);
     if(member.id === config.ownerid &&
-    channel.permissionsFor(member).hasPermissions(perms)) return true;
+    channel.permissionsFor(member).has(perms)) return true;
     else return false;
   }
   if(trustedPermIndex > -1) {
     perms.splice(trustedPermIndex, 1);
 
     if((member.id === config.ownerid || member.id === config.trustedids) &&
-    channel.permissionsFor(member).hasPermissions(perms)) return true;
+    channel.permissionsFor(member).has(perms)) return true;
     else return false;
   }
-  if(channel.permissionsFor(member).hasPermissions(perms)) return true;
+  if(channel.permissionsFor(member).has(perms)) return true;
   else return false;
 }
