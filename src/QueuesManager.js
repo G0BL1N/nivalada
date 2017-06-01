@@ -6,9 +6,9 @@ class QueuesManager {
     this.container = {};
   }
   getQueue(guildid) {
-    if(guildid in this.container) {
+    if(guildid in this.container)
       return this.container[guildid];
-    }
+
     return this.newQueue(guildid);
   }
   newQueue(guildid) {
@@ -16,7 +16,15 @@ class QueuesManager {
     return this.container[guildid];
   }
   removeQueue(guildid) {
+    if(!guildid in this.container) return;
+
+    let queue = this.container[guildid];
+    queue.leave();
     delete this.container[guildid];
+  }
+  reinitQueue(guildid) {
+    this.removeQueue(guildid);
+    return this.newQueue(guildid);
   }
 
 }

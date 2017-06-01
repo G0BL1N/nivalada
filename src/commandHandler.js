@@ -91,7 +91,7 @@ function checkPermissions(message, command) {
   if(trustedPermIndex > -1) {
     perms.splice(trustedPermIndex, 1);
 
-    if((member.id === config.ownerid || member.id === config.trustedids) &&
+    if((member.id === config.ownerid || member.id in config.trustedids) &&
     channel.permissionsFor(member).has(perms)) return true;
     else return false;
   }
