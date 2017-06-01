@@ -69,9 +69,9 @@ class Queue {
     this.dispatcher.once('end', () => {
       if(timeout) {
         clearTimeout(timeout);
+        this.array.unshift(this.nowPlaying);
         this.nowPlaying = null;
         this.dispatcher = null;
-        this.array.unshift(this.nowPlaying);
         this.play();
         return;
       }
