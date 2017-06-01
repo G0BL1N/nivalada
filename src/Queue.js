@@ -63,7 +63,7 @@ class Queue {
     let streamOptions = {volume: this.volume/100};
     this.dispatcher = this.connection.playStream(stream, streamOptions);
     let timeout = setTimeout(() => {
-      this.textChannel.sendEmbed(this.nowPlaying.embed);
+      this.textChannel.send('', {embed: this.nowPlaying.embed});
       timeout = null;
     }, 300);
     this.dispatcher.once('end', () => {
@@ -139,11 +139,11 @@ class Queue {
     for(const a of this.array) {
       if(a.type === 'stream')
         continue;
-      if(audio.path === audio.path) {
+      if(a.path === audio.path) {
         return;
       }
     }
-    audio.destroy()
+    audio.destroy();
   }
   leave() {
     if(!this.connection) return;
