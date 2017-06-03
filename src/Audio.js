@@ -22,7 +22,7 @@ class Audio {
     return embed;
   }
   toString() {
-    return `**${this.title}**, добавлено ${this.author.tag}`;
+    return `**${this.title + ` (${this.duration})`}**, добавлено ${this.author.tag}`;
   }
   destroy() {}
 

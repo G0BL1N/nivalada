@@ -30,6 +30,8 @@ class YoutubeWrapper {
         let audio = new AudioFile(path, data.title);
         if(data.duration)
           audio.setDuration(data.duration);
+        if(data.thumbnail)
+          audio.setThumbnail(data.thumbnail);
         resolve(audio);
       });
       video.on('error', (err) => reject(err));
