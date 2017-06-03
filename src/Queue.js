@@ -1,6 +1,7 @@
-const audioHandler = require('./audioHandler.js');
 const fs = require('fs');
 const logger = require('./logger.js');
+const {AudioFile, Stream} = require('./Audio.js');
+const YoutubeWrapper = require('./YoutubeWrapper.js');
 
 
 class Queue {
@@ -29,15 +30,13 @@ class Queue {
     return this.move(member.voiceChannel);
   }
   add(query, author) {
-    let pending = this.textChannel.send('Кеширую...')
-      .then((message) => {
-        return message;
-      })
-    audioHandler.handle(query, author)
-      .then((result) => {
-        let str = `:white_check_mark: Добавлено: **${result.title}**`;
+    let pending = this.textChannel.send('Кеширую...');
+    YoutubeWrapper.cache(query)
+      .then((audio) => {
+        let str = `:white_check_mark: Добавлено: **${audio.title}**`;
         pending.then(message => message.edit(str));
-        this.array.push(result);
+        audio.setAuthor(author);
+        this.array.push(audio);
         this.play();
       })
       .catch((err) => {
@@ -50,10 +49,10 @@ class Queue {
       });
   }
   addStream(url, author) {
-    let result = audioHandler.handleStream(url, author)
+    let stream = new Stream(url, author);
     this.textChannel.send(
-        `:white_check_mark: Добавлено: **${result.title}**`);
-    this.array.push(result);
+        `:white_check_mark: Добавлено: **${stream.title}**`);
+    this.array.push(stream);
     this.play();
   }
   play() {
@@ -63,7 +62,7 @@ class Queue {
     let streamOptions = {volume: this.volume/100};
     this.dispatcher = this.connection.playStream(stream, streamOptions);
     let timeout = setTimeout(() => {
-      this.textChannel.send('', {embed: this.nowPlaying.embed});
+      this.textChannel.send('', {embed: this.nowPlaying.getEmbed()});
       timeout = null;
     }, 300);
     this.dispatcher.once('end', () => {
