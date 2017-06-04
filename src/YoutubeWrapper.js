@@ -19,7 +19,7 @@ class YoutubeWrapper {
         });
     }
     return new Promise((resolve, reject) => {
-      let video = youtubedl(url, ['--format=93/best'], {maxBuffer: Infinity});
+      let video = youtubedl(url, ['--format=93'], {maxBuffer: Infinity});
       video.on('info', (data) => {
         let stream = new YoutubeStream(url, data.title, video);
         if(data.thumbnail)
