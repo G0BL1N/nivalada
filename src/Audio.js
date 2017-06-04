@@ -1,4 +1,5 @@
 const fs = require('fs');
+const spawn = require('child_process').spawn;
 const {RichEmbed} = require('discord.js');
 
 class Audio {
@@ -62,6 +63,47 @@ class AudioFile extends Audio {
 
 }
 
+class YoutubeStream extends Audio {
+  constructor(url, title, video) {
+    super('ytstream', title);
+    this.url = url;
+    this.duration = '∞';
+    this.video = video;
+  }
+  setThumbnail(url) {
+    this.thumbnail = url;
+  }
+  getEmbed() {
+    let embed = super.getEmbed(0xE62117) //youtube red color
+    if(this.thumbnail)
+      embed.setThumbnail(this.thumbnail);
+    return embed;
+  }
+  getStream() {
+    let args = [
+      '-analyzeduration', '0',
+      '-protocol_whitelist', 'file,pipe,http,https,tcp,tls,hls,applehttp',
+      '-i', '-',
+      '-vn',
+      '-c:a', 'copy',
+      '-f', 's16le',
+      '-'
+    ]
+    let ffmpeg = spawn('ffmpeg', args);
+    ffmpeg.on('close', console.log)
+    ffmpeg.on('error', console.log)
+    ffmpeg.on('message', console.log)
+    ffmpeg.on('exit', console.log)
+
+    ffmpeg.stderr.on('data', (data) => {
+      console.log(`stderr: ${data}`);
+    });
+
+    this.video.pipe(ffmpeg.stdin);
+    return ffmpeg.stdout;
+  }
+}
+
 class Stream extends Audio {
 
   constructor(url, author) {
@@ -82,5 +124,6 @@ class Stream extends Audio {
 
 module.exports = {
   AudioFile,
+  YoutubeStream,
   Stream
 }
