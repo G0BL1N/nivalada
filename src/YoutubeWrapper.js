@@ -3,33 +3,11 @@ const youtubedl = require('youtube-dl');
 const request = require('request');
 const requestp = require('request-promise-native');
 const {googlekey: gkey} = require('../config.json');
-const {AudioFile, YoutubeStream} = require('./Audio.js');
+const {AudioFile} = require('./Audio.js');
 
 class YoutubeWrapper {
 
-  getTYStream(query) {
-    let url;
-    let httpRegExp = /^(http|https):\/\//i;
-    if(httpRegExp.test(query)) {
-      url = query;
-    } else {
-      return this.search(query, {type: 'video', eventType: 'live'})
-        .then((result) => {
-          return this.getTYStream('https://www.youtube.com/watch?v=' + result.id.videoId);
-        });
-    }
-    return new Promise((resolve, reject) => {
-      let video = youtubedl(url, ['--format=93'], {maxBuffer: Infinity});
-      video.on('info', (data) => {
-        let stream = new YoutubeStream(url, data.title, video);
-        if(data.thumbnail)
-          stream.setThumbnail(data.thumbnail);
-        resolve(stream);
-      });
-      video.on('error', (err) => reject(err));
-    })
-  }
-  getAudio(query) {
+  cache(query) {
     let url;
     let httpRegExp = /^(http|https):\/\//i;
     if(httpRegExp.test(query)) {

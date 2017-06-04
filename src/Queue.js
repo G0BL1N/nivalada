@@ -31,26 +31,7 @@ class Queue {
   }
   add(query, author) {
     let pending = this.textChannel.send('Кеширую...');
-    YoutubeWrapper.getAudio(query)
-      .then((audio) => {
-        let str = `:white_check_mark: Добавлено: **${audio.title}**`;
-        pending.then(message => message.edit(str));
-        audio.setAuthor(author);
-        this.array.push(audio);
-        this.play();
-      })
-      .catch((err) => {
-        if(err.message === 'Not found') {
-          pending.then(message => message.edit(':x: Не найдено.'));
-          return;
-        }
-        logger.error(err);
-        throw err;
-      });
-  }
-  addYTStream(query, author) {
-    let pending = this.textChannel.send('Обработка...');
-    YoutubeWrapper.getTYStream(query)
+    YoutubeWrapper.cache(query)
       .then((audio) => {
         let str = `:white_check_mark: Добавлено: **${audio.title}**`;
         pending.then(message => message.edit(str));
