@@ -16,6 +16,7 @@ module.exports = {
       let url = 'https://www.googleapis.com/customsearch/v1' +
       `?key=${config.googlekey}&cx=${config.googlecsid}&q=${query}`;
       url += '&searchType=image';
+      url += '&safe=medium';
       request(url)
         .then((body) => {
           let parsed = JSON.parse(body);
