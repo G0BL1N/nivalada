@@ -12,7 +12,8 @@ module.exports = {
       .then((message) => {
         return message;
       });
-    args += ' rating:safe';
+    if(!channel.nsfw)
+      args += ' rating:safe';
     args.replace(/\s/g, '+');
     let query = encodeURIComponent(args);
 
