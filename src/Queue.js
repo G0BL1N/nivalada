@@ -15,6 +15,7 @@ class Queue {
     this.currentDispatcher = null;
     this.textChannel = null;
     this.volume = 100;
+    this.paused = false;
   }
   move(channel) {
     return channel.join().then((connection) => this.connection = connection)
@@ -110,9 +111,13 @@ class Queue {
       this.textChannel.send('Очередь пуста.');
       return;
     }
-    let message = `:notes: Сейчас играет: ${this.nowPlaying}\n`;
+    let message;
+    if(!this.paused)
+      message = `:arrow_forward: Сейчас играет: ${this.nowPlaying}\n`;
+    else
+      message = `:pause_button: Сейчас на паузе: ${this.nowPlaying}\n`;
     if(this.array[0]) {
-      message += ':arrow_forward: В очереди:\n'
+      message += ':notes: В очереди:\n'
       for(const key in this.array) {
         if(message.length > 1900) {
           message += '**...**';
@@ -142,6 +147,18 @@ class Queue {
         return;
     }
     audio.destroy();
+  }
+  togglePause() {
+    let message;
+    if(!this.paused) {
+      this.dispatcher.pause();
+      message = ':pause_button: Пауза';
+    } else {
+      this.dispatcher.resume();
+      message = `:arrow_forward: Сейчас играет: ${this.nowPlaying}\n`;
+    }
+    this.textChannel.send(message);
+    this.paused = !this.paused;
   }
   leave() {
     if(!this.connection) return;
