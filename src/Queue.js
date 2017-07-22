@@ -138,9 +138,8 @@ class Queue {
     for(const a of this.array) {
       if(a.type === 'stream')
         continue;
-      if(a.path === audio.path) {
+      if(audio.path === a.path)
         return;
-      }
     }
     audio.destroy();
   }

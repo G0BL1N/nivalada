@@ -8,6 +8,6 @@ module.exports = {
     let queue = QueuesManager.getQueue(message.guild.id);
 
     queue.setTextChannel(message.channel);
-    voiceHandler[message.guild.id].setVolume(args);
+    queue.setVolume(args);
   }
 }
