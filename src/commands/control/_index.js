@@ -1,1 +1,1 @@
-module.exports.name = ':information_source: Инфо';
+module.exports.name = ':keyboard: Управление';
