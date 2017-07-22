@@ -1,7 +1,7 @@
 const QueuesManager = require('../../QueuesManager.js');
 
 module.exports = {
-  variants: ['rm', 'remove'],
+  variants: ['remove', 'rm'],
   description: 'Бот удаляет указанный трек из очереди' +
   ' или очищает всю очередь если было указано \`all\`.',
   usage: 'rm 2',

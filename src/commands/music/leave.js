@@ -1,7 +1,7 @@
 const QueuesManager = require('../../QueuesManager.js');
 
 module.exports = {
-  variants: ['lv', 'leave'],
+  variants: ['leave', 'lv'],
   description: 'Бот покидает голосовой канал и очищает очередь.',
   usage: 'leave',
   async action(message) {

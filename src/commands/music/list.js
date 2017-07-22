@@ -1,7 +1,7 @@
 const QueuesManager = require('../../QueuesManager.js');
 
 module.exports = {
-  variants: ['ls', 'list'],
+  variants: ['list', 'ls'],
   description: 'Список треков в очереди.',
   usage: 'list',
   async action(message) {
