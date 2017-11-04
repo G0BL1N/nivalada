@@ -1,0 +1,4 @@
+{
+  "ping_reply": "Pong!",
+  "ping_full_reply": "Pong! Took `{0}ms`"
+}

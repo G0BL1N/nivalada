@@ -1,0 +1,15 @@
+{
+  "ping": {
+    "variants": ["пинг"],
+    "description": "Пинг до бота."
+  },
+  "status": {
+    "description": "Статус бота."
+  },
+  "setlocale": {
+    "description": "Изменение локали для всего сервера."
+  },
+  "setprefix": {
+    "description": "Изменение префикса для всего сервера."
+  }
+}

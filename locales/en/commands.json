@@ -1,0 +1,14 @@
+{
+  "ping": {
+    "description": "Ping to bot."
+  },
+  "status": {
+    "description": "Bot status."
+  },
+  "setlocale": {
+    "description": "Sets locale for this server."
+  },
+  "setprefix": {
+    "description": "Sets prefix for this server."
+  }
+}
