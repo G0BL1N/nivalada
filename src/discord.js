@@ -6,11 +6,9 @@ const logger = require('./logger.js');
 
 const Client = new Discord.Client()
 
-
 Client.on('ready', () => {
   logger.log('Client ready.');
 });
-
 
 Client.on('message', async (message) => {
   const map = CommandEngine.getCommandMap(message.guild);
@@ -24,7 +22,6 @@ Client.on('message', async (message) => {
     break;
   }
 });
-
 
 Client.login(config.token)
   .then(result => logger.log('Logged in successfully.'))

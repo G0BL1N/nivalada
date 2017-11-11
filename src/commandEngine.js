@@ -3,7 +3,6 @@ const Logger = require('./logger.js');
 const { cache, getGuildValue } = require('./dataEngine.js');
 const LocaleEngine = require('./localeEngine.js');
 
-
 const commandsMaps = new Map();
 
 module.exports = {
@@ -11,7 +10,6 @@ module.exports = {
   buildCommandsMap,
   commandsMaps
 }
-
 
 let commands = [];
 const categories = [];
@@ -21,7 +19,6 @@ categories.push(info);
 categories.push(control);
 commands = commands.concat(info.commands);
 commands = commands.concat(control.commands);
-
 
 cache.forEach((guild, key) => {
   const getKey = getGuildValue(guild);
@@ -58,7 +55,6 @@ function buildCommandsMap(locale, prefix) {
   }
   commandsMaps.set(index, {map, guildsUsing: 1});
 }
-
 
 function escapeString(str) {
   return str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
