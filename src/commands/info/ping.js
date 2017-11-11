@@ -5,10 +5,13 @@ module.exports = {
   usage: 'ping',
   async action(message) {
     let pingTimestamp = message.createdTimestamp;
-    const reply = await message.channel.send(
-      l.getString(message.guild, 'ping_reply'));
+    const text1 = await l.getString(message.guild, 'ping_reply');
+
+    const reply = await message.channel.send(text1);
+
     let pongTimestamp = reply.createdTimestamp;
-    reply.edit(
-      l.getString(message.guild, 'ping_full_reply', pongTimestamp-pingTimestamp));
+    const text2 = await
+      l.getString(message.guild, 'ping_full_reply', pongTimestamp-pingTimestamp);
+    reply.edit(text2);
   }
 }

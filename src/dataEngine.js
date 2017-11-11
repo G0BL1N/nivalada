@@ -1,60 +1,50 @@
 const r = require('rethinkdb');
-const Logger = require('./logger.js');
+const logger = require('./logger.js');
 const dbconfig = require('../dbconfig.json');
+const defaults = require('../defaults.json');
+const cache = new Map();
+let connection;
 
-class DataEngine {
-  constructor() {
-    this.getConnection();
-    this.cache = this.loadCache();
-  }
-  async getConnection() {
-    if(this.connection) return this.connection;
-    let connection;
-    try {
-      connection = await r.connect(dbconfig);
-      await r.tableCreate('guilds').run(connection);
-    } catch(err) {
-      if(err.msg != 'Table `zeroone.guilds` already exists.') {
-        Logger.error('Error connecting to database:\n' + err);
-        process.exit(1);
-      }
+async function init() {
+  try {
+    connection = await r.connect(dbconfig);
+    await r.tableCreate('guilds').run(connection);
+  } catch(err) {
+    if(err.msg != 'Table `zeroone.guilds` already exists.') {
+      logger.error('Error connecting to database:\n' + err);
+      process.exit(1);
     }
-    this.connection = connection;
-    return this.connection;
   }
-  async loadCache() {
-    const connection = await this.getConnection();;
-    const cursor = await r.table('guilds').run(connection);
-    const cache = new Map();
+  const cursor = await r.table('guilds').run(connection);
 
-    await cursor.eachAsync((guild) => {
-      cache[guild.id] = guild;
-    }).catch(this.handleError);
-    cache.set('defaults', require('../defaults.json'));
-    return cache;
-  }
-  getCache() {
-    return this.cache;
-  }
-  async getGuildSetting(guild, key) {
-    await this.getConnection();
-    if(this.cache.has(guild.id))
-      return this.cache.get(guild.id).get(key)
-          || this.cache.get('defaults').get(key);
-    this.cache.get('defaults').get(key);
-  }
-  async updateGuildData(guild, data) {
-    const connection = await this.getConnection();
-    data.id = guild.id;
-    r.table('guilds').insert(data, {conflict: 'update'} )
-      .run(connection).catch(this.handleError);
-    this.cache[guild.id] = Object.assign(this.cache[guild.id] || {}, data);
-  }
-  handleError(err) {
-    if(!err) return;
-    Logger.error('Rethinkdb error:\n' + err);
-  }
+  await cursor.eachAsync((guild) => {
+    cache.set(guild.id, guild);
+  }).catch(handleError);
 }
 
+const getGuildValue = guild => key => {
+  const guildCache = cache.get(guild.id);
+  if(guildCache && guildCache[key])
+    return guildCache[key];
+  return defaults[key];
+}
 
-module.exports = new DataEngine();
+const updateGuildData = guild => data => {
+  cache.set(guild.id, Object.assign(cache.get(guild.id) || {}, data));
+  data.id = guild.id;
+  r.table('guilds').insert(data, {conflict: 'update'} )
+    .run(connection).catch(this.handleError);
+}
+
+function handleError() {
+  if(!err) return;
+  logger.error('Rethinkdb error:\n' + err);
+}
+
+module.exports = {
+  init,
+  getGuildValue,
+  updateGuildData,
+  cache,
+  defaults
+}
