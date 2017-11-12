@@ -2,7 +2,9 @@ const r = require('rethinkdb');
 const logger = require('./logger.js');
 const dbconfig = require('../dbconfig.json');
 const defaults = require('../defaults.json');
+
 const cache = new Map();
+
 let connection;
 
 async function init() {
@@ -15,6 +17,7 @@ async function init() {
       process.exit(1);
     }
   }
+  logger.log('Connected to database.')
   const cursor = await r.table('guilds').run(connection);
 
   await cursor.eachAsync((guild) => {

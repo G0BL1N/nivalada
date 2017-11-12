@@ -23,6 +23,6 @@ module.exports = {
       .addField('Сервера', message.client.guilds.size, true)
       .addField('Каналы', message.client.channels.size, true)
       .addField('Пользователи', message.client.users.size, true);
-    message.channel.send('', {embed} );
+    message.channel.send('', embed);
   }
 }

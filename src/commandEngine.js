@@ -2,13 +2,15 @@ const fs = require('fs');
 const Logger = require('./logger.js');
 const { cache, getGuildValue } = require('./dataEngine.js');
 const LocaleEngine = require('./localeEngine.js');
+const { ownerid } = require('../config.json');
 
 const commandsMaps = new Map();
 
 module.exports = {
   getCommandMap,
   buildCommandsMap,
-  commandsMaps
+  commandsMaps,
+  checkPermissions
 }
 
 let commands = [];
@@ -54,6 +56,19 @@ function buildCommandsMap(locale, prefix) {
     map.set(new RegExp(regExpSource, 'i'), command);
   }
   commandsMaps.set(index, {map, guildsUsing: 1});
+}
+
+function checkPermissions(message, command) {
+  const member = message.member;
+  const perms = command.permissions;
+  if(!perms) return true;
+  const ownerindex = perms.indexOf('OWNER');
+  if(ownerindex > -1) {
+    if(member.id != ownerid) return false;
+    perms.splice(ownerindex, 1);
+  }
+  if(!member.hasPermission(perms)) return false;
+  return true;
 }
 
 function escapeString(str) {

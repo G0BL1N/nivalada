@@ -3,6 +3,7 @@ const config = require('../config.json');
 const DataEngine = require('./dataEngine.js');
 const CommandEngine = require('./commandEngine.js');
 const logger = require('./logger.js');
+const { getGuildString: l } = require('./localeEngine.js');
 
 const Client = new Discord.Client()
 
@@ -16,6 +17,11 @@ Client.on('message', async (message) => {
   for(const [regExp, command] of map) {
     const result = regExp.exec(message);
     if(!result) continue;
+    const hasPerms = CommandEngine.checkPermissions(message, command);
+    if(!hasPerms) {
+      message.channel.send(l(message.guild)('no_permissions'));
+      break;
+    }
     let [, variant, args] = result;
     command.action(message, args, variant);
     logger.command(message);
