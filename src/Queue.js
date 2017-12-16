@@ -19,7 +19,9 @@ class Queue {
   }
   move(channel) {
     return channel.join().then((connection) => this.connection = connection)
-    .catch(logger.error);
+    .catch((e) => {
+      logger.error(e.message);
+    });
   }
   connect(member) {
     if(this.connection || this.pendingConnetion)
