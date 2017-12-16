@@ -1,13 +1,13 @@
 const CommandEngine = require('../../commandEngine.js');
-const {cache, updateGuildData, getGuildValue} = require('../../dataEngine.js');
-const defaults = require('../../../defaults.json');
-const { getGuildString, locales } = require('../../localeEngine.js');
+const { updateTableData, getGuildValue } = require('../../dataEngine.js');
+const { getGuildString } = require('../../localeEngine.js');
 
 module.exports = {
   variants: ['setprefix'],
-  usage: 'setprefix',
-  permissions: 'ADMINISTRATOR',
+  usage: 'setprefix ~',
+  permissions: ['ADMINISTRATOR'],
   async action(message, args) {
+    if(!args) return false;
     const l = getGuildString(message.guild);
     const prefix = args;
     const { guild } = message;
@@ -25,7 +25,7 @@ module.exports = {
       }
     }
     CommandEngine.buildCommandsMap(oldLocale, prefix);
-    updateGuildData(guild)({prefix});
+    updateTableData('guilds')( {id: guild.id, prefix} );
     message.channel.send(l('setprefix_done', prefix));
   }
 }

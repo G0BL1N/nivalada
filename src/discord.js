@@ -3,13 +3,15 @@ const config = require('../config.json');
 const DataEngine = require('./dataEngine.js');
 const CommandEngine = require('./commandEngine.js');
 const logger = require('./logger.js');
-const { getGuildString: l } = require('./localeEngine.js');
+const { getGuildString } = require('./localeEngine.js');
 
 const Client = new Discord.Client()
 
 Client.on('ready', () => {
   logger.log('Client ready.');
 });
+
+let blTimeouts = {};
 
 Client.on('message', async (message) => {
   const map = CommandEngine.getCommandMap(message.guild);
@@ -21,6 +23,16 @@ Client.on('message', async (message) => {
     if(!hasPerms) {
       message.channel.send(l(message.guild)('no_permissions'));
       break;
+    }
+    const blReason = CommandEngine.isBlacklisted(message.author);
+    if(blReason != false) {
+      if(blTimeouts[message.author.id]) return;
+      const l = getGuildString(message.guild);
+      message.channel.send(l('blacklisted', blReason));
+      blTimeouts[message.author.id] = setTimeout(() => {
+        blTimeouts[message.author.id] = undefined;
+      }, 6000000);
+      return;
     }
     let [, variant, args] = result;
     command.action(message, args, variant);

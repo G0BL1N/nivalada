@@ -1,13 +1,13 @@
 const CommandEngine = require('../../commandEngine.js');
-const {cache, updateGuildData, getGuildValue} = require('../../dataEngine.js');
-const defaults = require('../../../defaults.json');
+const { updateTableData, getGuildValue } = require('../../dataEngine.js');
 const { getGuildString, locales } = require('../../localeEngine.js');
 
 module.exports = {
   variants: ['setlocale'],
-  usage: 'setlocale',
-  permissions: 'ADMINISTRATOR',
+  usage: 'setlocale en',
+  permissions: ['ADMINISTRATOR'],
   async action(message, args) {
+    if(!args) return false;
     const l = getGuildString(message.guild);
     if(!(args in locales))
       return message.channel.send(l('setlocale_no_locale'));
@@ -27,7 +27,7 @@ module.exports = {
       }
     }
     CommandEngine.buildCommandsMap(locale, oldPrefix);
-    updateGuildData(guild)({locale});
+    updateTableData('guilds')( {id: guild.id, locale} );
     message.channel.send(l('setlocale_done', locale));
   }
 }

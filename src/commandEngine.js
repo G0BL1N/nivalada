@@ -1,6 +1,6 @@
 const fs = require('fs');
 const Logger = require('./logger.js');
-const { cache, getGuildValue } = require('./dataEngine.js');
+const { cache, getGuildValue, getRow } = require('./dataEngine.js');
 const LocaleEngine = require('./localeEngine.js');
 const { ownerid } = require('../config.json');
 
@@ -10,7 +10,8 @@ module.exports = {
   getCommandMap,
   buildCommandsMap,
   commandsMaps,
-  checkPermissions
+  checkPermissions,
+  isBlacklisted
 }
 
 let commands = [];
@@ -64,11 +65,19 @@ function checkPermissions(message, command) {
   if(!perms) return true;
   const ownerindex = perms.indexOf('OWNER');
   if(ownerindex > -1) {
-    if(member.id != ownerid) return false;
+    if(member.id !== ownerid) return false;
     perms.splice(ownerindex, 1);
+    if(perms.length === 0) return true;
   }
   if(!member.hasPermission(perms)) return false;
   return true;
+}
+
+function isBlacklisted(user) {
+  if(user.id === ownerid) return false;
+  const data = getRow('blacklist')(user.id);
+  if(data === undefined) return false;
+  return data.reason;
 }
 
 function escapeString(str) {

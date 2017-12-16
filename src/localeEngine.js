@@ -1,5 +1,5 @@
 const fs = require('fs');
-const DataEngine = require('./dataEngine.js')
+const { getGuildValue } = require('./dataEngine.js')
 const defaults = require('../defaults.json');
 
 const locales = {};
@@ -17,11 +17,7 @@ function getCommandData(locale, command) {
 }
 
 const getGuildString = guild => (stringName, ...values) => {
-  let locale = defaults.locale;
-  const cache = DataEngine.cache;
-  const guildData = cache.get(guild.id);
-  if(guildData && guildData.locale)
-    locale = guildData.locale;
+  let locale = getGuildValue(guild)('locale');
   const string = locales[locale].strings[stringName];
   return string.replace(/{(\d+)}/g, (match, number) => {
     return values[number] || match;

@@ -3,6 +3,7 @@ module.exports = {
   fancyname: ':keyboard: Управление',
   commands: [
     require('./setlocale.js'),
-    require('./setprefix.js')
+    require('./setprefix.js'),
+    require('./blacklist.js')
   ]
 };
