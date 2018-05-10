@@ -6,9 +6,9 @@ module.exports = {
   variants: ['blacklist'],
   usage: 'blacklist @username reason',
   permissions: ['OWNER'],
-  async action(message, args) {
+  async action(message, arg) {
     const regExp = /<@!?(\d+)>\s(.+)/i;
-    const result = regExp.exec(args);
+    const result = regExp.exec(arg);
     if(!result) return false;
     const [, userid, reason] = result;
     const l = getGuildString(message.guild);

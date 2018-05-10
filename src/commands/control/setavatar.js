@@ -4,11 +4,11 @@ module.exports = {
   variants: ['setavatar', 'setav'],
   usage: 'setavatar http://link.to/avatar.png',
   permissions: ['OWNER'],
-  async action(message, args) {
+  async action(message, arg) {
     const l = getGuildString(message.guild);
     let url;
-    if (args !== undefined) {
-      url = args;
+    if (arg !== undefined) {
+      url = arg;
     } else if (message.attachments.size > 0) {
       url = message.attachments.first().url;
     } else {

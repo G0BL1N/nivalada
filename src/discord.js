@@ -34,8 +34,8 @@ Client.on('message', async (message) => {
       }, 6000000);
       return;
     }
-    let [, variant, args] = result;
-    command.action(message, args, variant);
+    let [, variant, arg] = result;
+    command.action(message, arg, variant);
     logger.command(message);
     break;
   }

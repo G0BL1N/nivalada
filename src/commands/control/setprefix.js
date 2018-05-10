@@ -6,10 +6,10 @@ module.exports = {
   variants: ['setprefix'],
   usage: 'setprefix ~',
   permissions: ['ADMINISTRATOR'],
-  async action(message, args) {
-    if(!args) return false;
+  async action(message, arg) {
+    if(!arg) return false;
     const l = getGuildString(message.guild);
-    const prefix = args;
+    const prefix = arg;
     const { guild } = message;
     const getValue = getGuildValue(guild);
     const oldLocale = getValue('locale');

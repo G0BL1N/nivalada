@@ -6,12 +6,12 @@ module.exports = {
   variants: ['setlocale'],
   usage: 'setlocale en',
   permissions: ['ADMINISTRATOR'],
-  async action(message, args) {
-    if(!args) return false;
+  async action(message, arg) {
+    if(!arg) return false;
     const l = getGuildString(message.guild);
-    if(!(args in locales))
+    if(!(arg in locales))
       return message.channel.send(l('setlocale_no_locale'));
-    const locale = args;
+    const locale = arg;
     const { guild } = message;
     const getValue = getGuildValue(guild);
     const oldLocale = getValue('locale');
