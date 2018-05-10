@@ -11,6 +11,9 @@
   "setprefix": {
     "description": "Sets prefix for this server."
   },
+  "setavatar": {
+    "description": "Sets bot avatar. Should be used with link or attchment."
+  },
   "blacklist": {
     "description": "Adds user to blacklist. User will not be allowed to use any command on any server."
   }

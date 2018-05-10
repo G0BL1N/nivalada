@@ -7,6 +7,8 @@
   "setlocale_done": "✅ Locale is set. New locale `{0}`",
   "setprefix_same_prefix": "⚠ This prefix already set!",
   "setprefix_done": "✅ Prefix set. New prefix `{0}`",
+  "setavatar_done": "✅ New avatar set.",
+  "setavatar_no_picture": "⚠ No picture!",
   "blacklist_no_user": "❌ User {0} does not exists.",
   "blacklist_done": "✅ User {0} was added to blacklist with reason: `{1}`",
   "blacklisted": "⚠ You are blacklisted with reason: `{0}`"
