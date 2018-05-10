@@ -1,10 +1,10 @@
 const { RichEmbed } = require('discord.js');
-
+const { getGuildString } = require('../../localeEngine.js');
 module.exports = {
   variants: ['status', 'stats'],
   usage: 'status',
   async action(message) {
-
+    const l = getGuildString(message.guild);
     const ms = message.client.uptime;
     const days      = Math.floor(ms / (24*60*60*1000));
     const daysms    = ms % (24*60*60*1000);
@@ -13,8 +13,7 @@ module.exports = {
     const minutes   = Math.floor((hoursms)/(60*1000));
 
     const memory = (process.memoryUsage().rss / 1024 / 1024).toFixed(2);
-    const uptime = `\`${days}\` дней, ` +
-      `\`${hours}\` часов, \`${minutes}\` мин`;
+    const uptime = l('uptime_string', days, hours, minutes);
     const embed = new RichEmbed()
       .setColor(0x36d148)
       .addField('Использование памяти', `${memory} MB`, true)
