@@ -7,10 +7,10 @@ module.exports = {
   async action(message, args) {
     const l = getGuildString(message.guild);
     let url;
-    if (args[0]) {
-      url = args[0];
-    } else if (message.attachments.first) {
-      url = message.attachments.first.url;
+    if (args !== undefined) {
+      url = args;
+    } else if (message.attachments.size > 0) {
+      url = message.attachments.first().url;
     } else {
       message.channel.send(l('setavatar_no_picture'));
       return false;

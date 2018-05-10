@@ -34,7 +34,6 @@ function getCommandMap(guild) {
   const getKey = getGuildValue(guild);
   const locale = getKey('locale');
   const prefix = getKey('prefix');
-  console.log(locale+prefix);
   return commandsMaps.get(locale + prefix).map;
 }
 
