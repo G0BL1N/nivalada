@@ -5,15 +5,15 @@ module.exports = {
   usage: 'status',
   async action(message) {
 
-    let ms = message.client.uptime;
-    let days      = Math.floor(ms / (24*60*60*1000));
-    let daysms    = ms % (24*60*60*1000);
-    let hours     = Math.floor((daysms)/(60*60*1000));
-    let hoursms   = ms % (60*60*1000);
-    let minutes   = Math.floor((hoursms)/(60*1000));
+    const ms = message.client.uptime;
+    const days      = Math.floor(ms / (24*60*60*1000));
+    const daysms    = ms % (24*60*60*1000);
+    const hours     = Math.floor((daysms)/(60*60*1000));
+    const hoursms   = ms % (60*60*1000);
+    const minutes   = Math.floor((hoursms)/(60*1000));
 
-    let memory = (process.memoryUsage().rss / 1024 / 1024).toFixed(2);
-    let uptime = `\`${days}\` дней, ` +
+    const memory = (process.memoryUsage().rss / 1024 / 1024).toFixed(2);
+    const uptime = `\`${days}\` дней, ` +
       `\`${hours}\` часов, \`${minutes}\` мин`;
     const embed = new RichEmbed()
       .setColor(0x36d148)
