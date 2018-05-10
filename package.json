@@ -1,5 +1,5 @@
 {
-  "name": "zeroone",
+  "name": "gbot",
   "version": "0.1.0",
   "description": "",
   "main": "src/main.js",
@@ -10,12 +10,11 @@
   "author": "G0BL1N",
   "license": "MIT",
   "dependencies": {
-    "chalk": "^2.1.0",
-    "discord.js": "^11.2.1",
-    "moment": "^2.19.1",
+    "chalk": "^2.4.1",
+    "discord.js": "^11.3.2",
+    "moment": "^2.22.1",
     "opusscript": "0.0.4",
     "rethinkdb": "^2.3.3",
-    "youtube-dl": "^1.12.2",
     "ytdl-core": "^0.18.2"
   }
 }
