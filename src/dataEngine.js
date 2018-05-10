@@ -35,7 +35,8 @@ const getRow = table => id => {
 };
 
 const getGuildValue = guild => key => {
-  const row = cache.get('guilds').get(guild.id);
+  const guildId = typeof(guild) == "string" ? guild : guild.id;
+  const row = cache.get('guilds').get(guildId);
   if(row && row[key])
     return row[key];
   return defaults[key];
