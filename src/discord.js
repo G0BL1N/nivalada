@@ -13,31 +13,21 @@ Client.on('ready', () => {
 let blTimeouts = {};
 
 Client.on('message', async (message) => {
-  const map = CommandEngine.getCommandMap(message.guild);
-  const entries = map.entries();
-  for(const [regExp, command] of map) {
-    const result = regExp.exec(message);
-    if(!result) continue;
-    const hasPerms = CommandEngine.checkPermissions(message, command);
-    if(!hasPerms) {
-      message.channel.send(l(message.guild)('no_permissions'));
-      break;
-    }
-    const blReason = CommandEngine.isBlacklisted(message.author);
-    if(blReason != false) {
-      if(blTimeouts[message.author.id]) return;
-      const l = getGuildString(message.guild);
-      message.channel.send(l('blacklisted', blReason));
-      blTimeouts[message.author.id] = setTimeout(() => {
-        blTimeouts[message.author.id] = undefined;
-      }, 6000000);
-      return;
-    }
-    let [, variant, arg] = result;
-    command.action(message, arg, variant);
-    logger.command(message);
-    break;
+  const commandMap = CommandEngine.getCommandMap(message.guild);
+  const entries = [...commandMap.entries()];
+  const result = entries.find(([regExp]) =>
+    message.content.search(regExp) != -1
+  );
+  if (result === undefined) return;
+  const [regExp, command] = result;
+  const [, variant, arg] = regExp.exec(message);
+  const hasPerms = CommandEngine.checkPermissions(message, command);
+  if (!hasPerms) {
+    message.channel.send(l(message.guild)('no_permissions'));
+    return;
   }
+  command.action(message, arg, variant);
+  logger.command(message);
 });
 
 Client.login(token)

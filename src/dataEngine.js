@@ -56,7 +56,7 @@ const updateTableData = table => data => {
     .run(connection).catch(this.handleError);
 }
 
-function handleError() {
+function handleError(err) {
   if(!err) return;
   logger.error('Rethinkdb error:\n' + err);
 }

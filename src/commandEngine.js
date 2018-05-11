@@ -70,13 +70,6 @@ function checkPermissions(message, command) {
   return true;
 }
 
-function isBlacklisted(user) {
-  if(user.id === ownerid) return false;
-  const data = getRow('blacklist')(user.id);
-  if(data === undefined) return false;
-  return data.reason;
-}
-
 function escapeString(str) {
   return str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
