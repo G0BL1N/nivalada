@@ -20,7 +20,8 @@ const getGuildString = guild => (stringName, ...values) => {
   let locale = getGuildValue(guild)('locale');
   const string = locales[locale].strings[stringName];
   return string.replace(/{(\d+)}/g, (match, number) => {
-    return values[number] || match;
+    console.log(match, number, values);
+    return values[number] !== undefined ? values[number] : match;
   });
 }
 

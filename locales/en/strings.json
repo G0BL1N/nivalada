@@ -12,7 +12,7 @@
   "blacklist_no_user": "❌ User {0} does not exists.",
   "blacklist_done": "✅ User {0} was added to blacklist with reason: `{1}`",
   "blacklisted": "⚠ You are blacklisted with reason: `{0}`",
-  "uptime_string": "{0} days, {1} hours, {2} minutes",
+  "uptime_string": "`{0}` days, `{1}` hours, `{2}` minutes",
   "memory_usage": "Memory usage",
   "uptime": "Uptime",
   "servers": "Servers",

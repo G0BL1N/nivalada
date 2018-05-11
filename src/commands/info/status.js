@@ -16,12 +16,12 @@ module.exports = {
     const uptime = l('uptime_string', days, hours, minutes);
     const embed = new RichEmbed()
       .setColor(0x36d148)
-      .addField('Использование памяти', `${memory} MB`, true)
-      .addField('Онлайн', uptime, true)
+      .addField(l('memory_usage'), `${memory} MB`, true)
+      .addField(l('uptime'), uptime, true)
       .addField('\u200b', '\u200b', true)
-      .addField('Сервера', message.client.guilds.size, true)
-      .addField('Каналы', message.client.channels.size, true)
-      .addField('Пользователи', message.client.users.size, true);
+      .addField(l('servers'), message.client.guilds.size, true)
+      .addField(l('channels'), message.client.channels.size, true)
+      .addField(l('users'), message.client.users.size, true);
     message.channel.send('', embed);
   }
 }
