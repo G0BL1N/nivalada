@@ -8,8 +8,7 @@ module.exports = {
   getCommandMap,
   buildCommandsMap,
   commandsMaps,
-  checkPermissions,
-  isBlacklisted
+  checkPermissions
 }
 
 let commands = [];

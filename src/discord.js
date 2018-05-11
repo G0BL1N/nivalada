@@ -6,11 +6,7 @@ const { getGuildString } = require('./localeEngine.js');
 
 const Client = new Discord.Client()
 
-Client.on('ready', () => {
-  logger.log('Client ready.');
-});
-
-let blTimeouts = {};
+Client.on('ready', () => logger.log('Client ready.'));
 
 Client.on('message', async (message) => {
   const commandMap = CommandEngine.getCommandMap(message.guild);
