@@ -7,7 +7,7 @@ module.exports = {
   async action(message, arg) {
     const l = getGuildString(message.guild);
     let url;
-    if (arg !== undefined) {
+    if (arg !== '') {
       url = arg;
     } else if (message.attachments.size > 0) {
       url = message.attachments.first().url;
@@ -21,6 +21,9 @@ module.exports = {
       message.channel.send(l('setavatar_done'));
       logger.log('New avatar has been set')
     })
-    .catch(logger.warn);
+    .catch(err => {
+      message.channel.send(l('setavatar_error'))
+      logger.warn(err);
+    });
   }
 }
