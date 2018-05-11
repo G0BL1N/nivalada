@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
-const config = require('../config.json');
-const DataEngine = require('./dataEngine.js');
+const { token } = require('../credentials.json');
 const CommandEngine = require('./commandEngine.js');
 const logger = require('./logger.js');
 const { getGuildString } = require('./localeEngine.js');
@@ -41,7 +40,7 @@ Client.on('message', async (message) => {
   }
 });
 
-Client.login(config.token)
+Client.login(token)
   .then(result => logger.log('Logged in successfully.'))
   .catch((error) => {
     logger.error('Cannot log in, error:\n' + error);

@@ -1,8 +1,6 @@
-const fs = require('fs');
-const Logger = require('./logger.js');
 const { cache, getGuildValue, getRow } = require('./dataEngine.js');
-const LocaleEngine = require('./localeEngine.js');
-const { ownerid } = require('../config.json');
+const { getCommandData } = require('./localeEngine.js');
+const { ownerid } = require('../credentials.json');
 
 const commandsMaps = new Map();
 
@@ -48,8 +46,7 @@ function buildCommandsMap(locale, prefix) {
     const commandPrefix = (command.prefix === 'mention')
      ? '<@!?${clientid}>\\s*'
      : command.prefix || prefix;
-    const localeVariants =
-      LocaleEngine.getCommandData(locale, command).variants || [];
+    const localeVariants = getCommandData(locale, command).variants || [];
     const variants = command.variants.concat(localeVariants);
     const variantsString = variants.map(escapeString).join('|');
     const regExpSource =
