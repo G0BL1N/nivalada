@@ -17,14 +17,13 @@ module.exports = {
       return false;
     }
     const clientUser = message.client.user;
-    clientUser.setAvatar(url)
-    .then(user => {
+    try {
+      await clientUser.setAvatar(url);
       message.channel.send(l('setavatar_done'));
       logger.log('New avatar has been set')
-    })
-    .catch(err => {
+    } catch (err) {
       message.channel.send(l('error'))
       logger.warn(err);
-    });
+    }
   }
 }

@@ -29,23 +29,23 @@ module.exports = {
       },
       json: true
     }
-    rp(options)
-      .then(( {items} ) => {
-        if (!items) {
-          pending.then(it => it.edit(l('google_not_found')));
-          return;
-        }
-        const itemIndex = number ? Math.max(number - 1, items.length - 1) : 0;
-        pending.then(it => {
-          const embed = new RichEmbed()
-            .setColor(0xfbbc05)
-            .setImage(items[itemIndex].link)
-          it.edit('', {embed: embed} );
-        });
-      })
-      .catch((err) => {
-        logger.warn('Google search error:' + err);
-        pending.then(it => it.edit(l('error')));
-      });
+    try {
+      const { items } = await rp(options);
+      if (!items) {
+        const reply = await pending;
+        reply.edit(l('google_not_found'));
+        return;
+      }
+      const itemIndex = number ? Math.max(number - 1, items.length - 1) : 0;
+      const reply = await pending;
+      const embed = new RichEmbed()
+        .setColor(0xfbbc05)
+        .setImage(items[itemIndex].link);
+      reply.edit('', embed);
+    } catch (err) {
+      logger.warn('Google search error:' + err);
+      const reply = await pending;
+      reply.edit(l('error'));
+    }
   }
 }

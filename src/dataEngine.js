@@ -11,7 +11,7 @@ async function init() {
   try {
     connection = await r.connect(dbconfig);
     await r.tableCreate('guilds').run(connection);
-  } catch(err) {
+  } catch (err) {
     if (err.msg != `Table \`${dbconfig.db}.guilds\` already exists.`) {
       logger.error('Error connecting to database:\n' + err);
       process.exit(1);
