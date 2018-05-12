@@ -7,22 +7,25 @@ module.exports = {
   usage: 'setlocale en',
   permissions: ['ADMINISTRATOR'],
   async action(message, arg) {
-    if(!arg) return false;
     const l = getGuildString(message.guild);
-    if(!(arg in locales))
-      return message.channel.send(l('setlocale_no_locale'));
+    if (!(arg in locales)) {
+      message.channel.send(l('setlocale_no_locale'));
+      return;
+    }
     const locale = arg;
     const { guild } = message;
     const getValue = getGuildValue(guild);
     const oldLocale = getValue('locale');
+    if (locale == oldLocale) {
+      message.channel.send(l('setlocale_same_locale'));
+      return;
+    }
     const oldPrefix = getValue('prefix');
-    if(locale == oldLocale)
-      return message.channel.send(l('setlocale_same_locale'));
     const key = oldLocale + oldPrefix;
-    if(CommandEngine.commandsMaps.has(key)) {
+    if (CommandEngine.commandsMaps.has(key)) {
       const commandsMap = CommandEngine.commandsMaps.get(key);
       commandsMap.guildsUsing -= 1;
-      if(commandsMap.guildsUsing == 0) {
+      if (commandsMap.guildsUsing == 0) {
         CommandEngine.commandsMaps.delete(key);
       }
     }

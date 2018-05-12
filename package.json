@@ -14,6 +14,8 @@
     "discord.js": "^11.3.2",
     "moment": "^2.22.1",
     "opusscript": "0.0.4",
+    "request": "^2.85.0",
+    "request-promise-native": "^1.0.5",
     "rethinkdb": "^2.3.3",
     "ytdl-core": "^0.18.2"
   }

@@ -1,4 +1,7 @@
 {
+  "info": "ℹ Info",
+  "control": "⌨ Control",
+  "search": "🔍 Search",
   "no_permissions": "❌ You do not have permissions for this command.",
   "ping_reply": "Pong!",
   "ping_full_reply": "Pong! Took `{0}ms`",
@@ -9,7 +12,6 @@
   "setprefix_done": "✅ Prefix set. New prefix `{0}`",
   "setavatar_done": "✅ New avatar set.",
   "setavatar_no_picture": "❌ No picture!",
-  "setavatar_err": "❌ Error!",
   "blacklist_no_user": "❌ User {0} does not exists.",
   "blacklist_done": "✅ User {0} was added to blacklist with reason: `{1}`",
   "blacklisted": "⚠ You are blacklisted with reason: `{0}`",
@@ -18,5 +20,9 @@
   "uptime": "Uptime",
   "servers": "Servers",
   "channels": "Channels",
-  "users": "Users"
+  "users": "Users",
+  "error": "❌ Error!",
+  "searching": "🔍 Searching...",
+  "google_no_query": "❌ No query!",
+  "google_not_found": "❌ Not found!"
 }

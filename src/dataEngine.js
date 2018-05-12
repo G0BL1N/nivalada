@@ -12,7 +12,7 @@ async function init() {
     connection = await r.connect(dbconfig);
     await r.tableCreate('guilds').run(connection);
   } catch(err) {
-    if(err.msg != `Table \`${dbconfig.db}.guilds\` already exists.`) {
+    if (err.msg != `Table \`${dbconfig.db}.guilds\` already exists.`) {
       logger.error('Error connecting to database:\n' + err);
       process.exit(1);
     }
@@ -30,14 +30,15 @@ async function init() {
 }
 
 const getRow = table => id => {
-  if(!(cache.has(table) && cache.get(table).has(id))) return undefined;
+  if (!(cache.has(table) && cache.get(table).has(id)))
+    return undefined;
   return cache.get(table).get(id);
 };
 
 const getGuildValue = guild => key => {
-  const guildId = typeof(guild) == "string" ? guild : guild.id;
+  const guildId = typeof(guild) === "string" ? guild : guild.id;
   const row = cache.get('guilds').get(guildId);
-  if(row && row[key])
+  if (row && row[key])
     return row[key];
   return defaults[key];
 }
@@ -45,11 +46,12 @@ const getGuildValue = guild => key => {
 const updateTableData = table => data => {
   let oldData = {};
   let tableObject = cache.get(table);
-  if(!tableObject) {
+  if (!tableObject) {
     cache.set(table, new Map());
     tableObject = cache.get(table);
   }
-  else if(tableObject.has(data.id)) oldData = tableObject.get(data.id);
+  else if (tableObject.has(data.id))
+    oldData = tableObject.get(data.id);
   const newData = Object.assign(oldData, data);
   tableObject.set(data.id, newData);
   r.table(table).insert(data, {conflict: 'update'} )
@@ -57,7 +59,8 @@ const updateTableData = table => data => {
 }
 
 function handleError(err) {
-  if(!err) return;
+  if (!err)
+    return;
   logger.error('Rethinkdb error:\n' + err);
 }
 

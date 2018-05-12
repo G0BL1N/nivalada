@@ -14,7 +14,8 @@ Client.on('message', async (message) => {
   const result = entries.find(([regExp]) =>
     message.content.search(regExp) != -1
   );
-  if (result === undefined) return;
+  if (result === undefined)
+    return;
   const [regExp, command] = result;
   const [, variant, arg] = regExp.exec(message);
   const hasPerms = CommandEngine.checkPermissions(message, command);

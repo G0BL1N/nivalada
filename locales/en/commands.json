@@ -16,5 +16,11 @@
   },
   "blacklist": {
     "description": "Adds user to blacklist. User will not be allowed to use any command on any server."
+  },
+  "google": {
+    "description": "Searches Internet through Google and returns first found result. You can provide first argument to tell what result you need."
+  },
+  "googleimg": {
+    "description": "Searches Internet through Google and returns first found image. You can provide first argument to tell what result you need."
   }
 }

@@ -1,5 +1,6 @@
 const { getGuildString } = require('../../localeEngine.js');
 const logger = require('../../logger.js');
+
 module.exports = {
   variants: ['setavatar', 'setav'],
   usage: 'setavatar http://link.to/avatar.png',
@@ -7,11 +8,11 @@ module.exports = {
   async action(message, arg) {
     const l = getGuildString(message.guild);
     let url;
-    if (arg !== '') {
+    if (arg !== '')
       url = arg;
-    } else if (message.attachments.size > 0) {
+    else if (message.attachments.size > 0)
       url = message.attachments.first().url;
-    } else {
+    else {
       message.channel.send(l('setavatar_no_picture'));
       return false;
     }
@@ -22,7 +23,7 @@ module.exports = {
       logger.log('New avatar has been set')
     })
     .catch(err => {
-      message.channel.send(l('setavatar_error'))
+      message.channel.send(l('error'))
       logger.warn(err);
     });
   }

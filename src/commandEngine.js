@@ -1,6 +1,6 @@
 const { cache, getGuildValue, getRow } = require('./dataEngine.js');
 const { getCommandData } = require('./localeEngine.js');
-const { ownerid } = require('../credentials.json');
+const { ownerID } = require('../credentials.json');
 
 const commandsMaps = new Map();
 
@@ -15,10 +15,13 @@ let commands = [];
 const categories = [];
 const info = require('./commands/info');
 const control = require('./commands/control');
+const search = require('./commands/search');
 categories.push(info);
 categories.push(control);
+categories.push(search);
 commands = commands.concat(info.commands);
 commands = commands.concat(control.commands);
+commands = commands.concat(search.commands);
 
 cache.get('guilds').forEach((guild, key) => {
   const getKey = getGuildValue(guild);
@@ -36,7 +39,7 @@ function getCommandMap(guild) {
 
 function buildCommandsMap(locale, prefix) {
   const index = locale + prefix;
-  if(commandsMaps.has(index)) {
+  if (commandsMaps.has(index)) {
     commandsMaps.get(index).guildsUsing += 1;
     return;
   }
@@ -58,14 +61,18 @@ function buildCommandsMap(locale, prefix) {
 function checkPermissions(message, command) {
   const member = message.member;
   const perms = command.permissions;
-  if(!perms) return true;
+  if (!perms)
+    return true;
   const ownerindex = perms.indexOf('OWNER');
-  if(ownerindex > -1) {
-    if(member.id !== ownerid) return false;
+  if (ownerindex > -1) {
+    if (member.id !== ownerID)
+      return false;
     perms.splice(ownerindex, 1);
-    if(perms.length === 0) return true;
+    if (perms.length === 0)
+      return true;
   }
-  if(!member.hasPermission(perms)) return false;
+  if (!member.hasPermission(perms))
+    return false;
   return true;
 }
 
