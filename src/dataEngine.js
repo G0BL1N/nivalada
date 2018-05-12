@@ -10,23 +10,34 @@ let connection;
 async function init() {
   try {
     connection = await r.connect(dbconfig);
+    await r.dbCreate(dbconfig.db).run(connection);
     await r.tableCreate('guilds').run(connection);
   } catch (err) {
-    if (err.msg != `Table \`${dbconfig.db}.guilds\` already exists.`) {
+    if (err.msg.search('already exists') == -1) {
       logger.error('Error connecting to database:\n' + err);
       process.exit(1);
     }
   }
   logger.log('Connected to database.');
-  const tables = await r.tableList().run(connection);
-  const promises = tables.map(async (table) => {
-    const cursor = await r.table(table).run(connection);
-    cache.set(table, new Map());
-    return cursor.eachAsync((row) => {
-      cache.get(table).set(row.id, row);
-    }).catch(handleError);
-  });
-  return Promise.all(promises);
+  try {
+    await r.db('nivalada')
+    .tableList()
+    .map((table) => ({
+        name: table,
+        documents: r.db('nivalada').table(table).coerceTo('array')
+    }))
+    .run(connection)
+    .reduce((cache, {name, documents} ) => {
+      const table = documents.reduce((table, document) => (
+        table.set(document.id, document)
+      ), new Map());
+      cache.set(name, table);
+    }, cache);
+  } catch (err) {
+    handleError(err);
+  }
+  cache.get('guilds').set('defaults', defaults);
+  return;
 }
 
 const getRow = table => id => {
