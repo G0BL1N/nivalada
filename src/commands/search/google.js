@@ -15,7 +15,6 @@ module.exports = {
       channel.send(l('google_no_query'));
       return;
     }
-    console.log(result);
     const pending = channel.send(l('searching'));
     const [, number, query] = result;
     const encodedQuery = encodeURIComponent(query);
