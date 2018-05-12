@@ -27,10 +27,12 @@ Client.on('message', async (message) => {
   logger.command(message);
 });
 
-try {
-  await Client.login(token);
-  logger.log('Logged in successfully.')
-} catch (err) {
-  logger.error('Cannot log in, error:\n' + error);
-  process.exit(0);
-}
+(async () => {
+  try {
+    await Client.login(token);
+    logger.log('Logged in successfully.')
+  } catch (err) {
+    logger.error('Cannot log in, error:\n' + error);
+    process.exit(0);
+  }
+})();
