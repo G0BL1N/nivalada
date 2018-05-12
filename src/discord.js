@@ -23,8 +23,8 @@ Client.on('message', async (message) => {
     message.channel.send(l(message.guild)('no_permissions'));
     return;
   }
-  command.action(message, arg, variant);
   logger.command(message);
+  command.action(message, arg, variant);
 });
 
 (async () => {
