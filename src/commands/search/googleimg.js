@@ -10,7 +10,7 @@ module.exports = {
   usage: 'googleimg 2 anime girl',
   async action(message, arg) {
     const l = getGuildString(message.guild);
-    const result = /^(\d*)\s*(.*)$/g.exec(arg);
+    const result = /^(\d*)\s*(.*)$/.exec(arg);
     const channel = message.channel;
     if (!result) {
       channel.send(l('google_no_query'));
@@ -39,7 +39,7 @@ module.exports = {
       const itemIndex = number ? Math.max(number - 1, items.length - 1) : 0;
       const reply = await pending;
       const embed = new RichEmbed()
-        .setColor(0xfbbc05)
+        .setColor(0xFBBC05)
         .setImage(items[itemIndex].link);
       reply.edit('', embed);
     } catch (err) {

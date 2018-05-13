@@ -24,5 +24,8 @@
   "error": "❌ Error!",
   "searching": "🔍 Searching...",
   "google_no_query": "❌ No query!",
-  "google_not_found": "❌ Not found!"
+  "google_not_found": "❌ Not found!",
+  "help": "Help",
+  "help_usage": "Use `{0}help <command>` to get detailed information",
+  "help_command": "**Command help** `{0}`:\n**Description**: {1}\n**Usage**: `{2}{3}`\n**Variants**: {4}"
 }

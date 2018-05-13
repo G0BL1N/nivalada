@@ -12,7 +12,7 @@
     "description": "Sets prefix for this server."
   },
   "setavatar": {
-    "description": "Sets bot avatar. Should be used with link or attchment."
+    "description": "Sets bot avatar. Should be used with link or attachment."
   },
   "blacklist": {
     "description": "Adds user to blacklist. User will not be allowed to use any command on any server."
@@ -22,5 +22,8 @@
   },
   "googleimg": {
     "description": "Searches Internet through Google and returns first found image. You can provide first argument to tell what result you need."
+  },
+  "help": {
+    "description": "Command list or command help."
   }
 }

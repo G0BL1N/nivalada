@@ -30,7 +30,7 @@ module.exports = {
       }
     }
     CommandEngine.buildCommandsMap(locale, oldPrefix);
-    updateTableData('guilds')( {id: guild.id, locale} );
+    updateTableData('guilds')({ id: guild.id, locale });
     message.channel.send(l('setlocale_done', locale));
   }
 }

@@ -27,7 +27,7 @@ async function init() {
         documents: r.db('nivalada').table(table).coerceTo('array')
     }))
     .run(connection)
-    .reduce((cache, {name, documents} ) => {
+    .reduce((cache, { name, documents }) => {
       const table = documents.reduce((table, document) => (
         table.set(document.id, document)
       ), new Map());
@@ -41,16 +41,14 @@ async function init() {
 }
 
 const getRow = table => id => {
-  if (!(cache.has(table) && cache.get(table).has(id)))
-    return undefined;
+  if (!(cache.has(table) && cache.get(table).has(id))) return undefined;
   return cache.get(table).get(id);
 };
 
 const getGuildValue = guild => key => {
   const guildId = typeof(guild) === "string" ? guild : guild.id;
   const row = cache.get('guilds').get(guildId);
-  if (row && row[key])
-    return row[key];
+  if (row && row[key]) return row[key];
   return defaults[key];
 }
 
@@ -65,13 +63,12 @@ const updateTableData = table => data => {
     oldData = tableObject.get(data.id);
   const newData = Object.assign(oldData, data);
   tableObject.set(data.id, newData);
-  r.table(table).insert(data, {conflict: 'update'} )
+  r.table(table).insert(data, { conflict: 'update' })
     .run(connection).catch(this.handleError);
 }
 
 function handleError(err) {
-  if (!err)
-    return;
+  if (!err) return;
   logger.error('Rethinkdb error:\n' + err);
 }
 

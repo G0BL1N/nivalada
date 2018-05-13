@@ -29,7 +29,7 @@ module.exports = {
         CommandEngine.commandsMaps.delete(key);
     }
     CommandEngine.buildCommandsMap(oldLocale, prefix);
-    updateTableData('guilds')( {id: guild.id, prefix} );
+    updateTableData('guilds')({ id: guild.id, prefix });
     message.channel.send(l('setprefix_done', prefix));
   }
 }

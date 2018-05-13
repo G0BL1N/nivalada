@@ -4,40 +4,27 @@ const { ownerID } = require('../credentials.json');
 
 const commandsMaps = new Map();
 
-module.exports = {
-  getCommandMap,
-  buildCommandsMap,
-  commandsMaps,
-  checkPermissions
-}
-
-let commands = [];
 const categories = [];
+const commands = [];
+
+module.exports.categories = categories;
+module.exports.commands = commands;
+
 const info = require('./commands/info');
 const control = require('./commands/control');
 const search = require('./commands/search');
-categories.push(info);
-categories.push(control);
-categories.push(search);
-commands = commands.concat(info.commands);
-commands = commands.concat(control.commands);
-commands = commands.concat(search.commands);
+categories.push(info, control, search);
+commands.push(...info.commands, ...control.commands, ...search.commands)
 
-cache.get('guilds').forEach((guild, key) => {
-  const getKey = getGuildValue(guild);
-  const locale = getKey('locale');
-  const prefix = getKey('prefix');
-  buildCommandsMap(locale, prefix);
-});
 
-function getCommandMap(guild) {
+const getCommandMap = guild => {
   const getKey = getGuildValue(guild);
   const locale = getKey('locale');
   const prefix = getKey('prefix');
   return commandsMaps.get(locale + prefix).map;
 }
 
-function buildCommandsMap(locale, prefix) {
+const buildCommandsMap = (locale, prefix) => {
   const index = locale + prefix;
   if (commandsMaps.has(index)) {
     commandsMaps.get(index).guildsUsing += 1;
@@ -51,14 +38,13 @@ function buildCommandsMap(locale, prefix) {
     const localeVariants = getCommandData(locale, command).variants || [];
     const variants = command.variants.concat(localeVariants);
     const variantsString = variants.map(escapeString).join('|');
-    const regExpSource =
-      `^${escapeString(commandPrefix)}(${variantsString})(?:\\s|$)(.*)`;
+    const regExpSource = `^${escapeString(commandPrefix)}(${variantsString})(?:\\s|$)(.*)`;
     map.set(new RegExp(regExpSource, 'i'), command);
   }
   commandsMaps.set(index, {map, guildsUsing: 1});
 }
 
-function checkPermissions(message, command) {
+const checkPermissions = (message, command) => {
   const member = message.member;
   const perms = command.permissions;
   if (!perms)
@@ -76,6 +62,20 @@ function checkPermissions(message, command) {
   return true;
 }
 
-function escapeString(str) {
-  return str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+const escapeString = str => str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+cache.get('guilds').forEach((guild, key) => {
+  const getKey = getGuildValue(guild);
+  const locale = getKey('locale');
+  const prefix = getKey('prefix');
+  buildCommandsMap(locale, prefix);
+});
+
+module.exports = {
+  getCommandMap,
+  buildCommandsMap,
+  commandsMaps,
+  checkPermissions,
+  categories,
+  commands
 }
