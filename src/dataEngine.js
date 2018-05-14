@@ -7,7 +7,7 @@ const cache = new Map();
 
 let connection;
 
-async function init() {
+const init = async () => {
   try {
     connection = await r.connect(dbconfig);
     await r.dbCreate(dbconfig.db).run(connection);
@@ -67,7 +67,7 @@ const updateTableData = table => data => {
     .run(connection).catch(this.handleError);
 }
 
-function handleError(err) {
+const handleError = err => {
   if (!err) return;
   logger.error('Rethinkdb error:\n' + err);
 }
