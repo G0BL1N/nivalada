@@ -3,26 +3,8 @@ const { getCommandData } = require('./localeEngine.js');
 const { ownerID } = require('../credentials.json');
 
 const commandsMaps = new Map();
-
 const categories = [];
 const commands = [];
-
-module.exports.categories = categories;
-module.exports.commands = commands;
-
-const info = require('./commands/info');
-const control = require('./commands/control');
-const search = require('./commands/search');
-categories.push(info, control, search);
-commands.push(...info.commands, ...control.commands, ...search.commands)
-
-
-const getCommandMap = guild => {
-  const getKey = getGuildValue(guild);
-  const locale = getKey('locale');
-  const prefix = getKey('prefix');
-  return commandsMaps.get(locale + prefix).map;
-}
 
 const buildCommandsMap = (locale, prefix) => {
   const index = locale + prefix;
@@ -42,6 +24,31 @@ const buildCommandsMap = (locale, prefix) => {
     map.set(new RegExp(regExpSource, 'i'), command);
   }
   commandsMaps.set(index, {map, guildsUsing: 1});
+}
+
+module.exports.buildCommandsMap = buildCommandsMap;
+module.exports.commandsMaps = commandsMaps;
+module.exports.categories = categories;
+module.exports.commands = commands;
+
+const info = require('./commands/info');
+const control = require('./commands/control');
+const search = require('./commands/search');
+const music = require('./commands/music');
+categories.push(info, control, search, music);
+commands.push(
+  ...info.commands,
+  ...control.commands,
+  ...search.commands,
+  ...music.commands
+);
+
+
+const getCommandMap = guild => {
+  const getKey = getGuildValue(guild);
+  const locale = getKey('locale');
+  const prefix = getKey('prefix');
+  return commandsMaps.get(locale + prefix).map;
 }
 
 const checkPermissions = (message, command) => {
