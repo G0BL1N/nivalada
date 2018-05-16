@@ -26,5 +26,11 @@
   },
   "help": {
     "description": "Список команд или помощь по команде."
+  },
+  "queue": {
+    "description": "..."
+  },
+  "skip": {
+    "description": "..."
   }
 }

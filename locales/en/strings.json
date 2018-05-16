@@ -23,9 +23,12 @@
   "users": "Users",
   "error": "❌ Error!",
   "searching": "🔍 Searching...",
-  "google_no_query": "❌ No query!",
-  "google_not_found": "❌ Not found!",
   "help": "Help",
   "help_usage": "Use `{0}help <command>` to get detailed information",
-  "help_command": "**Command help** `{0}`:\n**Description**: {1}\n**Usage**: `{2}{3}`\n**Variants**: {4}"
+  "help_command": "**Command help** `{0}`:\n**Description**: {1}\n**Usage**: `{2}{3}`\n**Variants**: {4}",
+  "not_found": "❌ Not found!",
+  "no_query": "❌ No query!",
+  "caching": "⬇ Caching...",
+  "cached": "✅ Кешировано!",
+  "now_playing": "Now playing"
 }
