@@ -18,13 +18,12 @@ module.exports = {
     }
     const pending = channel.send(l('searching'));
     const [, number, query] = result;
-    const encodedQuery = encodeURIComponent(query);
     const options = {
       uri: 'https://www.googleapis.com/customsearch/v1',
       qs: {
         key: googleAPIKey,
         cx: googleSearchEngineID,
-        q: encodedQuery,
+        q: query,
         searchType: 'image'
       },
       json: true
@@ -36,7 +35,7 @@ module.exports = {
         reply.edit(l('google_not_found'));
         return;
       }
-      const itemIndex = number ? Math.max(number - 1, items.length - 1) : 0;
+      const itemIndex = number ? Math.min(number - 1, items.length - 1) : 0;
       const reply = await pending;
       const embed = new RichEmbed()
         .setColor(0xFBBC05)

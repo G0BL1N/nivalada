@@ -17,17 +17,15 @@ module.exports = {
     }
     const pending = channel.send(l('searching'));
     const [, number, query] = result;
-    const encodedQuery = encodeURIComponent(query);
     const options = {
       uri: 'https://www.googleapis.com/customsearch/v1',
       qs: {
         key: googleAPIKey,
         cx: googleSearchEngineID,
-        q: encodedQuery
+        q: query
       },
       json: true
     }
-
     try {
       const { items } = await rp(options);
       if (!items) {
