@@ -1,6 +1,6 @@
-const CommandEngine = require('../../commandEngine.js');
-const { updateTableData, getGuildValue } = require('../../dataEngine.js');
-const { getGuildString } = require('../../localeEngine.js');
+const { commandsMaps, buildCommandsMap } = require('../../commands.js');
+const { updateTableData, getGuildValue } = require('../../data.js');
+const { getGuildString } = require('../../locales.js');
 
 module.exports = {
   variants: ['setprefix'],
@@ -22,13 +22,12 @@ module.exports = {
     }
     const oldLocale = getValue('locale');
     const key = oldLocale + oldPrefix;
-    if (CommandEngine.commandsMaps.has(key)) {
-      const commandsMap = CommandEngine.commandsMaps.get(key);
+    if (commandsMaps.has(key)) {
+      const commandsMap = commandsMaps.get(key);
       commandsMap.guildsUsing -= 1;
-      if (commandsMap.guildsUsing == 0)
-        CommandEngine.commandsMaps.delete(key);
+      if (commandsMap.guildsUsing == 0) commandsMaps.delete(key);
     }
-    CommandEngine.buildCommandsMap(oldLocale, prefix);
+    buildCommandsMap(oldLocale, prefix);
     updateTableData('guilds')({ id: guild.id, prefix });
     message.channel.send(l('setprefix_done', prefix));
   }

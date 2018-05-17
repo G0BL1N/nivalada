@@ -1,5 +1,5 @@
-const { cache, getGuildValue, getRow } = require('./dataEngine.js');
-const { getCommandData } = require('./localeEngine.js');
+const { cache, getGuildValue, getRow } = require('./data.js');
+const { getCommandData } = require('./locales.js');
 const { ownerID } = require('../credentials.json');
 
 const commandsMaps = new Map();

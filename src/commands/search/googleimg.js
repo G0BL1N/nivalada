@@ -1,6 +1,6 @@
 const { RichEmbed } = require('discord.js');
 const rp = require('request-promise-native');
-const { getGuildString } = require('../../localeEngine.js');
+const { getGuildString } = require('../../locales.js');
 const { googleAPIKey, googleSearchEngineID } =
   require('../../../credentials.json');
 const logger = require('../../logger.js');

@@ -4,7 +4,7 @@ const fse = require('fs-extra');
 const { RichEmbed } = require('discord.js');
 const logger = require('./logger.js');
 const { search, cache } = require('./youtubeWrapper.js');
-const { getGuildString } = require('./localeEngine.js');
+const { getGuildString } = require('./locales.js');
 
 const queues = new Map();
 

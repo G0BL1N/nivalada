@@ -1,5 +1,5 @@
 const { RichEmbed } = require('discord.js');
-const { getGuildString } = require('../../localeEngine.js');
+const { getGuildString } = require('../../locales.js');
 module.exports = {
   variants: ['status', 'stats'],
   usage: 'status',

@@ -1,6 +1,6 @@
-const dbEngine = require('./dataEngine.js');
+const data = require('./data.js');
 
 (async () => {
-  await dbEngine.init();
+  await data.init();
   require('./discord.js');
 })();

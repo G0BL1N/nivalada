@@ -1,7 +1,7 @@
 const { RichEmbed } = require('discord.js');
-const { getGuildString, getGuildCommand } = require('../../localeEngine.js');
-const { getGuildValue } = require('../../dataEngine.js');
-const { commands, categories } = require('../../commandEngine.js');
+const { getGuildString, getGuildCommand } = require('../../locales.js');
+const { getGuildValue } = require('../../data.js');
+const { commands, categories } = require('../../commands.js');
 
 module.exports = {
   variants: ['help'],

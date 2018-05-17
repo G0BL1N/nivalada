@@ -1,4 +1,4 @@
-const { getGuildString } = require('../../localeEngine.js');
+const { getGuildString } = require('../../locales.js');
 const music = require('../../music.js');
 
 module.exports = {

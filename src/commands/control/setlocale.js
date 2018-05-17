@@ -1,6 +1,6 @@
-const CommandEngine = require('../../commandEngine.js');
-const { updateTableData, getGuildValue } = require('../../dataEngine.js');
-const { getGuildString, locales } = require('../../localeEngine.js');
+const { commandsMaps, buildCommandsMap } = require('../../commands.js');
+const { updateTableData, getGuildValue } = require('../../data.js');
+const { getGuildString, locales } = require('../../locales.js');
 
 module.exports = {
   variants: ['setlocale'],
@@ -22,14 +22,12 @@ module.exports = {
     }
     const oldPrefix = getValue('prefix');
     const key = oldLocale + oldPrefix;
-    if (CommandEngine.commandsMaps.has(key)) {
-      const commandsMap = CommandEngine.commandsMaps.get(key);
+    if (commandsMaps.has(key)) {
+      const commandsMap = commandsMaps.get(key);
       commandsMap.guildsUsing -= 1;
-      if (commandsMap.guildsUsing == 0) {
-        CommandEngine.commandsMaps.delete(key);
-      }
+      if (commandsMap.guildsUsing == 0) commandsMaps.delete(key);
     }
-    CommandEngine.buildCommandsMap(locale, oldPrefix);
+    buildCommandsMap(locale, oldPrefix);
     updateTableData('guilds')({ id: guild.id, locale });
     message.channel.send(l('setlocale_done', locale));
   }

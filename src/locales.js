@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { getGuildValue } = require('./dataEngine.js')
+const { getGuildValue } = require('./data.js')
 const defaults = require('../defaults.json');
 
 const locales = {};
