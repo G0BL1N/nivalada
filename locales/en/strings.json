@@ -30,5 +30,6 @@
   "no_query": "❌ No query!",
   "caching": "⬇ Caching...",
   "cached": "✅ Кешировано!",
-  "now_playing": "Now playing"
+  "now_playing": "Now playing",
+  "not_in_voice": "⚠ You should be in the voice channel!"
 }

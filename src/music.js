@@ -77,12 +77,9 @@ const add = async (queue, query, author) => {
   const channel = queue.textChannel;
   const l = getGuildString(channel.guild);
   const pending = channel.send(l('caching'));
+  let track;
   try {
-    const track = await getTrack(queue, query, author);
-    queue.push(track);
-    if (!queue.playing) play(queue);
-    const message = await pending;
-    message.edit(l('cached'));
+    track = await getTrack(queue, query, author);
   } catch(err) {
     if (err.message === 'not found') {
       const message = await pending;
@@ -92,10 +89,15 @@ const add = async (queue, query, author) => {
       message.edit(l('error'));
       logger.error(err);
     }
+    return;
   }
+  queue.push(track);
+  if (!queue.playing) play(queue);
+  const message = await pending;
+  message.edit(l('cached'));
 }
 
-const skip = async(queue) => {
+const skip = queue => {
   if (queue.playing) queue.dispatcher.end();
 }
 

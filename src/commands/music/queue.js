@@ -1,3 +1,4 @@
+
 const { getGuildString } = require('../../localeEngine.js');
 const music = require('../../music.js');
 
@@ -8,7 +9,9 @@ module.exports = {
     const l = getGuildString(message.guild);
     const queue = music.getQueue(message.guild.id);
     const voiceChannel = message.member.voiceChannel;
-
+    if (!voiceChannel) {
+      message.channel.send(l('not_in_voice'));
+    }
     if (!queue.connection) {
       music.join(queue, voiceChannel);
     }
