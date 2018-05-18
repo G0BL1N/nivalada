@@ -1,3 +1,4 @@
+const { getImageColor } = require('../../utils.js');
 const { RichEmbed } = require('discord.js');
 const rp = require('request-promise-native');
 const { getGuildString } = require('../../locales.js');
@@ -36,11 +37,13 @@ module.exports = {
         return;
       }
       const itemIndex = number ? Math.min(number - 1, items.length - 1) : 0;
-      const reply = await pending;
+      const image = items[itemIndex].link;
+      const color = await getImageColor(image);
       const embed = new RichEmbed()
-        .setColor(0xFBBC05)
-        .setImage(items[itemIndex].link);
-      reply.edit('', embed);
+        .setColor(color) //.setColor(0xFBBC05)
+        .setImage(image);
+      const reply = await pending;
+      reply.edit(embed);
     } catch (err) {
       logger.warn('Google search error:' + err);
       const reply = await pending;

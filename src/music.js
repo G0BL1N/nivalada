@@ -1,6 +1,5 @@
-const jimp = require('jimp');
-const colorThief = require('color-thief-jimp');
 const fse = require('fs-extra');
+const { getImageColor } = require('./utils.js');
 const { RichEmbed } = require('discord.js');
 const logger = require('./logger.js');
 const { search, cache } = require('./youtubeWrapper.js');
@@ -38,15 +37,10 @@ const getTrack = async (queue, query, author) => {
   };
 }
 
-const getColor = async (url) => {
-  const image = await jimp.read(url);
-  return colorThief.getColor(image);
-}
-
 const sendNowPlaying = async (channel, track) => {
   const l = getGuildString(channel.guild);
   const { tag, avatarURL } = track.author;
-  const color = await getColor(track.thumbnail);
+  const color = await getImageColor(track.thumbnail);
   const embed = new RichEmbed()
     .setColor(color)//.setColor(0x5DADEC) //blue, same as :notes: emoji
     .setTitle(track.title) //add duration
