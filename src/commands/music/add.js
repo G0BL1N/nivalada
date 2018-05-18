@@ -3,8 +3,8 @@ const { getGuildString } = require('../../locales.js');
 const music = require('../../music.js');
 
 module.exports = {
-  variants: ['queue', 'q', 'play', 'p', 'add', 'a'],
-  usage: 'queue',
+  variants: ['add', 'a', 'play', 'p', 'queue', 'q'],
+  usage: 'add bad apple',
   async action(message, arg) {
     const l = getGuildString(message.guild);
     const queue = music.getQueue(message.guild.id);

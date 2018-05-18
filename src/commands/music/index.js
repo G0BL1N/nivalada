@@ -1,7 +1,7 @@
 module.exports = {
   name: 'music',
   commands: [
-    require('./queue.js'),
+    require('./add.js'),
     require('./skip.js')
   ]
 };
