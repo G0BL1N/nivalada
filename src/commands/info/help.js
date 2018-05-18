@@ -15,7 +15,7 @@ module.exports = {
       const cmd = commands.find((command) => command.variants.includes(query));
       const [cmdName] = cmd.variants;
       const desc = getGuildCommand(guild)(cmdName).description;
-      const variants = cmd.variants.join('\`;\`');
+      const variants = `\`${cmd.variants.join('\`;\`')}\``;
       const reply = l('help_command', cmdName, desc, prefix, cmd.usage, variants);
       message.channel.send(reply);
       return;
