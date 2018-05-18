@@ -11,9 +11,14 @@ module.exports = {
     const voiceChannel = message.member.voiceChannel;
     if (!voiceChannel) {
       message.channel.send(l('not_in_voice'));
+      return;
     }
     if (!queue.connection) {
       music.join(queue, voiceChannel);
+    }
+    else if (voiceChannel.id !== queue.connection.channel.id) {
+      message.channel.send(l('not_in_same_voice'));
+      return;
     }
     music.setTextChannel(queue, message.channel);
     music.add(queue, arg, message.author);

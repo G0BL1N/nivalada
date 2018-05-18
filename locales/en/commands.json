@@ -26,10 +26,10 @@
   "help": {
     "description": "Command list or command help."
   },
-  "queue": {
-    "description": "..."
+  "add": {
+    "description": "Searches track on Youtube and adds it queue. Youtube links and search queries allowed."
   },
   "skip": {
-    "description": "..."
+    "description": "Skips current playing track, if there is one."
   }
 }
