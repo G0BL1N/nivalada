@@ -28,11 +28,21 @@ const getTrack = async (queue, query, author) => {
   const { id: { videoId } } = await search(query);
   const info = await cache(videoId);
   const path = `./cache/${info.video_id}`;
+
+  let secondsLeft = info.length_seconds;
+  const hours = Math.floor(secondsLeft / (60 * 60));
+  secondsLeft %= (60 * 60);
+  const rawMinutes = Math.floor(secondsLeft / 60);
+  const minutes = (hours && rawMinutes < 10) ? `0${rawMinutes}` : rawMinutes;
+  secondsLeft %= (60);
+  const seconds = secondsLeft < 10 ? `0${secondsLeft}` : secondsLeft;
+  const duration = (hours) ? `${hours}:${minutes}:${seconds}`
+                           : `${minutes}:${seconds}`;
   return {
     path,
     author,
     title: info.title,
-    duration: info.duration,
+    duration: duration,
     thumbnail: info.thumbnail_url
   };
 }
@@ -43,7 +53,7 @@ const sendNowPlaying = async (channel, track) => {
   const color = await getImageColor(track.thumbnail);
   const embed = new RichEmbed()
     .setColor(color)//.setColor(0x5DADEC) //blue, same as :notes: emoji
-    .setTitle(track.title) //add duration
+    .setTitle(`${track.title} (${track.duration})`)
     .setFooter(l('now_playing'))
     .setThumbnail(track.thumbnail)
     .setAuthor(tag, avatarURL);
