@@ -13,6 +13,10 @@ module.exports = {
     if (arg) {
       const query = arg.replace(`^${prefix}`, '');
       const cmd = commands.find((command) => command.variants.includes(query));
+      if (!cmd) {
+        message.channel.send(l('no_such_command'));
+        return;
+      }
       const [cmdName] = cmd.variants;
       const desc = getGuildCommand(guild)(cmdName).description;
       const variants = `\`${cmd.variants.join('\`;\`')}\``;
