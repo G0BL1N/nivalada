@@ -16,7 +16,7 @@ const join = async (queue, channel) => {
   try {
     queue.connection = await channel.join();
   } catch(err) {
-    logger.err(err);
+    logger.error(err);
   }
 }
 
@@ -47,16 +47,18 @@ const getTrack = async (queue, query, author) => {
   };
 }
 
-const sendNowPlaying = async (channel, track) => {
-  const l = getGuildString(channel.guild);
-  const { tag, avatarURL } = track.author;
+const sendNowPlaying = async (queue) => {
+  const l = getGuildString(queue.textChannel.guild);
+  const track = queue.playing;
+  const { title, duration, author: { tag, avatarURL } } = queue.playing;
   const color = await getImageColor(track.thumbnail);
   const embed = new RichEmbed()
     .setColor(color)//.setColor(0x5DADEC) //blue, same as :notes: emoji
-    .setTitle(`${track.title} (${track.duration})`)
-    .setFooter(l('now_playing'))
+    .setTitle(`${title} (${duration})`)
+    .setAuthor(tag, avatarURL)
     .setThumbnail(track.thumbnail)
-    .setAuthor(tag, avatarURL);
+    .setFooter(l('now_playing'))
+    .setTimestamp();
   channel.send(embed);
 }
 
@@ -66,7 +68,7 @@ const play = (queue) => {
   //const dispatcher = connection.playFile(playing.path);
   const fileStream = fse.createReadStream(playing.path);
   const dispatcher = connection.playStream(fileStream);
-  sendNowPlaying(queue.textChannel, playing);
+  sendNowPlaying(queue);
   dispatcher.once('end', () => {
     fileStream.destroy();
     //possible race condition, should be resolved
@@ -110,5 +112,6 @@ module.exports = {
   join,
   setTextChannel,
   add,
-  skip
+  skip,
+  sendList
 }

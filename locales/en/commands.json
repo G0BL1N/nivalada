@@ -31,5 +31,8 @@
   },
   "skip": {
     "description": "Skips current playing track, if there is one."
+  },
+  "move": {
+    "description": "..."
   }
 }
