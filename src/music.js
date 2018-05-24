@@ -112,6 +112,5 @@ module.exports = {
   join,
   setTextChannel,
   add,
-  skip,
-  sendList
+  skip
 }

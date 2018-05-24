@@ -34,6 +34,6 @@ module.exports = {
     });
     embed.addField('\u200b', l('help_usage', prefix));
     embed.setColor(0xF4B342);
-    message.channel.send({ embed });
+    message.channel.send(embed);
   }
 }
