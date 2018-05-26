@@ -3,7 +3,7 @@ const { getGuildValue } = require('./data.js')
 const defaults = require('../defaults.json');
 
 const locales = {};
-const localeFoldersPath = __dirname + '../../locales/';
+const localeFoldersPath = __dirname + '/../locales/';
 const localeFolders = fs.readdirSync(localeFoldersPath);
 
 localeFolders.forEach((locale) => {
