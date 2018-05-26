@@ -59,7 +59,7 @@ const sendNowPlaying = async (queue) => {
     .setThumbnail(track.thumbnail)
     .setFooter(l('now_playing'))
     .setTimestamp();
-  channel.send(embed);
+  queue.textChannel.send(embed);
 }
 
 const play = (queue) => {
