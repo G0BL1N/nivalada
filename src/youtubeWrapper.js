@@ -39,7 +39,8 @@ const cache = async (videoId) => {
   const url = `https://www.youtube.com/watch?v=${videoId}`;
   const path = `${cacheFolder}/${videoId}`;
   const writeStream = fse.createWriteStream(path);
-  const stream = ytdl(url, { quality: 'highestaudio' });
+  //dirty hack for faster download
+  const stream = ytdl(url, { quality: 'highest', filter: 'audioandvideo' });
   stream.pipe(writeStream);
   return new Promise(resolve =>
     stream.on('info', info =>
