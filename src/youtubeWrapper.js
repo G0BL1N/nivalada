@@ -40,7 +40,7 @@ const cache = async (videoId) => {
   const path = `${cacheFolder}/${videoId}`;
   const writeStream = fse.createWriteStream(path);
   //dirty hack for faster download
-  const stream = ytdl(url, { quality: 'highest', filter: 'audioandvideo' });
+  const stream = ytdl(url, { quality: 'highestaudio', filter: 'audioandvideo' });
   stream.pipe(writeStream);
   return new Promise(resolve =>
     stream.on('info', info =>
