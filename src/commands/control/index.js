@@ -3,6 +3,7 @@ module.exports = {
   commands: [
     require('./setlocale.js'),
     require('./setprefix.js'),
-    require('./setavatar.js')
+    require('./setavatar.js'),
+    require('./reload.js')
   ]
 };

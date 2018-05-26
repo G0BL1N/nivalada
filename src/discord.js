@@ -15,11 +15,12 @@ Client.on('message', async (message) => {
     message.content.search(regExp) != -1
   ));
   if (result === undefined) return;
+  const l = getGuildString(message.guild);
   const [regExp, command] = result;
   const [, variant, arg] = regExp.exec(message);
   const hasPerms = commands.checkPermissions(message, command);
   if (!hasPerms) {
-    message.channel.send(l(message.guild)('no_permissions'));
+    message.channel.send(l('no_permissions'));
     return;
   }
   logger.command(message);

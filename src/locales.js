@@ -19,6 +19,8 @@ const getCommandData = (locale, command) => {
 const getGuildString = guild => (stringName, ...values) => {
   const locale = getGuildValue(guild)('locale');
   const string = locales[locale].strings[stringName];
+  if (!string)
+    return stringName;
   return string.replace(/{(\d+)}/g, (match, number) => (
     values[number] !== undefined ? values[number] : match
   ));
@@ -26,7 +28,10 @@ const getGuildString = guild => (stringName, ...values) => {
 
 const getGuildCommand = guild => command => {
   const locale = getGuildValue(guild)('locale');
-  return locales[locale].commands[command];
+  const result = locales[locale].commands[command];
+  if (!result)
+    return { description: 'no_description' };
+  return result;
 }
 
 module.exports = {
