@@ -12,18 +12,11 @@ const exit = async () => {
 }
 
 const register = () => {
+  process.once('SIGUSR1', exit);
 
-  process.once('SIGUSR1', async () => {
-    await exit();
-  });
+  process.once('SIGUSR2', exit);
 
-  process.once('SIGUSR2', async () => {
-    await exit();
-  });
-
-  process.once('SIGINT', async () => {
-    await exit();
-  });
+  process.once('SIGINT', exit);
 
   process.once('uncaughtException', async (err) => {
     logger.error('Uncaught Exception!\n' + e.stack);
