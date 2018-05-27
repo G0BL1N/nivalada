@@ -12,7 +12,7 @@ module.exports = {
     const result = /^(\d*)\s*(.*)$/.exec(arg);
     const channel = message.channel;
     if (!result) {
-      channel.send(l('google_no_query'));
+      channel.send(l('no_query'));
       return;
     }
     const pending = channel.send(l('searching'));
@@ -30,7 +30,7 @@ module.exports = {
       const { items } = await rp(options);
       if (!items) {
         const reply = await pending;
-        reply.edit(l('google_not_found'));
+        reply.edit(l('not_found'));
         return;
       }
       const itemIndex = number ? Math.max(number - 1, items.length - 1) : 0;
