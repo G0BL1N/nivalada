@@ -3,6 +3,7 @@ module.exports = {
   commands: [
     require('./add.js'),
     require('./skip.js'),
-    require('./move.js')
+    require('./move.js'),
+    require('./leave.js')
   ]
 };

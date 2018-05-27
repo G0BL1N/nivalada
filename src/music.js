@@ -7,6 +7,11 @@ const { getGuildString } = require('./locales.js');
 
 const queues = new Map();
 
+const getQueue = (guildId) => {
+  if (!queues.has(guildId)) queues.set(guildId, []);
+  return queues.get(guildId);
+}
+
 const findInQueues = (track) => {
   const id = track.id || track;
   const entries = [...queues.entries()];
@@ -22,9 +27,9 @@ const findInQueues = (track) => {
   return found;
 }
 
-const getQueue = (guildId) => {
-  if (!queues.has(guildId)) queues.set(guildId, []);
-  return queues.get(guildId);
+const cleanupTrack = async (track) => {
+  if (findInQueues(track)) return;
+  await fse.unlink(track.path);
 }
 
 const join = async (queue, channel) => {
@@ -91,7 +96,7 @@ const play = (queue) => {
   sendNowPlaying(queue);
   dispatcher.once('end', () => {
     fileStream.destroy();
-    if (!findInQueues(playing)) fse.unlink(playing.path);
+    cleanupTrack(playing);
     if (queue.length) play(queue);
     else queue.playing = undefined;
   });
@@ -126,10 +131,22 @@ const skip = queue => {
   if (queue.playing) queue.dispatcher.end();
 }
 
+const leave = async (queue) => {
+  const tracks = queue.slice();
+  queue.length = 0;
+  if (queue.playing) queue.dispatcher.end();
+  const promises = tracks.map(track =>
+    cleanupTrack(track).catch(logger.warn)
+  );
+  await Promise.all(promises);
+  queue.connection.channel.leave();
+}
+
 module.exports = {
   getQueue,
   join,
   setTextChannel,
   add,
-  skip
+  skip,
+  leave
 }

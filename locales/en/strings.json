@@ -31,5 +31,6 @@
   "now_playing": "Now playing",
   "not_in_voice": "⚠ You should be in the voice channel!",
   "not_in_same_voice": "⚠ You should be in the same voice channel!",
-  "no_such_command": "❌ Command not found!"
+  "no_such_command": "❌ Command not found!",
+  "not_connected": "⚠ Not on in voice channel!"
 }
