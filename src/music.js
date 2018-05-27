@@ -71,8 +71,10 @@ const play = (queue) => {
   sendNowPlaying(queue);
   dispatcher.once('end', () => {
     fileStream.destroy();
-    //possible race condition, should be resolved
-    if (!queue.includes(playing)) fse.unlink(playing.path);
+    const exists = queues.entries().find(([id, queue]) =>
+      queue.includes(playing)
+    )
+    if (!exists) fse.unlink(playing.path);
     if (queue.length) play(queue);
     else queue.playing = undefined;
   });
