@@ -14,7 +14,7 @@ module.exports = {
     }
     const channel = queue.connection.channel;
     const perms = channel.permissionsFor(message.member);
-    if (!perms.has('MANAGE_CHANNELS')) {
+    if (!queue.playing && !perms.has('MANAGE_CHANNELS')) {
       message.channel.send(l('no_permissions'));
       return;
     }
