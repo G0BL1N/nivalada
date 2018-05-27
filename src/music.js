@@ -7,6 +7,21 @@ const { getGuildString } = require('./locales.js');
 
 const queues = new Map();
 
+const findInQueues = (track) => {
+  const id = track.id || track;
+  const entries = [...queues.entries()];
+  let found;
+  entries.find(([, queue]) => {
+    if (queue.playing && queue.playing.id === id) {
+      found = queue.playing;
+      return true;
+    }
+    found = queue.find(it => it.id === id);
+    return found !== undefined;
+  })
+  return found;
+}
+
 const getQueue = (guildId) => {
   if (!queues.has(guildId)) queues.set(guildId, []);
   return queues.get(guildId);
@@ -26,6 +41,10 @@ const setTextChannel = (queue, textChannel) => (
 
 const getTrack = async (queue, query, author) => {
   const { id: { videoId } } = await search(query);
+  const found = findInQueues(videoId);
+  if (found)
+    return found;
+
   const info = await cache(videoId);
   const path = `./cache/${info.video_id}`;
 
@@ -39,6 +58,7 @@ const getTrack = async (queue, query, author) => {
   const duration = (hours) ? `${hours}:${minutes}:${seconds}`
                            : `${minutes}:${seconds}`;
   return {
+    id: videoId,
     path,
     author,
     title: info.title,
@@ -71,10 +91,7 @@ const play = (queue) => {
   sendNowPlaying(queue);
   dispatcher.once('end', () => {
     fileStream.destroy();
-    const exists = queues.entries().find(([id, queue]) =>
-      queue.includes(playing)
-    )
-    if (!exists) fse.unlink(playing.path);
+    if (!findInQueues(playing)) fse.unlink(playing.path);
     if (queue.length) play(queue);
     else queue.playing = undefined;
   });
