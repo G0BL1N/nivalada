@@ -13,7 +13,7 @@ module.exports = {
       message.channel.send(l('not_in_voice'));
       return;
     }
-    if (!queue.connection) {
+    if (!queue.playing) {
       music.join(queue, voiceChannel);
     }
     else if (voiceChannel.id !== queue.connection.channel.id) {

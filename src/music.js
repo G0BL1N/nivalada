@@ -140,6 +140,7 @@ const leave = async (queue) => {
   );
   await Promise.all(promises);
   queue.connection.channel.leave();
+  queue.connection = undefined;
 }
 
 module.exports = {
