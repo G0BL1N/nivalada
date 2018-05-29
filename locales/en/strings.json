@@ -6,7 +6,7 @@
   "no_permissions": "❌ You do not have permissions for this command.",
   "ping_reply": "Pong!",
   "ping_full_reply": "Pong! Took `{0}ms`",
-  "setlocale_no_locale": "❌ This locale does not exist!",
+  "setlocale_no_locale": "❌ This locale does not exist or not implemented yet.",
   "setlocale_same_locale": "⚠ This locale already set!",
   "setlocale_done": "✅ Locale is set. New locale `{0}`",
   "setprefix_same_prefix": "⚠ This prefix already set!",
