@@ -1,5 +1,15 @@
 const fse = require('fs-extra');
 const logger = require('./logger.js');
+const { queues, leave } = require('./music.js');
+
+
+const leaveChannels = () => {
+  logger.warn('Leaving all channels...');
+  queues.forEach(queue => {
+    if (queue.playing)
+      leave(queue);
+  });
+}
 
 const cleanup = async () => {
   logger.warn('Cleaning up...');
@@ -7,14 +17,16 @@ const cleanup = async () => {
 }
 
 const exit = async () => {
+  leaveChannels();
   await cleanup();
+  logger.warn('Shutting down...');
   process.exit();
 }
 
 const register = () => {
-  process.once('SIGUSR1', exit);
+  process.once('uexit', exit);
 
-  process.once('SIGUSR2', exit);
+  process.once('SIGHUP', exit);
 
   process.once('SIGINT', exit);
 

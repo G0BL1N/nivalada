@@ -4,6 +4,7 @@ module.exports = {
     require('./setlocale.js'),
     require('./setprefix.js'),
     require('./setavatar.js'),
-    require('./reload.js')
+    require('./reload.js'),
+    require('./restart.js'),
   ]
 };

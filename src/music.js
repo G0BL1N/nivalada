@@ -143,6 +143,7 @@ const leave = async (queue) => {
 }
 
 module.exports = {
+  queues,
   getQueue,
   join,
   setTextChannel,
