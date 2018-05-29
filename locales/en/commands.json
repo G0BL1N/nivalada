@@ -1,9 +1,12 @@
 {
-  "ping": {
-    "description": "Ping to bot."
+  "reload": {
+    "description": "no_description"
   },
-  "status": {
-    "description": "Bot status."
+  "restart": {
+    "description": "no_description"
+  },
+  "setavatar": {
+    "description": "Sets bot avatar. Should be used with link or attachment."
   },
   "setlocale": {
     "description": "Sets locale for this server."
@@ -11,28 +14,31 @@
   "setprefix": {
     "description": "Sets prefix for this server."
   },
-  "setavatar": {
-    "description": "Sets bot avatar. Should be used with link or attachment."
+  "help": {
+    "description": "Command list or command help."
   },
-  "blacklist": {
-    "description": "Adds user to blacklist. User will not be allowed to use any command on any server."
+  "ping": {
+    "description": "Ping to bot."
+  },
+  "status": {
+    "description": "Bot status."
+  },
+  "add": {
+    "description": "Searches track on Youtube and adds it queue. Youtube links and search queries allowed."
+  },
+  "leave": {
+    "description": "no_description"
+  },
+  "move": {
+    "description": "no_description"
+  },
+  "skip": {
+    "description": "Skips current playing track, if there is one."
   },
   "google": {
     "description": "Searches Internet through Google and returns first found result. You can provide first argument to tell what result you need."
   },
   "googleimg": {
     "description": "Searches Internet through Google and returns first found image. You can provide first argument to tell what result you need."
-  },
-  "help": {
-    "description": "Command list or command help."
-  },
-  "add": {
-    "description": "Searches track on Youtube and adds it queue. Youtube links and search queries allowed."
-  },
-  "skip": {
-    "description": "Skips current playing track, if there is one."
-  },
-  "move": {
-    "description": "..."
   }
 }
