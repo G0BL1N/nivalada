@@ -31,7 +31,7 @@ const register = () => {
   process.once('SIGINT', exit);
 
   process.once('uncaughtException', async (err) => {
-    logger.error('Uncaught Exception!\n' + e.stack);
+    logger.error('Uncaught Exception!\n' + err.stack);
     await exit();
   });
 }
