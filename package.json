@@ -17,7 +17,7 @@
     "jimp": "^0.2.28",
     "moment": "^2.22.1",
     "opusscript": "^0.0.4",
-    "request": "^2.86.0",
+    "request": "^2.87.0",
     "request-promise-native": "^1.0.5",
     "rethinkdb": "^2.3.3",
     "ytdl-core": "^0.20.4"
