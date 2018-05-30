@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { getGuildString, getGuildCommand } = require('../../locales.js');
 const { getGuildValue } = require('../../data.js');
 const { commands, categories } = require('../../commands.js');
@@ -24,7 +24,7 @@ module.exports = {
       message.channel.send(reply);
       return;
     }
-    const embed = new RichEmbed().setTitle(l('help'));
+    const embed = new MessageEmbed().setTitle(l('help'));
     categories.forEach(({ name, commands }) => {
       const fieldTitle = l(name);
       const field = commands.reduce((field, { variants }) => (

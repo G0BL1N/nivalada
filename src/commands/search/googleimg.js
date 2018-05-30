@@ -1,5 +1,5 @@
 const { getImageColor } = require('../../utils.js');
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const rp = require('request-promise-native');
 const { getGuildString } = require('../../locales.js');
 const { googleAPIKey, googleSearchEngineID } =
@@ -39,7 +39,7 @@ module.exports = {
       const itemIndex = number ? Math.min(number - 1, items.length - 1) : 0;
       const image = items[itemIndex].link;
       const color = await getImageColor(image);
-      const embed = new RichEmbed()
+      const embed = new MessageEmbed()
         .setColor(color) //.setColor(0xFBBC05)
         .setImage(image);
       const reply = await pending;

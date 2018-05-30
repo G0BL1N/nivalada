@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { getGuildString } = require('../../locales.js');
 module.exports = {
   variants: ['status', 'stats'],
@@ -14,7 +14,7 @@ module.exports = {
 
     const memory = (process.memoryUsage().rss / 1024 / 1024).toFixed(2);
     const uptime = l('uptime_string', days, hours, minutes);
-    const embed = new RichEmbed()
+    const embed = new MessageEmbed()
       .setColor(0x36d148)
       .addField(l('memory_usage'), `${memory} MB`, true)
       .addField(l('uptime'), uptime, true)
