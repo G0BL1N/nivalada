@@ -4,6 +4,7 @@ module.exports = {
     require('./add.js'),
     require('./skip.js'),
     require('./move.js'),
-    require('./leave.js')
+    require('./leave.js'),
+    require('./spotify.js'),
   ]
 };

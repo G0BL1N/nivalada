@@ -32,5 +32,10 @@
   "not_in_voice": "⚠ Вы должны быть в голосовом канале!",
   "not_in_same_voice": "⚠ Вы должны быть в том же голосовом канале!",
   "no_such_command": "❌ Команда не найдена!",
-  "not_connected": "⚠ Не в голосовом канале!"
+  "not_connected": "⚠ Не в голосовом канале!",
+  "spotify_something_playing": "⚠ Что-то сейчас играет! Не могу включить Spotify.",
+  "add_playing_spotify": "⚠ Сейчас активирован Spotify! Не могу воспроизвести.",
+  "spotify_no_spotify": "❌ Этот пользователь сейчас не слушает Spotify!",
+  "spotify_playing": "✅ Играю Spotify!",
+  "spotify_skip": "✅ Spotify выключен!"
 }

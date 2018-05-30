@@ -1,4 +1,3 @@
-
 const { getGuildString } = require('../../locales.js');
 const music = require('../../music.js');
 
@@ -13,11 +12,15 @@ module.exports = {
       message.channel.send(l('not_in_voice'));
       return;
     }
-    if (!queue.playing) {
+    if (!queue.connection) {
       music.join(queue, voiceChannel);
     }
     else if (voiceChannel.id !== queue.connection.channel.id) {
       message.channel.send(l('not_in_same_voice'));
+      return;
+    }
+    if (queue.playingSpotify) {
+      message.channel.send(l('add_playing_spotify'));
       return;
     }
     music.setTextChannel(queue, message.channel);

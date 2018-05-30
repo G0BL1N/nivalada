@@ -32,5 +32,10 @@
   "not_in_voice": "⚠ You should be in the voice channel!",
   "not_in_same_voice": "⚠ You should be in the same voice channel!",
   "no_such_command": "❌ Command not found!",
-  "not_connected": "⚠ Not on in voice channel!"
+  "not_connected": "⚠ Not on in voice channel!",
+  "spotify_something_playing": "⚠ Something playing right now! Can't engage Spotify mode.",
+  "add_playing_spotify": "⚠ In the Spotify mode! Can't play right now.",
+  "spotify_no_spotify": "❌ That user doesn't listen to Spotify right now!",
+  "spotify_playing": "✅ Spotify mode engaged!",
+  "spotify_skip": "✅ Spotify mode disengaged!"
 }

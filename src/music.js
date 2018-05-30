@@ -1,6 +1,6 @@
 const fse = require('fs-extra');
 const { getImageColor } = require('./utils.js');
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const logger = require('./logger.js');
 const { search, cache } = require('./youtubeWrapper.js');
 const { getGuildString } = require('./locales.js');
@@ -44,7 +44,7 @@ const setTextChannel = (queue, textChannel) => (
   queue.textChannel = textChannel
 )
 
-const getTrack = async (queue, query, author) => {
+const getTrack = async (query, author) => {
   const { id: { videoId } } = await search(query);
   const found = findInQueues(videoId);
   if (found)
@@ -63,9 +63,10 @@ const getTrack = async (queue, query, author) => {
   const duration = (hours) ? `${hours}:${minutes}:${seconds}`
                            : `${minutes}:${seconds}`;
   return {
-    id: videoId,
+    query,
     path,
     author,
+    id: videoId,
     title: info.title,
     duration: duration,
     thumbnail: info.thumbnail_url
@@ -77,7 +78,7 @@ const sendNowPlaying = async (queue) => {
   const track = queue.playing;
   const { title, duration, author: { tag, avatarURL } } = queue.playing;
   const color = await getImageColor(track.thumbnail);
-  const embed = new RichEmbed()
+  const embed = new MessageEmbed()
     .setColor(color)//.setColor(0x5DADEC) //blue, same as :notes: emoji
     .setTitle(`${title} (${duration})`)
     .setAuthor(tag, avatarURL)
@@ -92,7 +93,7 @@ const play = (queue) => {
   const { connection, playing } = queue;
   //const dispatcher = connection.playFile(playing.path);
   const fileStream = fse.createReadStream(playing.path);
-  const dispatcher = connection.playStream(fileStream);
+  const dispatcher = connection.play(playing.path);
   sendNowPlaying(queue);
   dispatcher.once('end', () => {
     fileStream.destroy();
@@ -109,7 +110,7 @@ const add = async (queue, query, author) => {
   const pending = channel.send(l('caching'));
   let track;
   try {
-    track = await getTrack(queue, query, author);
+    track = await getTrack(query, author);
   } catch(err) {
     if (err.message === 'not found') {
       const message = await pending;
@@ -128,7 +129,14 @@ const add = async (queue, query, author) => {
 }
 
 const skip = queue => {
-  if (queue.playing) queue.dispatcher.end();
+  if (queue.playing) {
+    queue.dispatcher.end();
+    return;
+  }
+  if (queue.playingSpotify) {
+    queue.skipSpotify = true;
+    queue.dispatcher.end();
+  }
 }
 
 const leave = async (queue) => {
@@ -143,6 +151,57 @@ const leave = async (queue) => {
   queue.connection = undefined;
 }
 
+const getPlayTime = (user) => {
+  const { activity: { timestamps: { start } } } = user.presence;
+  const startDate = new Date(start);
+  return Date.now() - startDate;
+}
+
+const playSpotify = async (queue, user, interval) => {
+  const { activity: {state: artists, details: trackName} } = user.presence;
+  const [artist] = artists.split('; ');
+  const trackQuery = `${artist} - ${trackName}`;
+  if (queue.playingSpotify) {
+    if (queue.playingSpotify.query !== trackQuery) {
+      clearInterval(interval);
+      await getTrack(trackQuery, user);
+      queue.dispatcher.end();
+    }
+    const playTime = getPlayTime(user);
+    const streamTime = queue.dispatcher.totalStreamTime;
+    const currentTime = streamTime + queue.playingSpotify.started;
+    if (Math.abs(currentTime - playTime) > 2000) {
+      queue.dispatcher.end();
+    }
+    return;
+  }
+  const track = await getTrack(trackQuery, user);
+  queue.playingSpotify = track;
+  const { connection } = queue;
+  const fileStream = fse.createReadStream(queue.playingSpotify.path);
+  const playTime = getPlayTime(user);
+  queue.playingSpotify.started = playTime;
+  const dispatcher = connection.play(fileStream, { seek: (playTime / 1000) });
+  const updating = setInterval(() => {
+    playSpotify(queue, user, updating)
+  }, 3000);
+  dispatcher.on('end', () => {
+    fileStream.destroy();
+    cleanupTrack(queue.playingSpotify);
+    queue.playingSpotify = undefined;
+    clearInterval(updating);
+    if (queue.skipSpotify) {
+      queue.skipSpotify = undefined;
+      const l = getGuildString(queue.textChannel.guild);
+      queue.textChannel.send(l('spotify_skip'));
+      return;
+    }
+    playSpotify(queue, user);
+  });
+  queue.dispatcher = dispatcher;
+}
+
+
 module.exports = {
   queues,
   getQueue,
@@ -150,5 +209,6 @@ module.exports = {
   setTextChannel,
   add,
   skip,
-  leave
+  leave,
+  playSpotify
 }
