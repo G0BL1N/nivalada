@@ -165,6 +165,7 @@ const playSpotify = async (queue, user, interval) => {
     if (queue.playingSpotify.query !== trackQuery) {
       clearInterval(interval);
       await getTrack(trackQuery, user);
+      queue.skipSpotify = true;
       queue.dispatcher.end();
     }
     const playTime = getPlayTime(user);
