@@ -193,9 +193,6 @@ const playSpotify = async (queue, user) => {
     queue.nextSpotify = await getTrack(trackQuery, user);
     queue.nextSpotify.time = getPlayTime(user);
   }
-  else if (queue.nextSpotify.id !== queue.playingSpotify.id) {
-    cleanupTrack(queue.playingSpotify);
-  }
   queue.playingSpotify = queue.nextSpotify;
   queue.nextSpotify = undefined;
   const { connection, playingSpotify } = queue;
@@ -211,9 +208,13 @@ const playSpotify = async (queue, user) => {
     clearInterval(interval);
     fileStream.destroy();
     if (queue.nextSpotify) {
+      if (queue.nextSpotify.id !== queue.playingSpotify.id) {
+        cleanupTrack(queue.playingSpotify);
+      }
       playSpotify(queue, user);
       return;
     }
+    queue.playingSpotify = undefined;
     const l = getGuildString(queue.textChannel.guild);
     queue.textChannel.send(l('spotify_skip'));
   })
