@@ -134,7 +134,6 @@ const skip = queue => {
     return;
   }
   if (queue.playingSpotify) {
-    queue.nextSpotify = true;
     queue.dispatcher.end();
   }
 }
