@@ -94,6 +94,7 @@ const play = (queue) => {
   //const dispatcher = connection.playFile(playing.path);
   const fileStream = fse.createReadStream(playing.path);
   const dispatcher = connection.play(playing.path);
+  queue.dispatcher = dispatcher;
   sendNowPlaying(queue);
   dispatcher.once('end', () => {
     fileStream.destroy();
@@ -101,7 +102,6 @@ const play = (queue) => {
     if (queue.length) play(queue);
     else queue.playing = undefined;
   });
-  queue.dispatcher = dispatcher;
 }
 
 const add = async (queue, query, author) => {
@@ -134,7 +134,7 @@ const skip = queue => {
     return;
   }
   if (queue.playingSpotify) {
-    queue.skipSpotify = true;
+    queue.nextSpotify = true;
     queue.dispatcher.end();
   }
 }
@@ -157,50 +157,69 @@ const getPlayTime = (user) => {
   return Date.now() - startDate;
 }
 
-const playSpotify = async (queue, user, interval) => {
+const updateSpotify = async (queue, user) => {
+  const activity = user.presence && user.presence.activity;
+  const name = activity && activity.name;
+  const type = activity && activity.type;
+  if (name !== 'Spotify' && type !== 'LISTENING') {
+    console.log('HAHA GOTCHA1!!!');
+    queue.dispatcher.end();
+    //queue.textChannel.send(l('spotify_no_spotify'));
+    return;
+  }
   const { activity: {state: artists, details: trackName} } = user.presence;
   const [artist] = artists.split('; ');
   const trackQuery = `${artist} - ${trackName}`;
-  if (queue.playingSpotify) {
-    if (queue.playingSpotify.query !== trackQuery) {
-      clearInterval(interval);
-      await getTrack(trackQuery, user);
-      queue.skipSpotify = true;
-      queue.dispatcher.end();
-    }
-    const playTime = getPlayTime(user);
-    const streamTime = queue.dispatcher.totalStreamTime;
-    const currentTime = streamTime + queue.playingSpotify.started;
-    if (Math.abs(currentTime - playTime) > 2000) {
-      queue.dispatcher.end();
-    }
+  const playTime = getPlayTime(user);
+  if (queue.playingSpotify.query !== trackQuery) {
+    queue.nextSpotify = await getTrack(trackQuery, user),
+    queue.nextSpotify.time = playTime;
+    queue.dispatcher.end();
     return;
   }
-  const track = await getTrack(trackQuery, user);
-  queue.playingSpotify = track;
-  const { connection } = queue;
-  const fileStream = fse.createReadStream(queue.playingSpotify.path);
-  const playTime = getPlayTime(user);
-  queue.playingSpotify.started = playTime;
-  const dispatcher = connection.play(fileStream, { seek: (playTime / 1000) });
-  const updating = setInterval(() => {
-    playSpotify(queue, user, updating)
-  }, 3000);
-  dispatcher.on('end', () => {
-    fileStream.destroy();
+  const streamTime = queue.dispatcher.totalStreamTime;
+  const currentTime = streamTime + queue.playingSpotify.time;
+  if (Math.abs(currentTime - playTime) > 2000) {
+    queue.nextSpotify = queue.playingSpotify;
+    queue.nextSpotify.time = playTime;
+    queue.dispatcher.end();
+  }
+}
+
+const playSpotify = async (queue, user) => {
+  if (!queue.nextSpotify) {
+    const { activity: {state: artists, details: trackName} } = user.presence;
+    const [artist] = artists.split('; ');
+    const trackQuery = `${artist} - ${trackName}`;
+    queue.nextSpotify = await getTrack(trackQuery, user);
+    queue.nextSpotify.time = getPlayTime(user);
+  }
+  else if (queue.nextSpotify.id !== queue.playingSpotify.id) {
     cleanupTrack(queue.playingSpotify);
-    queue.playingSpotify = undefined;
-    clearInterval(updating);
-    if (queue.skipSpotify) {
-      queue.skipSpotify = undefined;
-      const l = getGuildString(queue.textChannel.guild);
-      queue.textChannel.send(l('spotify_skip'));
-      return;
-    }
-    playSpotify(queue, user);
+  }
+  queue.playingSpotify = queue.nextSpotify;
+  queue.nextSpotify = undefined;
+  const { connection, playingSpotify } = queue;
+  const fileStream = fse.createReadStream(playingSpotify.path);
+  const dispatcher = connection.play(fileStream, {
+    seek: (playingSpotify.time / 1000)
   });
   queue.dispatcher = dispatcher;
+  const interval = setInterval(() =>
+    updateSpotify(queue, user), 2000
+  );
+  dispatcher.on('end', (reason) => {
+    clearInterval(interval);
+    fileStream.destroy();
+    if (queue.nextSpotify) {
+      playSpotify(queue, user);
+      return;
+    }
+    const l = getGuildString(queue.textChannel.guild);
+    queue.textChannel.send(l('spotify_skip'));
+  })
 }
+
 
 
 module.exports = {
