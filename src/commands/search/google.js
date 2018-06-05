@@ -9,7 +9,7 @@ module.exports = {
   usage: 'google 2 anime',
   async action(message, arg) {
     const l = getGuildString(message.guild);
-    const result = /^(\d*)\s+(.*)$/.exec(arg);
+    const result = /^(\d*)\s*(.*)$/.exec(arg);
     const channel = message.channel;
     if (!result) {
       channel.send(l('no_query'));
