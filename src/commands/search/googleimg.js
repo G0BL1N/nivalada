@@ -43,7 +43,7 @@ module.exports = {
         .setColor(color) //.setColor(0xFBBC05)
         .setImage(image);
       const reply = await pending;
-      reply.edit(embed);
+      reply.edit({ embed });
     } catch (err) {
       logger.warn('Google search error:' + err);
       const reply = await pending;
