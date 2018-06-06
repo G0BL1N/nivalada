@@ -10,7 +10,6 @@ module.exports = {
     const result = /^([A-Za-z]+)\s+(.+)$/.exec(arg);
     const type = result && result[1];
     const name = result && result[2];
-    //add type check
     if (!type || !name) {
       message.channel.send(l('setactivity_err'));
       return;
