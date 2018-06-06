@@ -24,6 +24,7 @@ const search = async (query) => {
     uri: 'https://www.googleapis.com/youtube/v3/search',
     qs: {
       part: 'snippet',
+      type: 'video',
       q: query,
       maxResults: 1,
       key: googleAPIKey

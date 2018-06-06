@@ -118,7 +118,7 @@ const add = async (queue, query, author) => {
     } else {
       const message = await pending;
       message.edit(l('error'));
-      logger.error(err);
+      logger.error(err.stack);
     }
     return;
   }
