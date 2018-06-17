@@ -93,7 +93,7 @@ const play = (queue) => {
   const { connection, playing } = queue;
   //const dispatcher = connection.playFile(playing.path);
   const fileStream = fse.createReadStream(playing.path);
-  const dispatcher = connection.play(playing.path, { volume: 0.2 });
+  const dispatcher = connection.play(playing.path, { volume: 0.4 });
   queue.dispatcher = dispatcher;
   sendNowPlaying(queue);
   dispatcher.once('end', () => {
