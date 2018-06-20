@@ -8,7 +8,7 @@ module.exports = {
   async action(message, arg) {
     const l = getGuildString(message.guild);
     const queue = music.getQueue(message.guild.id);
-    if (!queue.playing) {
+    if (!queue.connection) {
       message.channel.send(l('not_connected'));
       return;
     }
