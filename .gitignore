@@ -4,3 +4,4 @@ node_modules
 npm-debug.log
 defaults.json
 credentials.json
+rethinkdb_data
