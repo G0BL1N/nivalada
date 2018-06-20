@@ -6,7 +6,7 @@ const { queues, leave } = require('./music.js');
 const leaveChannels = () => {
   logger.warn('Leaving all channels...');
   queues.forEach(queue => {
-    if (queue.playing)
+    if (queue.connection)
       leave(queue);
   });
 }
