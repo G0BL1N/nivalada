@@ -7,6 +7,7 @@
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": "github:G0BL1N/nivalada",
   "author": "G0BL1N",
   "license": "MIT",
   "dependencies": {
@@ -21,5 +22,13 @@
     "request-promise-native": "^1.0.5",
     "rethinkdb": "^2.3.3",
     "ytdl-core": "^0.20.4"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^3.0.5",
+    "erlpack": "github:discordapp/erlpack",
+    "libsodium-wrappers": "^0.7.3",
+    "node-opus": "^0.2.9",
+    "uws": "^9.148.0",
+    "zlib-sync": "^0.1.4"
   }
 }
