@@ -180,7 +180,8 @@ const playSpotify = async (queue) => {
     return;
   }
   if (!queue.spotify.next) {
-    //TODO: Spotify end message
+    queue.spotify = undefined;
+    //TODO: End spotify properly
     return;
   }
   queue.spotify.playing = queue.spotify.next;
