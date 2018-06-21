@@ -210,6 +210,7 @@ const updateSpotify = async (queue) => {
   if (name !== 'Spotify' && type !== 'LISTENING') {
     queue.spotify.next = undefined;
     queue.dispatcher.end();
+    const l = getGuildString(queue.textChannel.guild);
     queue.textChannel.send(l('spotify_no_spotify'));
     return;
   }
