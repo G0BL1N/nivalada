@@ -27,7 +27,7 @@
   "not_found": "❌ Not found!",
   "no_query": "❌ No query!",
   "caching": "⬇ Caching...",
-  "cached": "✅ Cached!",
+  "cached": "✅ Cached! **{0} ({1})**",
   "now_playing": "Now playing",
   "not_in_voice": "⚠ You should be in the voice channel!",
   "not_in_same_voice": "⚠ You should be in the same voice channel!",

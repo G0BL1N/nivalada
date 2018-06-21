@@ -31,6 +31,6 @@ module.exports = {
     }
     message.channel.send(l('spotify_playing'));
     music.setTextChannel(queue, message.channel);
-    music.playSpotify(queue, user);
+    music.attachSpotify(queue, user);
   }
 }

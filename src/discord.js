@@ -3,6 +3,7 @@ const { token } = require('../credentials.json');
 const commands = require('./commands.js');
 const logger = require('./logger.js');
 const { getGuildString } = require('./locales.js');
+const { presenceUpdate } = require('./music.js')
 
 const Client = new Discord.Client()
 
@@ -26,6 +27,8 @@ Client.on('message', async (message) => {
   logger.command(message);
   command.action(message, arg, variant);
 });
+
+Client.on('presenceUpdate', presenceUpdate);
 
 (async () => {
   try {

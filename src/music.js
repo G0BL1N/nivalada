@@ -7,9 +7,10 @@ const { getGuildString } = require('./locales.js');
 
 const queues = new Map();
 
-const getQueue = (guildId) => {
-  if (!queues.has(guildId)) queues.set(guildId, []);
-  return queues.get(guildId);
+const getQueue = (guild) => {
+  const id = guild.id || guild;
+  if (!queues.has(id)) queues.set(id, []);
+  return queues.get(id);
 }
 
 const findInQueues = (track) => {
@@ -23,7 +24,7 @@ const findInQueues = (track) => {
     }
     found = queue.find(it => it.id === id);
     return found !== undefined;
-  })
+  });
   return found;
 }
 
@@ -118,14 +119,15 @@ const add = async (queue, query, author) => {
     } else {
       const message = await pending;
       message.edit(l('error'));
-      logger.error(err.stack);
+      logger.error('Error caching track:\n' + err.stack);
     }
     return;
   }
   queue.push(track);
   if (!queue.playing) play(queue);
   const message = await pending;
-  message.edit(l('cached'));
+  //TODO: Rewrite, maybe add embed
+  message.edit(l('cached', track.title, track.duration));
 }
 
 const skip = queue => {
@@ -133,7 +135,7 @@ const skip = queue => {
     queue.dispatcher.end();
     return;
   }
-  if (queue.playingSpotify) {
+  if (queue.spotify) {
     queue.dispatcher.end();
   }
 }
@@ -150,74 +152,95 @@ const leave = async (queue) => {
   queue.connection = undefined;
 }
 
-const getPlayTime = (user) => {
-  const { activity: { timestamps: { start } } } = user.presence;
-  const startDate = new Date(start);
-  return Date.now() - startDate;
+const getPresenceTrack = (user) => {
+  const { state: artists, details: trackName, timestamps: { start } }
+    = user.presence.activity;
+  const [artist] = artists.split('; ');
+  const query = `${artist} - ${trackName}`;
+  const time = Date.now() - new Date(start);
+  return {
+    artist,
+    query,
+    time
+  }
 }
 
-const updateSpotify = async (queue, user) => {
+const presenceUpdate = (oldMember, newMember) => {
+  const guild = newMember.guild;
+  const queue = getQueue(guild.id);
+  const spotifyUserId = queue.spotify && queue.spotify.user.id;
+  if (spotifyUserId === oldMember.id) {
+    updateSpotify(queue);
+  }
+}
+
+const playSpotify = async (queue) => {
+  if (queue.spotify.playing) {
+    queue.dispatcher.end();
+    return;
+  }
+  if (!queue.spotify.next) {
+    //TODO: Spotify end message
+    return;
+  }
+  queue.spotify.playing = queue.spotify.next;
+  queue.spotify.next = undefined;
+  const { connection, spotify: { playing } } = queue;
+  const fileStream = fse.createReadStream(playing.path);
+  queue.dispatcher = connection.play(fileStream, {
+    seek: (playing.time / 1000),
+    volume: 0.4
+  });
+  queue.dispatcher.on('end', () => {
+    fileStream.destroy();
+    const { next, playing } = queue.spotify;
+    if (!next || next.id !== playing.id) {
+      cleanupTrack(queue.spotify.playing);
+    }
+    queue.spotify.playing = undefined;
+    playSpotify(queue);
+  });
+}
+
+const updateSpotify = async (queue) => {
+  const user = queue.spotify.user;
   const activity = user.presence && user.presence.activity;
   const name = activity && activity.name;
   const type = activity && activity.type;
   if (name !== 'Spotify' && type !== 'LISTENING') {
-    console.log('HAHA GOTCHA1!!!');
+    queue.spotify.next = undefined;
     queue.dispatcher.end();
-    //queue.textChannel.send(l('spotify_no_spotify'));
+    queue.textChannel.send(l('spotify_no_spotify'));
     return;
   }
-  const { activity: {state: artists, details: trackName} } = user.presence;
-  const [artist] = artists.split('; ');
-  const trackQuery = `${artist} - ${trackName}`;
-  const playTime = getPlayTime(user);
-  if (queue.playingSpotify.query !== trackQuery) {
-    queue.nextSpotify = await getTrack(trackQuery, user),
-    queue.nextSpotify.time = playTime;
-    queue.dispatcher.end();
+  const track = getPresenceTrack(user);
+  //TODO: Simplify, all ifs are doing the same thing
+  if (!queue.spotify.playing) {
+    queue.spotify.next = await getTrack(track.query, user);
+    queue.spotify.next.time = track.time;
+    playSpotify(queue);
+    return;
+  }
+  if (queue.spotify.playing.query !== track.query) {
+    queue.spotify.next = await getTrack(track.query, user);
+    queue.spotify.next.time = track.time;
+    playSpotify(queue);
     return;
   }
   const streamTime = queue.dispatcher.totalStreamTime;
-  const currentTime = streamTime + queue.playingSpotify.time;
-  if (Math.abs(currentTime - playTime) > 2000) {
-    queue.nextSpotify = queue.playingSpotify;
-    queue.nextSpotify.time = playTime;
-    queue.dispatcher.end();
+  const currentTime = streamTime + queue.spotify.playing.time;
+  if (Math.abs(currentTime - track.time) > 2000) {
+    queue.spotify.next = queue.spotify.playing;
+    queue.spotify.next.time = track.time;
+    playSpotify(queue);
   }
 }
 
-const playSpotify = async (queue, user) => {
-  if (!queue.nextSpotify) {
-    const { activity: {state: artists, details: trackName} } = user.presence;
-    const [artist] = artists.split('; ');
-    const trackQuery = `${artist} - ${trackName}`;
-    queue.nextSpotify = await getTrack(trackQuery, user);
-    queue.nextSpotify.time = getPlayTime(user);
+const attachSpotify = async (queue, user) => {
+  queue.spotify = {
+    user
   }
-  queue.playingSpotify = queue.nextSpotify;
-  queue.nextSpotify = undefined;
-  const { connection, playingSpotify } = queue;
-  const fileStream = fse.createReadStream(playingSpotify.path);
-  const dispatcher = connection.play(fileStream, {
-    seek: (playingSpotify.time / 1000)
-  });
-  queue.dispatcher = dispatcher;
-  const interval = setInterval(() =>
-    updateSpotify(queue, user), 2000
-  );
-  dispatcher.on('end', (reason) => {
-    clearInterval(interval);
-    fileStream.destroy();
-    if (queue.nextSpotify) {
-      if (queue.nextSpotify.id !== queue.playingSpotify.id) {
-        cleanupTrack(queue.playingSpotify);
-      }
-      playSpotify(queue, user);
-      return;
-    }
-    queue.playingSpotify = undefined;
-    const l = getGuildString(queue.textChannel.guild);
-    queue.textChannel.send(l('spotify_skip'));
-  })
+  updateSpotify(queue);
 }
 
 
@@ -230,5 +253,6 @@ module.exports = {
   add,
   skip,
   leave,
-  playSpotify
+  attachSpotify,
+  presenceUpdate
 }
