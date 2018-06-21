@@ -19,7 +19,7 @@ module.exports = {
       message.channel.send(l('not_in_same_voice'));
       return;
     }
-    if (queue.playingSpotify) {
+    if (queue.spotify) {
       message.channel.send(l('add_playing_spotify'));
       return;
     }
