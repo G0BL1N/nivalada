@@ -10,12 +10,11 @@ module.exports = {
     const [, userID] = /^<@\!?(\d+)>$/.exec(arg);
     const user = await message.client.users.fetch(userID);
     const voiceChannel = message.member.voiceChannel;
-    if (queue.playing || queue.playingSpotify) {
+    if (queue.playing || queue.spotify.playing) {
       message.channel.send(l('spotify_something_playing'));
       return;
     }
-    const author = message.author;
-    const activity = author.presence && author.presence.activity;
+    const activity = user.presence && user.presence.activity;
     const name = activity && activity.name;
     const type = activity && activity.type;
     if (name !== 'Spotify' && type !== 'LISTENING') {
