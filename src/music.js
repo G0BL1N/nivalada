@@ -70,6 +70,7 @@ const getTrack = async (query, author) => {
     id: videoId,
     title: info.title,
     duration: duration,
+    durationSeconds: info.length_seconds,
     thumbnail: info.thumbnail_url
   };
 }
@@ -77,7 +78,8 @@ const getTrack = async (query, author) => {
 const sendNowPlaying = async (queue) => {
   const l = getGuildString(queue.textChannel.guild);
   const track = queue.playing;
-  const { title, duration, author: { tag, avatarURL } } = queue.playing;
+  const { title, duration, author: { tag } } = queue.playing;
+  const avatarURL = queue.playing.author.avatarURL();
   const color = await getImageColor(track.thumbnail);
   const embed = new MessageEmbed()
     .setColor(color)//.setColor(0x5DADEC) //blue, same as :notes: emoji
@@ -244,8 +246,6 @@ const attachSpotify = async (queue, user) => {
   }
   updateSpotify(queue);
 }
-
-
 
 module.exports = {
   queues,
