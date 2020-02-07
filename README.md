@@ -1,5 +1,2 @@
-[![Discord](https://discordapp.com/api/guilds/249871861389721600/widget.png)](https://discord.gg/k2caQUE)
-# Niva Lada
-Readme in development.
+Currently archived and shouldn't be used for anything other than learning purposes
 
-Discord server: https://discord.gg/k2caQUE
