@@ -1,5 +1,1 @@
-[![Discord](https://discordapp.com/api/guilds/249871861389721600/widget.png)](https://discord.gg/k2caQUE)
-# GBot
-Бот для Discord полностью на русском языке.
-
-Могу предоставить помощь на сервере: https://discord.gg/k2caQUE
+Currently archived and shouldn't be used for anything other than learning purposes
